@@ -2,28 +2,109 @@ aid: column
 url: https://raw.githubusercontent.com/api-evangelist/column/refs/heads/main/apis.yml
 name: Column
 x-type: company
-description: >-
-  Column is a chartered nationally-regulated bank purpose-built for developer APIs. Offers ACH, wires, FedNow, checks, BIN sponsorship, and bank-direct ledgering.
+description: Column is a chartered nationally-regulated bank purpose-built for developer APIs. Offers ACH, wires, FedNow,
+  checks, BIN sponsorship, and bank-direct ledgering.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - Fintech
-  - Banking
-  - BaaS
-  - ACH
-  - Wires
+- Fintech
+- Banking
+- BaaS
+- ACH
+- Wires
 created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.19'
-apis: []
+apis:
+- name: Column ACH Transfers API
+  description: Originate and receive ACH transfers with returns and reversal handling.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - ACH
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Wire Transfers API
+  description: Send domestic wires with drawdowns and return-request workflows.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Wires
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column International Wires API
+  description: Cross-border wires with FX quoting and amendments.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Wires
+  - FX
+  - Cross-Border
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Realtime Transfers API
+  description: Instant RTP/FedNow transfers and Request for Payment (RFP).
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - RTP
+  - FedNow
+  - Instant Payments
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Book Transfers API
+  description: Internal ledger movements between Column accounts.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Book Transfers
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Check Services API
+  description: Issue, print, mail and deposit physical checks.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Check
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Lending API
+  description: Loan disbursements, payments, sales and reporting.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Lending
+  - Loans
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Entities & Accounts API
+  description: Person and business entity onboarding plus bank accounts and account numbers.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Accounts
+  - KYC
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
 common:
-  - type: Website
-    url: https://column.com/
-  - type: Plans
-    url: plans/column-plans-pricing.yml
-  - type: RateLimits
-    url: rate-limits/column-rate-limits.yml
-  - type: FinOps
-    url: finops/column-finops.yml
+- type: Website
+  url: https://column.com/
+- type: Plans
+  url: plans/column-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/column-rate-limits.yml
+- type: FinOps
+  url: finops/column-finops.yml
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
