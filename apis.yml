@@ -1,7 +1,7 @@
 aid: column
 url: https://raw.githubusercontent.com/api-evangelist/column/refs/heads/main/apis.yml
 name: Column
-x-type: company
+kind: company
 description: Column is a chartered nationally-regulated bank purpose-built for developer APIs. Offers ACH, wires, FedNow,
   checks, BIN sponsorship, and bank-direct ledgering.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
