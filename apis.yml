@@ -12,7 +12,7 @@ tags:
   - ACH
   - Wires
 created: '2026-05-08'
-modified: '2026-05-08'
+modified: '2026-05-30'
 specificationVersion: '0.19'
 apis:
   - name: Column ACH Transfers API
@@ -96,6 +96,20 @@ apis:
     properties:
     - type: Documentation
       url: https://column.com/docs/api
+  - name: Column Webhooks
+    description: HMAC-SHA256 signed event callbacks for ACH, wire, international wire (SWIFT), realtime
+      (RTP/FedNow), book transfers, checks, bank accounts, identity verification, loans, and reporting.
+    humanURL: https://docs.column.com/working-with-the-api/events-and-webhooks/
+    baseURL: https://api.column.com
+    tags:
+    - Webhooks
+    - Events
+    - AsyncAPI
+    properties:
+    - type: Documentation
+      url: https://docs.column.com/working-with-the-api/events-and-webhooks/
+    - type: AsyncAPI
+      url: openapi/column-asyncapi.yml
 common:
   - type: LinkedIn
     url: https://www.linkedin.com/company/column-bank

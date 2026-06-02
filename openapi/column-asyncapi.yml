@@ -1,0 +1,990 @@
+asyncapi: '2.6.0'
+info:
+  title: Column Webhooks
+  version: '1.0.0'
+  description: |
+    AsyncAPI specification for Column's webhook surface.
+
+    Column delivers state-change notifications as HTTP POST callbacks to
+    application-registered webhook endpoints. Each delivery carries an
+    Event payload signed with an HMAC-SHA256 signature derived from the
+    webhook endpoint's signing secret applied to the raw request body.
+
+    Source: https://docs.column.com/working-with-the-api/events-and-webhooks/
+
+    This document was generated from Column's public webhook documentation
+    and is best-effort. Only event types confirmed in Column's documentation
+    are modeled here; no event names are fabricated. The requested groupings
+    transaction.*, root.account.*, person.*, and business.* are not documented
+    as webhook event prefixes by Column and are therefore omitted.
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+  license:
+    name: Proprietary
+defaultContentType: application/json
+tags:
+  - name: ACH
+    description: ACH transfer event callbacks.
+  - name: Wire
+    description: Domestic wire transfer event callbacks.
+  - name: BookTransfer
+    description: Internal Column ledger book transfer event callbacks.
+  - name: Check
+    description: Check issuance, deposit, and delivery event callbacks.
+  - name: Account
+    description: Bank account state change event callbacks.
+servers:
+  production:
+    url: '{webhook_endpoint_url}'
+    protocol: https
+    description: |
+      Customer-hosted HTTPS endpoint registered with Column via
+      POST /webhook-endpoints. Column delivers events as HTTP POST
+      requests to this URL.
+    variables:
+      webhook_endpoint_url:
+        description: HTTPS URL configured on your Column webhook endpoint.
+        default: https://example.com/column/webhooks
+channels:
+  ach.outgoing_transfer.initiated:
+    description: Outgoing ACH transfer was initiated.
+    subscribe:
+      operationId: onAchOutgoingTransferInitiated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.manual_review:
+    description: Outgoing ACH transfer entered manual review.
+    subscribe:
+      operationId: onAchOutgoingTransferManualReview
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.submitted:
+    description: Outgoing ACH transfer was submitted to the Federal Reserve.
+    subscribe:
+      operationId: onAchOutgoingTransferSubmitted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.settled:
+    description: Outgoing ACH transfer settled.
+    subscribe:
+      operationId: onAchOutgoingTransferSettled
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.completed:
+    description: Outgoing ACH transfer completed.
+    subscribe:
+      operationId: onAchOutgoingTransferCompleted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.returned:
+    description: Outgoing ACH transfer was returned by the receiving bank.
+    subscribe:
+      operationId: onAchOutgoingTransferReturned
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.return_dishonored:
+    description: A return on an outgoing ACH transfer was dishonored.
+    subscribe:
+      operationId: onAchOutgoingTransferReturnDishonored
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.return_contested:
+    description: A return on an outgoing ACH transfer was contested.
+    subscribe:
+      operationId: onAchOutgoingTransferReturnContested
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.canceled:
+    description: Outgoing ACH transfer was canceled.
+    subscribe:
+      operationId: onAchOutgoingTransferCanceled
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.outgoing_transfer.noc:
+    description: Notification of Change received on outgoing ACH transfer.
+    subscribe:
+      operationId: onAchOutgoingTransferNoc
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchOutgoingTransferEvent'
+  ach.incoming_transfer.scheduled:
+    description: Incoming ACH transfer was scheduled.
+    subscribe:
+      operationId: onAchIncomingTransferScheduled
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchIncomingTransferEvent'
+  ach.incoming_transfer.settled:
+    description: Incoming ACH transfer settled.
+    subscribe:
+      operationId: onAchIncomingTransferSettled
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchIncomingTransferEvent'
+  ach.incoming_transfer.nsf:
+    description: Incoming ACH transfer failed due to insufficient funds.
+    subscribe:
+      operationId: onAchIncomingTransferNsf
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchIncomingTransferEvent'
+  ach.incoming_transfer.completed:
+    description: Incoming ACH transfer completed.
+    subscribe:
+      operationId: onAchIncomingTransferCompleted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchIncomingTransferEvent'
+  ach.incoming_transfer.returned:
+    description: Incoming ACH transfer was returned.
+    subscribe:
+      operationId: onAchIncomingTransferReturned
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchIncomingTransferEvent'
+  ach.incoming_transfer.return_dishonored:
+    description: A return on an incoming ACH transfer was dishonored.
+    subscribe:
+      operationId: onAchIncomingTransferReturnDishonored
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchIncomingTransferEvent'
+  ach.incoming_transfer.return_contested:
+    description: A return on an incoming ACH transfer was contested.
+    subscribe:
+      operationId: onAchIncomingTransferReturnContested
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AchIncomingTransferEvent'
+  wire.outgoing_transfer.initiated:
+    description: Outgoing wire transfer was initiated.
+    subscribe:
+      operationId: onWireOutgoingTransferInitiated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireOutgoingTransferEvent'
+  wire.outgoing_transfer.manual_review:
+    description: Outgoing wire transfer entered manual review.
+    subscribe:
+      operationId: onWireOutgoingTransferManualReview
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireOutgoingTransferEvent'
+  wire.outgoing_transfer.submitted:
+    description: Outgoing wire transfer was submitted.
+    subscribe:
+      operationId: onWireOutgoingTransferSubmitted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireOutgoingTransferEvent'
+  wire.outgoing_transfer.rejected:
+    description: Outgoing wire transfer was rejected.
+    subscribe:
+      operationId: onWireOutgoingTransferRejected
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireOutgoingTransferEvent'
+  wire.outgoing_transfer.completed:
+    description: Outgoing wire transfer completed.
+    subscribe:
+      operationId: onWireOutgoingTransferCompleted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireOutgoingTransferEvent'
+  wire.incoming_transfer.completed:
+    description: Incoming wire transfer completed.
+    subscribe:
+      operationId: onWireIncomingTransferCompleted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireIncomingTransferEvent'
+  wire.incoming_return_request.initiated:
+    description: Incoming wire return request was initiated.
+    subscribe:
+      operationId: onWireIncomingReturnRequestInitiated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.incoming_return_request.manual_review:
+    description: Incoming wire return request entered manual review.
+    subscribe:
+      operationId: onWireIncomingReturnRequestManualReview
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.incoming_return_request.approved:
+    description: Incoming wire return request was approved.
+    subscribe:
+      operationId: onWireIncomingReturnRequestApproved
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.incoming_return_request.rejected:
+    description: Incoming wire return request was rejected.
+    subscribe:
+      operationId: onWireIncomingReturnRequestRejected
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.incoming_return_request.completed:
+    description: Incoming wire return request completed.
+    subscribe:
+      operationId: onWireIncomingReturnRequestCompleted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.outgoing_return_request.scheduled:
+    description: Outgoing wire return request was scheduled.
+    subscribe:
+      operationId: onWireOutgoingReturnRequestScheduled
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.outgoing_return_request.sent:
+    description: Outgoing wire return request was sent.
+    subscribe:
+      operationId: onWireOutgoingReturnRequestSent
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.outgoing_return_request.manual_review:
+    description: Outgoing wire return request entered manual review.
+    subscribe:
+      operationId: onWireOutgoingReturnRequestManualReview
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.outgoing_return_request.approved:
+    description: Outgoing wire return request was approved.
+    subscribe:
+      operationId: onWireOutgoingReturnRequestApproved
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.outgoing_return_request.rejected:
+    description: Outgoing wire return request was rejected.
+    subscribe:
+      operationId: onWireOutgoingReturnRequestRejected
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.outgoing_return_request.completed:
+    description: Outgoing wire return request completed.
+    subscribe:
+      operationId: onWireOutgoingReturnRequestCompleted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireReturnRequestEvent'
+  wire.incoming_drawdown_request.received:
+    description: Incoming wire drawdown request received.
+    subscribe:
+      operationId: onWireIncomingDrawdownRequestReceived
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireDrawdownRequestEvent'
+  wire.incoming_drawdown_request.approved:
+    description: Incoming wire drawdown request approved.
+    subscribe:
+      operationId: onWireIncomingDrawdownRequestApproved
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireDrawdownRequestEvent'
+  wire.incoming_drawdown_request.denied:
+    description: Incoming wire drawdown request denied.
+    subscribe:
+      operationId: onWireIncomingDrawdownRequestDenied
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/WireDrawdownRequestEvent'
+  book.transfer.initiated:
+    description: Book transfer was initiated. Per Column docs, this type is not delivered as a webhook.
+    subscribe:
+      operationId: onBookTransferInitiated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/BookTransferEvent'
+  book.transfer.completed:
+    description: Book transfer completed.
+    subscribe:
+      operationId: onBookTransferCompleted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/BookTransferEvent'
+  book.transfer.hold_created:
+    description: A hold was created on a book transfer.
+    subscribe:
+      operationId: onBookTransferHoldCreated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/BookTransferEvent'
+  book.transfer.updated:
+    description: A book transfer was updated.
+    subscribe:
+      operationId: onBookTransferUpdated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/BookTransferEvent'
+  book.transfer.canceled:
+    description: Book transfer was canceled.
+    subscribe:
+      operationId: onBookTransferCanceled
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/BookTransferEvent'
+  check.incoming_debit.initiated:
+    description: Incoming check debit was initiated.
+    subscribe:
+      operationId: onCheckIncomingDebitInitiated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.issued:
+    description: Incoming check debit was issued.
+    subscribe:
+      operationId: onCheckIncomingDebitIssued
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.settled:
+    description: Incoming check debit settled.
+    subscribe:
+      operationId: onCheckIncomingDebitSettled
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.pending_first_return:
+    description: Incoming check debit is pending first return.
+    subscribe:
+      operationId: onCheckIncomingDebitPendingFirstReturn
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.returned:
+    description: Incoming check debit was returned.
+    subscribe:
+      operationId: onCheckIncomingDebitReturned
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.pending_reclear:
+    description: Incoming check debit is pending reclear.
+    subscribe:
+      operationId: onCheckIncomingDebitPendingReclear
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.pending_second_return:
+    description: Incoming check debit is pending second return.
+    subscribe:
+      operationId: onCheckIncomingDebitPendingSecondReturn
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.second_return:
+    description: Incoming check debit second return occurred.
+    subscribe:
+      operationId: onCheckIncomingDebitSecondReturn
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.user_initiated_return_submitted:
+    description: User-initiated return on incoming check debit was submitted.
+    subscribe:
+      operationId: onCheckIncomingDebitUserInitiatedReturnSubmitted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.user_initiated_returned:
+    description: User-initiated return on incoming check debit completed.
+    subscribe:
+      operationId: onCheckIncomingDebitUserInitiatedReturned
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.user_initiated_return_dishonored:
+    description: User-initiated return on incoming check debit dishonored.
+    subscribe:
+      operationId: onCheckIncomingDebitUserInitiatedReturnDishonored
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.pending_stop:
+    description: Incoming check debit pending stop.
+    subscribe:
+      operationId: onCheckIncomingDebitPendingStop
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.stopped:
+    description: Incoming check debit was stopped.
+    subscribe:
+      operationId: onCheckIncomingDebitStopped
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.manual_review:
+    description: Incoming check debit entered manual review.
+    subscribe:
+      operationId: onCheckIncomingDebitManualReview
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.rejected:
+    description: Incoming check debit was rejected.
+    subscribe:
+      operationId: onCheckIncomingDebitRejected
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckIncomingDebitEvent'
+  check.incoming_debit.delivery.created:
+    description: Delivery record created for incoming check debit.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryCreated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.rendered_pdf:
+    description: PDF rendered for incoming check debit delivery.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryRenderedPdf
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.mailed:
+    description: Incoming check debit delivery was mailed.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryMailed
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.in_transit:
+    description: Incoming check debit delivery in transit.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryInTransit
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.in_local_area:
+    description: Incoming check debit delivery in local area.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryInLocalArea
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.processed_for_delivery:
+    description: Incoming check debit delivery processed for delivery.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryProcessedForDelivery
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.delivered:
+    description: Incoming check debit delivery delivered.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryDelivered
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.rerouted:
+    description: Incoming check debit delivery rerouted.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryRerouted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.returned_to_sender:
+    description: Incoming check debit delivery returned to sender.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryReturnedToSender
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.incoming_debit.delivery.failed:
+    description: Incoming check debit delivery failed.
+    subscribe:
+      operationId: onCheckIncomingDebitDeliveryFailed
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckDeliveryEvent'
+  check.outgoing_debit.initiated:
+    description: Outgoing check debit was initiated.
+    subscribe:
+      operationId: onCheckOutgoingDebitInitiated
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  check.outgoing_debit.manual_review:
+    description: Outgoing check debit entered manual review.
+    subscribe:
+      operationId: onCheckOutgoingDebitManualReview
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  check.outgoing_debit.rejected:
+    description: Outgoing check debit was rejected.
+    subscribe:
+      operationId: onCheckOutgoingDebitRejected
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  check.outgoing_debit.pending_debit:
+    description: Outgoing check debit pending debit.
+    subscribe:
+      operationId: onCheckOutgoingDebitPendingDebit
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  check.outgoing_debit.deposited:
+    description: Outgoing check was deposited.
+    subscribe:
+      operationId: onCheckOutgoingDebitDeposited
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  check.outgoing_debit.settled:
+    description: Outgoing check debit settled.
+    subscribe:
+      operationId: onCheckOutgoingDebitSettled
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  check.outgoing_debit.returned:
+    description: Outgoing check debit was returned.
+    subscribe:
+      operationId: onCheckOutgoingDebitReturned
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  check.outgoing_debit.pending_reclear:
+    description: Outgoing check debit pending reclear.
+    subscribe:
+      operationId: onCheckOutgoingDebitPendingReclear
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  check.outgoing_debit.recleared:
+    description: Outgoing check debit was recleared.
+    subscribe:
+      operationId: onCheckOutgoingDebitRecleared
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/CheckOutgoingDebitEvent'
+  account.overdrafted:
+    description: Bank account became overdrafted.
+    subscribe:
+      operationId: onAccountOverdrafted
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AccountEvent'
+  account.overdraft_released:
+    description: Bank account overdraft was released.
+    subscribe:
+      operationId: onAccountOverdraftReleased
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AccountEvent'
+  account.frozen:
+    description: Bank account was frozen.
+    subscribe:
+      operationId: onAccountFrozen
+      bindings:
+        http:
+          type: request
+          method: POST
+      message:
+        $ref: '#/components/messages/AccountEvent'
+components:
+  messageTraits:
+    ColumnSignedDelivery:
+      headers:
+        type: object
+        required:
+          - Column-Signature
+          - Webhook-Endpoint-Id
+          - Content-Type
+        properties:
+          Column-Signature:
+            type: string
+            description: |
+              HMAC-SHA256 signature of the raw JSON request body using the
+              webhook endpoint's signing secret as the key. Per Column docs:
+              "The signature is a hash-based message authentication code
+              (HMAC) with SHA-256, by applying the webhook endpoint's
+              signing secret as the key, and the JSON payload (i.e., the
+              request body) as the message." Signatures must be computed
+              over the unmodified raw payload.
+            example: 5fb8b3a3f6c7a3a5e6c7a3a5e6c7a3a5e6c7a3a5e6c7a3a5e6c7a3a5e6c7a3a5
+          Webhook-Endpoint-Id:
+            type: string
+            description: ID of the Column webhook endpoint that received the delivery.
+            example: whep_2NfQ8ZQ9TgYf7vCk9w
+          Content-Type:
+            type: string
+            const: application/json
+  messages:
+    AchOutgoingTransferEvent:
+      name: AchOutgoingTransferEvent
+      title: Outgoing ACH transfer event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    AchIncomingTransferEvent:
+      name: AchIncomingTransferEvent
+      title: Incoming ACH transfer event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    WireOutgoingTransferEvent:
+      name: WireOutgoingTransferEvent
+      title: Outgoing wire transfer event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    WireIncomingTransferEvent:
+      name: WireIncomingTransferEvent
+      title: Incoming wire transfer event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    WireReturnRequestEvent:
+      name: WireReturnRequestEvent
+      title: Wire return request event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    WireDrawdownRequestEvent:
+      name: WireDrawdownRequestEvent
+      title: Wire drawdown request event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    BookTransferEvent:
+      name: BookTransferEvent
+      title: Book transfer event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    CheckIncomingDebitEvent:
+      name: CheckIncomingDebitEvent
+      title: Incoming check debit event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    CheckOutgoingDebitEvent:
+      name: CheckOutgoingDebitEvent
+      title: Outgoing check debit event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    CheckDeliveryEvent:
+      name: CheckDeliveryEvent
+      title: Check delivery event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+    AccountEvent:
+      name: AccountEvent
+      title: Bank account event
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/ColumnSignedDelivery'
+      payload:
+        $ref: '#/components/schemas/Event'
+  schemas:
+    Event:
+      type: object
+      description: |
+        Column Event object delivered as the JSON body of a webhook callback.
+        Per Column docs, an Event is "a snapshot of data at a point in time"
+        created on each state change of an underlying resource.
+      required:
+        - id
+        - type
+        - created_at
+        - data
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the Event. Stable across redeliveries; use it for idempotent processing.
+          example: evt_2NfQ8ZQ9TgYf7vCk9w
+        type:
+          type: string
+          description: The dotted event type name (for example, ach.outgoing_transfer.settled).
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp the event was created.
+        data:
+          type: object
+          description: |
+            Resource snapshot for the event. The shape depends on the
+            event type and corresponds to the underlying Column resource
+            (ACH transfer, wire transfer, book transfer, check, bank
+            account, identity, etc.). Refer to the Column API reference
+            for each resource's full schema.
+          additionalProperties: true
