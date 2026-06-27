@@ -121,7 +121,7 @@ common:
     url: rate-limits/column-rate-limits.yml
   - type: FinOps
     url: finops/column-finops.yml
-  - type: LLMsTxt
+  - type: LlmsText
     url: https://column.com/llms.txt
 maintainers:
   - FN: Kin Lane
