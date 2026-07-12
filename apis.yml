@@ -111,10 +111,16 @@ apis:
     - type: AsyncAPI
       url: openapi/column-asyncapi.yml
 common:
+  - type: DomainSecurity
+    url: security/column-domain-security.yml
+  - type: Authentication
+    url: authentication/column-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/column-bank
   - type: Website
     url: https://column.com/
+  - url: https://column.com/blog
+    type: Blog
   - type: Plans
     url: plans/column-plans-pricing.yml
   - type: RateLimits

@@ -1,0 +1,13 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/column-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: Column uses HTTP Basic Auth with your API key as the username.
+  sources:
+  - openapi/column-openapi.yml
