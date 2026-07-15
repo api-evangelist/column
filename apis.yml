@@ -111,6 +111,8 @@ apis:
     - type: AsyncAPI
       url: openapi/column-asyncapi.yml
 common:
+  - type: AgenticAccess
+    url: agentic-access/column-agentic-access.yml
   - type: DomainSecurity
     url: security/column-domain-security.yml
   - type: Authentication
