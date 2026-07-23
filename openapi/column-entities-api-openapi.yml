@@ -1,0 +1,203 @@
+openapi: 3.1.0
+info:
+  title: Column Account Numbers Entities API
+  description: 'Column is a chartered nationally-regulated bank purpose-built for developer
+
+    APIs. The Column API provides programmatic access to entities, bank accounts,
+
+    account numbers, ACH transfers, wire transfers, international wires, realtime
+
+    (RTP/FedNow) transfers, book transfers, check transfers, counterparties,
+
+    events, and webhooks. This best-effort OpenAPI was generated from the public
+
+    documentation at https://docs.column.com/api and does not cover every field
+
+    or sub-resource.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Column
+    url: https://column.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api.column.com
+  description: Column production API
+security:
+- basicAuth: []
+tags:
+- name: Entities
+paths:
+  /entities/person:
+    post:
+      tags:
+      - Entities
+      summary: Create a person entity
+      operationId: createPersonEntity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonEntityCreate'
+      responses:
+        '200':
+          description: Entity created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+  /entities/business:
+    post:
+      tags:
+      - Entities
+      summary: Create a business entity
+      operationId: createBusinessEntity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Entity created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+  /entities:
+    get:
+      tags:
+      - Entities
+      summary: List all entities
+      operationId: listEntities
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: List of entities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entities:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Entity'
+  /entities/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Entities
+      summary: Retrieve an entity
+      operationId: getEntity
+      responses:
+        '200':
+          description: Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+    patch:
+      tags:
+      - Entities
+      summary: Update an entity
+      operationId: updateEntity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Updated entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+    delete:
+      tags:
+      - Entities
+      summary: Delete an entity
+      operationId: deleteEntity
+      responses:
+        '200':
+          description: Deleted
+components:
+  schemas:
+    PersonEntityCreate:
+      type: object
+      required:
+      - first_name
+      - last_name
+      - date_of_birth
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        middle_name:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+        ssn:
+          type: string
+        email:
+          type: string
+          format: email
+        phone_number:
+          type: string
+        country_of_citizenship:
+          type: string
+        address:
+          type: object
+          properties:
+            line_1:
+              type: string
+            line_2:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postal_code:
+              type: string
+            country_code:
+              type: string
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - person
+          - business
+        is_root:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Column uses HTTP Basic Auth with your API key as the username.

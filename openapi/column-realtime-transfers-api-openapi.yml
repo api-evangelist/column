@@ -1,0 +1,92 @@
+openapi: 3.1.0
+info:
+  title: Column Account Numbers Realtime Transfers API
+  description: 'Column is a chartered nationally-regulated bank purpose-built for developer
+
+    APIs. The Column API provides programmatic access to entities, bank accounts,
+
+    account numbers, ACH transfers, wire transfers, international wires, realtime
+
+    (RTP/FedNow) transfers, book transfers, check transfers, counterparties,
+
+    events, and webhooks. This best-effort OpenAPI was generated from the public
+
+    documentation at https://docs.column.com/api and does not cover every field
+
+    or sub-resource.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Column
+    url: https://column.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api.column.com
+  description: Column production API
+security:
+- basicAuth: []
+tags:
+- name: Realtime Transfers
+paths:
+  /realtime-transfers:
+    get:
+      tags:
+      - Realtime Transfers
+      summary: List realtime transfers
+      operationId: listRealtimeTransfers
+      responses:
+        '200':
+          description: List
+    post:
+      tags:
+      - Realtime Transfers
+      summary: Create a realtime transfer
+      operationId: createRealtimeTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bank_account_id:
+                  type: string
+                counterparty_id:
+                  type: string
+                amount:
+                  type: integer
+                currency_code:
+                  type: string
+                description:
+                  type: string
+                rail:
+                  type: string
+                  enum:
+                  - RTP
+                  - FEDNOW
+      responses:
+        '200':
+          description: Created
+  /realtime-transfers/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Realtime Transfers
+      summary: Retrieve a realtime transfer
+      operationId: getRealtimeTransfer
+      responses:
+        '200':
+          description: Realtime transfer
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Column uses HTTP Basic Auth with your API key as the username.

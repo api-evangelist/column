@@ -1,0 +1,133 @@
+openapi: 3.1.0
+info:
+  title: Column Account Numbers Bank Accounts API
+  description: 'Column is a chartered nationally-regulated bank purpose-built for developer
+
+    APIs. The Column API provides programmatic access to entities, bank accounts,
+
+    account numbers, ACH transfers, wire transfers, international wires, realtime
+
+    (RTP/FedNow) transfers, book transfers, check transfers, counterparties,
+
+    events, and webhooks. This best-effort OpenAPI was generated from the public
+
+    documentation at https://docs.column.com/api and does not cover every field
+
+    or sub-resource.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Column
+    url: https://column.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api.column.com
+  description: Column production API
+security:
+- basicAuth: []
+tags:
+- name: Bank Accounts
+paths:
+  /bank-accounts:
+    get:
+      tags:
+      - Bank Accounts
+      summary: List all bank accounts
+      operationId: listBankAccounts
+      parameters:
+      - in: query
+        name: entity_id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bank_accounts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BankAccount'
+    post:
+      tags:
+      - Bank Accounts
+      summary: Create a new bank account
+      operationId: createBankAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountCreate'
+      responses:
+        '200':
+          description: Bank account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+  /bank-accounts/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Bank Accounts
+      summary: Retrieve a bank account
+      operationId: getBankAccount
+      responses:
+        '200':
+          description: Bank account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+components:
+  schemas:
+    BankAccountCreate:
+      type: object
+      required:
+      - entity_id
+      properties:
+        entity_id:
+          type: string
+        description:
+          type: string
+        display_name:
+          type: string
+        currency_code:
+          type: string
+          default: USD
+        is_overdraftable:
+          type: boolean
+        is_interest_bearing:
+          type: boolean
+    BankAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        entity_id:
+          type: string
+        description:
+          type: string
+        currency_code:
+          type: string
+        is_overdraftable:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Column uses HTTP Basic Auth with your API key as the username.

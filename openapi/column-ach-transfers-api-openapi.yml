@@ -1,0 +1,166 @@
+openapi: 3.1.0
+info:
+  title: Column Account Numbers ACH Transfers API
+  description: 'Column is a chartered nationally-regulated bank purpose-built for developer
+
+    APIs. The Column API provides programmatic access to entities, bank accounts,
+
+    account numbers, ACH transfers, wire transfers, international wires, realtime
+
+    (RTP/FedNow) transfers, book transfers, check transfers, counterparties,
+
+    events, and webhooks. This best-effort OpenAPI was generated from the public
+
+    documentation at https://docs.column.com/api and does not cover every field
+
+    or sub-resource.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Column
+    url: https://column.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api.column.com
+  description: Column production API
+security:
+- basicAuth: []
+tags:
+- name: ACH Transfers
+paths:
+  /ach-transfers:
+    get:
+      tags:
+      - ACH Transfers
+      summary: List all ACH transfers
+      operationId: listAchTransfers
+      responses:
+        '200':
+          description: List
+    post:
+      tags:
+      - ACH Transfers
+      summary: Create an ACH transfer
+      operationId: createAchTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AchTransferCreate'
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AchTransfer'
+  /ach-transfers/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - ACH Transfers
+      summary: Retrieve an ACH transfer
+      operationId: getAchTransfer
+      responses:
+        '200':
+          description: Transfer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AchTransfer'
+  /ach-transfers/{id}/cancel:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    post:
+      tags:
+      - ACH Transfers
+      summary: Cancel an ACH transfer
+      operationId: cancelAchTransfer
+      responses:
+        '200':
+          description: Cancelled
+  /ach-transfers/{id}/reverse:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    post:
+      tags:
+      - ACH Transfers
+      summary: Reverse an outgoing ACH transfer
+      operationId: reverseAchTransfer
+      responses:
+        '200':
+          description: Reversed
+components:
+  schemas:
+    AchTransfer:
+      type: object
+      properties:
+        id:
+          type: string
+        bank_account_id:
+          type: string
+        counterparty_id:
+          type: string
+        amount:
+          type: integer
+        currency_code:
+          type: string
+        type:
+          type: string
+          enum:
+          - CREDIT
+          - DEBIT
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    AchTransferCreate:
+      type: object
+      required:
+      - bank_account_id
+      - counterparty_id
+      - amount
+      - currency_code
+      - type
+      properties:
+        bank_account_id:
+          type: string
+        counterparty_id:
+          type: string
+        amount:
+          type: integer
+        currency_code:
+          type: string
+        type:
+          type: string
+          enum:
+          - CREDIT
+          - DEBIT
+        description:
+          type: string
+        allow_overdraft:
+          type: boolean
+        sec_code:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Column uses HTTP Basic Auth with your API key as the username.

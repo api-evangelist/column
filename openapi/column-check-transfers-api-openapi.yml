@@ -1,0 +1,86 @@
+openapi: 3.1.0
+info:
+  title: Column Account Numbers Check Transfers API
+  description: 'Column is a chartered nationally-regulated bank purpose-built for developer
+
+    APIs. The Column API provides programmatic access to entities, bank accounts,
+
+    account numbers, ACH transfers, wire transfers, international wires, realtime
+
+    (RTP/FedNow) transfers, book transfers, check transfers, counterparties,
+
+    events, and webhooks. This best-effort OpenAPI was generated from the public
+
+    documentation at https://docs.column.com/api and does not cover every field
+
+    or sub-resource.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Column
+    url: https://column.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api.column.com
+  description: Column production API
+security:
+- basicAuth: []
+tags:
+- name: Check Transfers
+paths:
+  /check-transfers/issue:
+    post:
+      tags:
+      - Check Transfers
+      summary: Issue a check
+      operationId: issueCheck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bank_account_id:
+                  type: string
+                amount:
+                  type: integer
+                payee_name:
+                  type: string
+                memo:
+                  type: string
+      responses:
+        '200':
+          description: Check issued
+  /check-transfers/deposit:
+    post:
+      tags:
+      - Check Transfers
+      summary: Deposit a check
+      operationId: depositCheck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Deposited
+  /check-transfers:
+    get:
+      tags:
+      - Check Transfers
+      summary: List all check transfers
+      operationId: listCheckTransfers
+      responses:
+        '200':
+          description: List
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Column uses HTTP Basic Auth with your API key as the username.

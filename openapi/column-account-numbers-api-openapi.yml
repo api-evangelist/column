@@ -1,0 +1,104 @@
+openapi: 3.1.0
+info:
+  title: Column Account Numbers API
+  description: 'Column is a chartered nationally-regulated bank purpose-built for developer
+
+    APIs. The Column API provides programmatic access to entities, bank accounts,
+
+    account numbers, ACH transfers, wire transfers, international wires, realtime
+
+    (RTP/FedNow) transfers, book transfers, check transfers, counterparties,
+
+    events, and webhooks. This best-effort OpenAPI was generated from the public
+
+    documentation at https://docs.column.com/api and does not cover every field
+
+    or sub-resource.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Column
+    url: https://column.com
+  license:
+    name: Proprietary
+servers:
+- url: https://api.column.com
+  description: Column production API
+security:
+- basicAuth: []
+tags:
+- name: Account Numbers
+paths:
+  /account-numbers:
+    get:
+      tags:
+      - Account Numbers
+      summary: List account numbers
+      operationId: listAccountNumbers
+      parameters:
+      - in: query
+        name: bank_account_id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags:
+      - Account Numbers
+      summary: Create an account number
+      operationId: createAccountNumber
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bank_account_id:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Created
+  /account-numbers/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Account Numbers
+      summary: Retrieve an account number
+      operationId: getAccountNumber
+      responses:
+        '200':
+          description: Account number
+    patch:
+      tags:
+      - Account Numbers
+      summary: Update an account number
+      operationId: updateAccountNumber
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Updated
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Column uses HTTP Basic Auth with your API key as the username.
