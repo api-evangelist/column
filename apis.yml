@@ -4,7 +4,20 @@ name: Column
 kind: company
 description: Column is a chartered nationally-regulated bank purpose-built for developer APIs. Offers ACH, wires, FedNow,
   checks, BIN sponsorship, and bank-direct ledgering.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/column.png
 tags:
   - Fintech
   - Banking
@@ -15,101 +28,222 @@ created: '2026-05-08'
 modified: '2026-05-30'
 specificationVersion: '0.19'
 apis:
-  - name: Column ACH Transfers API
-    description: Originate and receive ACH transfers with returns and reversal handling.
-    humanURL: https://column.com/docs/api
-    baseURL: https://api.column.com
-    tags:
-    - ACH
-    - Payments
-    properties:
-    - type: Documentation
-      url: https://column.com/docs/api
-  - name: Column Wire Transfers API
-    description: Send domestic wires with drawdowns and return-request workflows.
-    humanURL: https://column.com/docs/api
-    baseURL: https://api.column.com
-    tags:
-    - Wires
-    - Payments
-    properties:
-    - type: Documentation
-      url: https://column.com/docs/api
-  - name: Column International Wires API
-    description: Cross-border wires with FX quoting and amendments.
-    humanURL: https://column.com/docs/api
-    baseURL: https://api.column.com
-    tags:
-    - Wires
-    - FX
-    - Cross-Border
-    properties:
-    - type: Documentation
-      url: https://column.com/docs/api
-  - name: Column Realtime Transfers API
-    description: Instant RTP/FedNow transfers and Request for Payment (RFP).
-    humanURL: https://column.com/docs/api
-    baseURL: https://api.column.com
-    tags:
-    - RTP
-    - FedNow
-    - Instant Payments
-    properties:
-    - type: Documentation
-      url: https://column.com/docs/api
-  - name: Column Book Transfers API
-    description: Internal ledger movements between Column accounts.
-    humanURL: https://column.com/docs/api
-    baseURL: https://api.column.com
-    tags:
-    - Book Transfers
-    properties:
-    - type: Documentation
-      url: https://column.com/docs/api
-  - name: Column Check Services API
-    description: Issue, print, mail and deposit physical checks.
-    humanURL: https://column.com/docs/api
-    baseURL: https://api.column.com
-    tags:
-    - Check
-    - Payments
-    properties:
-    - type: Documentation
-      url: https://column.com/docs/api
-  - name: Column Lending API
-    description: Loan disbursements, payments, sales and reporting.
-    humanURL: https://column.com/docs/api
-    baseURL: https://api.column.com
-    tags:
-    - Lending
-    - Loans
-    properties:
-    - type: Documentation
-      url: https://column.com/docs/api
-  - name: Column Entities & Accounts API
-    description: Person and business entity onboarding plus bank accounts and account numbers.
-    humanURL: https://column.com/docs/api
-    baseURL: https://api.column.com
-    tags:
-    - Accounts
-    - KYC
-    properties:
-    - type: Documentation
-      url: https://column.com/docs/api
-  - name: Column Webhooks
-    description: HMAC-SHA256 signed event callbacks for ACH, wire, international wire (SWIFT), realtime
-      (RTP/FedNow), book transfers, checks, bank accounts, identity verification, loans, and reporting.
-    humanURL: https://docs.column.com/working-with-the-api/events-and-webhooks/
-    baseURL: https://api.column.com
-    tags:
-    - Webhooks
-    - Events
-    - AsyncAPI
-    properties:
-    - type: Documentation
-      url: https://docs.column.com/working-with-the-api/events-and-webhooks/
-    - type: AsyncAPI
-      url: openapi/column-asyncapi.yml
+- name: Column ACH Transfers API
+  description: Originate and receive ACH transfers with returns and reversal handling.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - ACH
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Wire Transfers API
+  description: Send domestic wires with drawdowns and return-request workflows.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Wires
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column International Wires API
+  description: Cross-border wires with FX quoting and amendments.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Wires
+  - FX
+  - Cross-Border
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Realtime Transfers API
+  description: Instant RTP/FedNow transfers and Request for Payment (RFP).
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - RTP
+  - FedNow
+  - Instant Payments
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Book Transfers API
+  description: Internal ledger movements between Column accounts.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Book Transfers
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Check Services API
+  description: Issue, print, mail and deposit physical checks.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Check
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Lending API
+  description: Loan disbursements, payments, sales and reporting.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Lending
+  - Loans
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Entities & Accounts API
+  description: Person and business entity onboarding plus bank accounts and account numbers.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Accounts
+  - KYC
+  properties:
+  - type: Documentation
+    url: https://column.com/docs/api
+- name: Column Webhooks
+  description: >-
+    HMAC-SHA256 signed event callbacks for ACH, wire, international wire (SWIFT), realtime (RTP/FedNow),
+    book transfers, checks, bank accounts, identity verification, loans, and reporting.
+  humanURL: https://docs.column.com/working-with-the-api/events-and-webhooks/
+  baseURL: https://api.column.com
+  tags:
+  - Webhooks
+  - Events
+  - AsyncAPI
+  properties:
+  - type: Documentation
+    url: https://docs.column.com/working-with-the-api/events-and-webhooks/
+  - type: AsyncAPI
+    url: openapi/column-asyncapi.yml
+- aid: column:column-account-numbers-api
+  name: Column Account Numbers API
+  description: The Account Numbers API from Column — 2 operation(s) for account numbers.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Account Numbers
+  properties:
+  - type: OpenAPI
+    url: openapi/column-account-numbers-api-openapi.yml
+- aid: column:column-ach-transfers-api
+  name: Column ACH Transfers API
+  description: The ACH Transfers API from Column — 4 operation(s) for ach transfers.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - ACH Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/column-ach-transfers-api-openapi.yml
+- aid: column:column-bank-accounts-api
+  name: Column Bank Accounts API
+  description: The Bank Accounts API from Column — 2 operation(s) for bank accounts.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Bank Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/column-bank-accounts-api-openapi.yml
+- aid: column:column-book-transfers-api
+  name: Column Book Transfers API
+  description: The Book Transfers API from Column — 2 operation(s) for book transfers.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Book Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/column-book-transfers-api-openapi.yml
+- aid: column:column-check-transfers-api
+  name: Column Check Transfers API
+  description: The Check Transfers API from Column — 3 operation(s) for check transfers.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Check Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/column-check-transfers-api-openapi.yml
+- aid: column:column-counterparties-api
+  name: Column Counterparties API
+  description: The Counterparties API from Column — 2 operation(s) for counterparties.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Counterparties
+  properties:
+  - type: OpenAPI
+    url: openapi/column-counterparties-api-openapi.yml
+- aid: column:column-entities-api
+  name: Column Entities API
+  description: The Entities API from Column — 4 operation(s) for entities.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Entities
+  properties:
+  - type: OpenAPI
+    url: openapi/column-entities-api-openapi.yml
+- aid: column:column-events-api
+  name: Column Events API
+  description: The Events API from Column — 2 operation(s) for events.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/column-events-api-openapi.yml
+- aid: column:column-international-wires-api
+  name: Column International Wires API
+  description: The International Wires API from Column — 2 operation(s) for international wires.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - International Wires
+  properties:
+  - type: OpenAPI
+    url: openapi/column-international-wires-api-openapi.yml
+- aid: column:column-realtime-transfers-api
+  name: Column Realtime Transfers API
+  description: The Realtime Transfers API from Column — 2 operation(s) for realtime transfers.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Realtime Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/column-realtime-transfers-api-openapi.yml
+- aid: column:column-webhooks-api
+  name: Column Webhooks API
+  description: The Webhooks API from Column — 2 operation(s) for webhooks.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/column-webhooks-api-openapi.yml
+- aid: column:column-wire-transfers-api
+  name: Column Wire Transfers API
+  description: The Wire Transfers API from Column — 2 operation(s) for wire transfers.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Wire Transfers
+  properties:
+  - type: OpenAPI
+    url: openapi/column-wire-transfers-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/column-agentic-access.yml
