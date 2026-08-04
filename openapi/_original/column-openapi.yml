@@ -1,0 +1,722 @@
+openapi: 3.1.0
+info:
+  title: Column API
+  description: |
+    Column is a chartered nationally-regulated bank purpose-built for developer
+    APIs. The Column API provides programmatic access to entities, bank accounts,
+    account numbers, ACH transfers, wire transfers, international wires, realtime
+    (RTP/FedNow) transfers, book transfers, check transfers, counterparties,
+    events, and webhooks. This best-effort OpenAPI was generated from the public
+    documentation at https://docs.column.com/api and does not cover every field
+    or sub-resource.
+  version: "1.0.0"
+  contact:
+    name: Column
+    url: https://column.com
+  license:
+    name: Proprietary
+servers:
+  - url: https://api.column.com
+    description: Column production API
+security:
+  - basicAuth: []
+tags:
+  - name: Entities
+  - name: Bank Accounts
+  - name: Account Numbers
+  - name: Counterparties
+  - name: ACH Transfers
+  - name: Wire Transfers
+  - name: International Wires
+  - name: Realtime Transfers
+  - name: Book Transfers
+  - name: Check Transfers
+  - name: Events
+  - name: Webhooks
+paths:
+  /entities/person:
+    post:
+      tags: [Entities]
+      summary: Create a person entity
+      operationId: createPersonEntity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonEntityCreate'
+      responses:
+        '200':
+          description: Entity created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+  /entities/business:
+    post:
+      tags: [Entities]
+      summary: Create a business entity
+      operationId: createBusinessEntity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Entity created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+  /entities:
+    get:
+      tags: [Entities]
+      summary: List all entities
+      operationId: listEntities
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        '200':
+          description: List of entities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entities:
+                    type: array
+                    items: { $ref: '#/components/schemas/Entity' }
+  /entities/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Entities]
+      summary: Retrieve an entity
+      operationId: getEntity
+      responses:
+        '200':
+          description: Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+    patch:
+      tags: [Entities]
+      summary: Update an entity
+      operationId: updateEntity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Updated entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+    delete:
+      tags: [Entities]
+      summary: Delete an entity
+      operationId: deleteEntity
+      responses:
+        '200':
+          description: Deleted
+  /bank-accounts:
+    get:
+      tags: [Bank Accounts]
+      summary: List all bank accounts
+      operationId: listBankAccounts
+      parameters:
+        - in: query
+          name: entity_id
+          schema: { type: string }
+      responses:
+        '200':
+          description: List
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bank_accounts:
+                    type: array
+                    items: { $ref: '#/components/schemas/BankAccount' }
+    post:
+      tags: [Bank Accounts]
+      summary: Create a new bank account
+      operationId: createBankAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountCreate'
+      responses:
+        '200':
+          description: Bank account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+  /bank-accounts/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Bank Accounts]
+      summary: Retrieve a bank account
+      operationId: getBankAccount
+      responses:
+        '200':
+          description: Bank account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+  /account-numbers:
+    get:
+      tags: [Account Numbers]
+      summary: List account numbers
+      operationId: listAccountNumbers
+      parameters:
+        - in: query
+          name: bank_account_id
+          schema: { type: string }
+      responses:
+        '200':
+          description: List
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      tags: [Account Numbers]
+      summary: Create an account number
+      operationId: createAccountNumber
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bank_account_id: { type: string }
+                description: { type: string }
+      responses:
+        '200':
+          description: Created
+  /account-numbers/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Account Numbers]
+      summary: Retrieve an account number
+      operationId: getAccountNumber
+      responses:
+        '200':
+          description: Account number
+    patch:
+      tags: [Account Numbers]
+      summary: Update an account number
+      operationId: updateAccountNumber
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Updated
+  /counterparties:
+    get:
+      tags: [Counterparties]
+      summary: List counterparties
+      operationId: listCounterparties
+      responses:
+        '200':
+          description: List
+    post:
+      tags: [Counterparties]
+      summary: Create a counterparty
+      operationId: createCounterparty
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                routing_number: { type: string }
+                account_number: { type: string }
+                account_type: { type: string }
+                description: { type: string }
+      responses:
+        '200':
+          description: Created
+  /counterparties/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Counterparties]
+      summary: Retrieve a counterparty
+      operationId: getCounterparty
+      responses:
+        '200':
+          description: Counterparty
+    delete:
+      tags: [Counterparties]
+      summary: Delete a counterparty
+      operationId: deleteCounterparty
+      responses:
+        '200':
+          description: Deleted
+  /ach-transfers:
+    get:
+      tags: [ACH Transfers]
+      summary: List all ACH transfers
+      operationId: listAchTransfers
+      responses:
+        '200':
+          description: List
+    post:
+      tags: [ACH Transfers]
+      summary: Create an ACH transfer
+      operationId: createAchTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AchTransferCreate'
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AchTransfer'
+  /ach-transfers/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [ACH Transfers]
+      summary: Retrieve an ACH transfer
+      operationId: getAchTransfer
+      responses:
+        '200':
+          description: Transfer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AchTransfer'
+  /ach-transfers/{id}/cancel:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    post:
+      tags: [ACH Transfers]
+      summary: Cancel an ACH transfer
+      operationId: cancelAchTransfer
+      responses:
+        '200':
+          description: Cancelled
+  /ach-transfers/{id}/reverse:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    post:
+      tags: [ACH Transfers]
+      summary: Reverse an outgoing ACH transfer
+      operationId: reverseAchTransfer
+      responses:
+        '200':
+          description: Reversed
+  /wire-transfers:
+    get:
+      tags: [Wire Transfers]
+      summary: List all wire transfers
+      operationId: listWireTransfers
+      responses:
+        '200':
+          description: List
+    post:
+      tags: [Wire Transfers]
+      summary: Create a wire transfer
+      operationId: createWireTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WireTransferCreate'
+      responses:
+        '200':
+          description: Created
+  /wire-transfers/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Wire Transfers]
+      summary: Retrieve a wire transfer
+      operationId: getWireTransfer
+      responses:
+        '200':
+          description: Wire transfer
+  /international-wire-transfers:
+    get:
+      tags: [International Wires]
+      summary: List international wire transfers
+      operationId: listInternationalWires
+      responses:
+        '200':
+          description: List
+    post:
+      tags: [International Wires]
+      summary: Create an international wire transfer
+      operationId: createInternationalWire
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Created
+  /international-wire-transfers/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [International Wires]
+      summary: Retrieve an international wire transfer
+      operationId: getInternationalWire
+      responses:
+        '200':
+          description: Wire transfer
+  /realtime-transfers:
+    get:
+      tags: [Realtime Transfers]
+      summary: List realtime transfers
+      operationId: listRealtimeTransfers
+      responses:
+        '200':
+          description: List
+    post:
+      tags: [Realtime Transfers]
+      summary: Create a realtime transfer
+      operationId: createRealtimeTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bank_account_id: { type: string }
+                counterparty_id: { type: string }
+                amount: { type: integer }
+                currency_code: { type: string }
+                description: { type: string }
+                rail: { type: string, enum: [RTP, FEDNOW] }
+      responses:
+        '200':
+          description: Created
+  /realtime-transfers/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Realtime Transfers]
+      summary: Retrieve a realtime transfer
+      operationId: getRealtimeTransfer
+      responses:
+        '200':
+          description: Realtime transfer
+  /book-transfers:
+    get:
+      tags: [Book Transfers]
+      summary: List book transfers
+      operationId: listBookTransfers
+      responses:
+        '200':
+          description: List
+    post:
+      tags: [Book Transfers]
+      summary: Create a book transfer
+      operationId: createBookTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender_bank_account_id: { type: string }
+                receiver_bank_account_id: { type: string }
+                amount: { type: integer }
+                currency_code: { type: string }
+                description: { type: string }
+      responses:
+        '200':
+          description: Created
+  /book-transfers/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Book Transfers]
+      summary: Retrieve a book transfer
+      operationId: getBookTransfer
+      responses:
+        '200':
+          description: Book transfer
+  /check-transfers/issue:
+    post:
+      tags: [Check Transfers]
+      summary: Issue a check
+      operationId: issueCheck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bank_account_id: { type: string }
+                amount: { type: integer }
+                payee_name: { type: string }
+                memo: { type: string }
+      responses:
+        '200':
+          description: Check issued
+  /check-transfers/deposit:
+    post:
+      tags: [Check Transfers]
+      summary: Deposit a check
+      operationId: depositCheck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Deposited
+  /check-transfers:
+    get:
+      tags: [Check Transfers]
+      summary: List all check transfers
+      operationId: listCheckTransfers
+      responses:
+        '200':
+          description: List
+  /events:
+    get:
+      tags: [Events]
+      summary: List events
+      operationId: listEvents
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        '200':
+          description: List
+  /events/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Events]
+      summary: Retrieve an event
+      operationId: getEvent
+      responses:
+        '200':
+          description: Event
+  /webhooks:
+    get:
+      tags: [Webhooks]
+      summary: List webhooks
+      operationId: listWebhooks
+      responses:
+        '200':
+          description: List
+    post:
+      tags: [Webhooks]
+      summary: Create a webhook
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url: { type: string, format: uri }
+                enabled_events:
+                  type: array
+                  items: { type: string }
+      responses:
+        '200':
+          description: Created
+  /webhooks/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: string }
+    get:
+      tags: [Webhooks]
+      summary: Retrieve a webhook
+      operationId: getWebhook
+      responses:
+        '200':
+          description: Webhook
+    patch:
+      tags: [Webhooks]
+      summary: Update a webhook
+      operationId: updateWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Updated
+    delete:
+      tags: [Webhooks]
+      summary: Delete a webhook
+      operationId: deleteWebhook
+      responses:
+        '200':
+          description: Deleted
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Column uses HTTP Basic Auth with your API key as the username.
+  schemas:
+    Entity:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string, enum: [person, business] }
+        is_root: { type: boolean }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    PersonEntityCreate:
+      type: object
+      required: [first_name, last_name, date_of_birth]
+      properties:
+        first_name: { type: string }
+        last_name: { type: string }
+        middle_name: { type: string }
+        date_of_birth: { type: string, format: date }
+        ssn: { type: string }
+        email: { type: string, format: email }
+        phone_number: { type: string }
+        country_of_citizenship: { type: string }
+        address:
+          type: object
+          properties:
+            line_1: { type: string }
+            line_2: { type: string }
+            city: { type: string }
+            state: { type: string }
+            postal_code: { type: string }
+            country_code: { type: string }
+    BankAccount:
+      type: object
+      properties:
+        id: { type: string }
+        entity_id: { type: string }
+        description: { type: string }
+        currency_code: { type: string }
+        is_overdraftable: { type: boolean }
+        created_at: { type: string, format: date-time }
+    BankAccountCreate:
+      type: object
+      required: [entity_id]
+      properties:
+        entity_id: { type: string }
+        description: { type: string }
+        display_name: { type: string }
+        currency_code: { type: string, default: USD }
+        is_overdraftable: { type: boolean }
+        is_interest_bearing: { type: boolean }
+    AchTransfer:
+      type: object
+      properties:
+        id: { type: string }
+        bank_account_id: { type: string }
+        counterparty_id: { type: string }
+        amount: { type: integer }
+        currency_code: { type: string }
+        type: { type: string, enum: [CREDIT, DEBIT] }
+        status: { type: string }
+        created_at: { type: string, format: date-time }
+    AchTransferCreate:
+      type: object
+      required: [bank_account_id, counterparty_id, amount, currency_code, type]
+      properties:
+        bank_account_id: { type: string }
+        counterparty_id: { type: string }
+        amount: { type: integer }
+        currency_code: { type: string }
+        type: { type: string, enum: [CREDIT, DEBIT] }
+        description: { type: string }
+        allow_overdraft: { type: boolean }
+        sec_code: { type: string }
+    WireTransferCreate:
+      type: object
+      required: [bank_account_id, counterparty_id, amount, currency_code]
+      properties:
+        bank_account_id: { type: string }
+        counterparty_id: { type: string }
+        account_number_id: { type: string }
+        amount: { type: integer }
+        currency_code: { type: string }
+        description: { type: string }
+        allow_overdraft: { type: boolean }

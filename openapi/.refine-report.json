@@ -1,0 +1,36 @@
+{
+  "provider": "column",
+  "sources": [
+    "column-account-numbers-api-openapi.yml",
+    "column-ach-transfers-api-openapi.yml",
+    "column-bank-accounts-api-openapi.yml",
+    "column-book-transfers-api-openapi.yml",
+    "column-check-transfers-api-openapi.yml",
+    "column-counterparties-api-openapi.yml",
+    "column-entities-api-openapi.yml",
+    "column-events-api-openapi.yml",
+    "column-international-wires-api-openapi.yml",
+    "column-realtime-transfers-api-openapi.yml",
+    "column-webhooks-api-openapi.yml",
+    "column-wire-transfers-api-openapi.yml"
+  ],
+  "outputs": [
+    "column-account-numbers-api-openapi.yml",
+    "column-ach-transfers-api-openapi.yml",
+    "column-bank-accounts-api-openapi.yml",
+    "column-book-transfers-api-openapi.yml",
+    "column-check-transfers-api-openapi.yml",
+    "column-counterparties-api-openapi.yml",
+    "column-entities-api-openapi.yml",
+    "column-events-api-openapi.yml",
+    "column-international-wires-api-openapi.yml",
+    "column-realtime-transfers-api-openapi.yml",
+    "column-webhooks-api-openapi.yml",
+    "column-wire-transfers-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
