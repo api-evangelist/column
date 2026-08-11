@@ -245,6 +245,20 @@ apis:
   - type: OpenAPI
     url: openapi/column-wire-transfers-api-openapi.yml
 common:
+  - type: Webhooks
+    url: https://docs.column.com/api/webhooks/
+  - type: Sandbox
+    url: https://docs.column.com/guides/sandbox-and-testing
+  - type: APIReference
+    url: https://docs.column.com/api/
+  - type: StatusPage
+    url: https://status.column.com
+  - type: ChangeLog
+    url: https://column.com/changelog/
+  - type: GettingStarted
+    url: https://docs.column.com/guides/getting-started
+  - type: Login
+    url: https://dashboard.column.com/login
   - type: AgenticAccess
     url: agentic-access/column-agentic-access.yml
   - type: DomainSecurity
