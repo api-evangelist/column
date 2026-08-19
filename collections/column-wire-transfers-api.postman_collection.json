@@ -1,0 +1,281 @@
+{
+  "item": [
+    {
+      "id": "75fcfb25-6195-4bec-a074-8babf37ee0fe",
+      "name": "Wire Transfers",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9f2fd276-950b-4139-a652-6469bbc1a35d",
+          "name": "List all wire transfers",
+          "request": {
+            "name": "List all wire transfers",
+            "description": {},
+            "url": {
+              "path": [
+                "wire-transfers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "29c2928f-66bd-4b90-a68a-ae2424b6a502",
+              "name": "List",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wire-transfers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a54c5146-08cd-4ef3-a72d-38f1d58dd873",
+          "name": "Create a wire transfer",
+          "request": {
+            "name": "Create a wire transfer",
+            "description": {},
+            "url": {
+              "path": [
+                "wire-transfers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bank_account_id\": \"<string>\",\n  \"counterparty_id\": \"<string>\",\n  \"amount\": \"<integer>\",\n  \"currency_code\": \"<string>\",\n  \"account_number_id\": \"<string>\",\n  \"description\": \"<string>\",\n  \"allow_overdraft\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8e650196-70d4-4b0c-baf2-2bd98f579d7f",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wire-transfers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"bank_account_id\": \"<string>\",\n  \"counterparty_id\": \"<string>\",\n  \"amount\": \"<integer>\",\n  \"currency_code\": \"<string>\",\n  \"account_number_id\": \"<string>\",\n  \"description\": \"<string>\",\n  \"allow_overdraft\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3448836b-59ff-470e-a7bc-7b62082f61c6",
+          "name": "Retrieve a wire transfer",
+          "request": {
+            "name": "Retrieve a wire transfer",
+            "description": {},
+            "url": {
+              "path": [
+                "wire-transfers",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9644d421-0117-4ed7-9631-5a3e3bcff114",
+              "name": "Wire transfer",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wire-transfers",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.column.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b9651f1f-0af3-4ecc-9fb9-9802e78599fc",
+    "name": "Column Account Numbers Wire Transfers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Column is a chartered nationally-regulated bank purpose-built for developer\nAPIs. The Column API provides programmatic access to entities, bank accounts,\naccount numbers, ACH transfers, wire transfers, international wires, realtime\n(RTP/FedNow) transfers, book transfers, check transfers, counterparties,\nevents, and webhooks. This best-effort OpenAPI was generated from the public\ndocumentation at https://docs.column.com/api and does not cover every field\nor sub-resource.\n\n\nContact Support:\n Name: Column",
+      "type": "text/plain"
+    }
+  }
+}

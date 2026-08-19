@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Column Account Numbers Realtime Transfers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Realtime Transfers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List realtime transfers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/realtime-transfers"
+          },
+          "docs": "List realtime transfers"
+        },
+        {
+          "info": {
+            "name": "Create a realtime transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/realtime-transfers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a realtime transfer"
+        },
+        {
+          "info": {
+            "name": "Retrieve a realtime transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/realtime-transfers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a realtime transfer"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

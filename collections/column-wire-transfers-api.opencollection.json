@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Column Account Numbers Wire Transfers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Wire Transfers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all wire transfers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/wire-transfers"
+          },
+          "docs": "List all wire transfers"
+        },
+        {
+          "info": {
+            "name": "Create a wire transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/wire-transfers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a wire transfer"
+        },
+        {
+          "info": {
+            "name": "Retrieve a wire transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/wire-transfers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a wire transfer"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

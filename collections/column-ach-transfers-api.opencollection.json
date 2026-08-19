@@ -1,0 +1,105 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Column Account Numbers ACH Transfers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "ACH Transfers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all ACH transfers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/ach-transfers"
+          },
+          "docs": "List all ACH transfers"
+        },
+        {
+          "info": {
+            "name": "Create an ACH transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/ach-transfers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an ACH transfer"
+        },
+        {
+          "info": {
+            "name": "Retrieve an ACH transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/ach-transfers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an ACH transfer"
+        },
+        {
+          "info": {
+            "name": "Cancel an ACH transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/ach-transfers/:id/cancel",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Cancel an ACH transfer"
+        },
+        {
+          "info": {
+            "name": "Reverse an outgoing ACH transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/ach-transfers/:id/reverse",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Reverse an outgoing ACH transfer"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

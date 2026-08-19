@@ -1,0 +1,320 @@
+{
+  "item": [
+    {
+      "id": "ab48cc96-b3cd-4fa0-b066-f44c462f2db1",
+      "name": "Bank Accounts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c99fd703-33aa-412f-9e32-9030f73ea91b",
+          "name": "List all bank accounts",
+          "request": {
+            "name": "List all bank accounts",
+            "description": {},
+            "url": {
+              "path": [
+                "bank-accounts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "entity_id",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d25bc337-c5f3-4271-9e75-2d1a99516bf4",
+              "name": "List",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "bank-accounts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "entity_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"bank_accounts\": [\n    {\n      \"id\": \"string\",\n      \"entity_id\": \"string\",\n      \"description\": \"string\",\n      \"currency_code\": \"string\",\n      \"is_overdraftable\": false,\n      \"created_at\": \"1965-07-17T03:57:17.913Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"entity_id\": \"string\",\n      \"description\": \"string\",\n      \"currency_code\": \"string\",\n      \"is_overdraftable\": false,\n      \"created_at\": \"1965-11-17T22:17:06.573Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0b19de29-9076-4f36-83c5-391bd912c012",
+          "name": "Create a new bank account",
+          "request": {
+            "name": "Create a new bank account",
+            "description": {},
+            "url": {
+              "path": [
+                "bank-accounts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"entity_id\": \"<string>\",\n  \"description\": \"<string>\",\n  \"display_name\": \"<string>\",\n  \"currency_code\": \"USD\",\n  \"is_overdraftable\": \"<boolean>\",\n  \"is_interest_bearing\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "30161f34-0896-4e36-8166-f2216e205189",
+              "name": "Bank account created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "bank-accounts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entity_id\": \"<string>\",\n  \"description\": \"<string>\",\n  \"display_name\": \"<string>\",\n  \"currency_code\": \"USD\",\n  \"is_overdraftable\": \"<boolean>\",\n  \"is_interest_bearing\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"entity_id\": \"string\",\n  \"description\": \"string\",\n  \"currency_code\": \"string\",\n  \"is_overdraftable\": false,\n  \"created_at\": \"1964-04-17T10:44:06.049Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4e7847a0-0ca8-4380-b78d-eb45368b7c1a",
+          "name": "Retrieve a bank account",
+          "request": {
+            "name": "Retrieve a bank account",
+            "description": {},
+            "url": {
+              "path": [
+                "bank-accounts",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ff7295e1-bcc4-4552-ab90-01fff28f75e4",
+              "name": "Bank account",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "bank-accounts",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"entity_id\": \"string\",\n  \"description\": \"string\",\n  \"currency_code\": \"string\",\n  \"is_overdraftable\": false,\n  \"created_at\": \"1964-04-17T10:44:06.049Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.column.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f6bf0987-9010-43ff-972c-9f3da13093d0",
+    "name": "Column Account Numbers Bank Accounts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Column is a chartered nationally-regulated bank purpose-built for developer\nAPIs. The Column API provides programmatic access to entities, bank accounts,\naccount numbers, ACH transfers, wire transfers, international wires, realtime\n(RTP/FedNow) transfers, book transfers, check transfers, counterparties,\nevents, and webhooks. This best-effort OpenAPI was generated from the public\ndocumentation at https://docs.column.com/api and does not cover every field\nor sub-resource.\n\n\nContact Support:\n Name: Column",
+      "type": "text/plain"
+    }
+  }
+}

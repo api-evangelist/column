@@ -1,0 +1,98 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Column Account Numbers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account Numbers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List account numbers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/account-numbers",
+            "params": [
+              {
+                "name": "bank_account_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List account numbers"
+        },
+        {
+          "info": {
+            "name": "Create an account number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/account-numbers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an account number"
+        },
+        {
+          "info": {
+            "name": "Retrieve an account number",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/account-numbers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an account number"
+        },
+        {
+          "info": {
+            "name": "Update an account number",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.column.com/account-numbers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an account number"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

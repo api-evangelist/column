@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Column Account Numbers Book Transfers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Book Transfers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List book transfers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/book-transfers"
+          },
+          "docs": "List book transfers"
+        },
+        {
+          "info": {
+            "name": "Create a book transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/book-transfers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a book transfer"
+        },
+        {
+          "info": {
+            "name": "Retrieve a book transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/book-transfers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a book transfer"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,87 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Column Account Numbers Counterparties API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Counterparties",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List counterparties",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/counterparties"
+          },
+          "docs": "List counterparties"
+        },
+        {
+          "info": {
+            "name": "Create a counterparty",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/counterparties",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a counterparty"
+        },
+        {
+          "info": {
+            "name": "Retrieve a counterparty",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/counterparties/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a counterparty"
+        },
+        {
+          "info": {
+            "name": "Delete a counterparty",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.column.com/counterparties/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a counterparty"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

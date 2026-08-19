@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Column Account Numbers International Wires API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "International Wires",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List international wire transfers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/international-wire-transfers"
+          },
+          "docs": "List international wire transfers"
+        },
+        {
+          "info": {
+            "name": "Create an international wire transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.column.com/international-wire-transfers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an international wire transfer"
+        },
+        {
+          "info": {
+            "name": "Retrieve an international wire transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.column.com/international-wire-transfers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an international wire transfer"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
