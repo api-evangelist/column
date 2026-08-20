@@ -33,6 +33,12 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/column.png
 tags:
   - Fintech
   - Banking
+  - Backend-as-a-Service
+  - ACH
+  - Wires
+tags_raw:
+  - Fintech
+  - Banking
   - BaaS
   - ACH
   - Wires
@@ -116,6 +122,9 @@ apis:
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
+  - Account
+  - KYC
+  tags_raw:
   - Accounts
   - KYC
   properties:
@@ -128,6 +137,10 @@ apis:
   humanURL: https://docs.column.com/working-with-the-api/events-and-webhooks/
   baseURL: https://api.column.com
   tags:
+  - Webhook
+  - Event
+  - AsyncAPI
+  tags_raw:
   - Webhooks
   - Events
   - AsyncAPI
@@ -212,6 +225,8 @@ apis:
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -242,6 +257,8 @@ apis:
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
