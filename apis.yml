@@ -274,6 +274,9 @@ apis:
   - type: OpenAPI
     url: openapi/column-wire-transfers-api-openapi.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/column-capability-edges.yml
+    name: Column Business Capability Map
   - type: Webhooks
     url: https://docs.column.com/api/webhooks/
   - type: Sandbox

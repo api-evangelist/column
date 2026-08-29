@@ -1,0 +1,99 @@
+slug: column
+provider: Column
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 9
+edges:
+- tag: International Wires
+  spec_file: column-international-wires-api-openapi.yml
+  capability_id: BC-1340.40
+  capability_id_l1: BC-1340
+  capability_name: Cross-Border Payment Management
+  confidence: 0.9
+  evidence: POST /international-wire-transfers  createInternationalWire  Create an international wire
+    transfer
+  reason: Explicitly international wire transfers — cross-border payment management.
+- tag: Realtime Transfers
+  spec_file: column-realtime-transfers-api-openapi.yml
+  capability_id: BC-1340.50
+  capability_id_l1: BC-1340
+  capability_name: Real-Time Payment Management
+  confidence: 0.9
+  evidence: POST /realtime-transfers  createRealtimeTransfer  Create a realtime transfer
+  reason: Vendor description names RTP/FedNow realtime transfers, matching Real-Time Payment Management.
+- tag: ACH Transfers
+  spec_file: column-ach-transfers-api-openapi.yml
+  capability_id: BC-1340.30
+  capability_id_l1: BC-1340
+  capability_name: Clearing & Settlement Management
+  confidence: 0.85
+  evidence: POST /ach-transfers  createAchTransfer  Create an ACH transfer; POST /ach-transfers/{id}/reverse  Reverse
+    an outgoing ACH transfer
+  reason: ACH is a domestic clearing rail; operations initiate, cancel and reverse ACH transfers, matching
+    Clearing & Settlement Management (ACH). Payment initiation is also plausible, hence 0.85 rather than
+    higher.
+- tag: Bank Accounts
+  spec_file: column-bank-accounts-api-openapi.yml
+  capability_id: BC-1330.10
+  capability_id_l1: BC-1330
+  capability_name: Deposit Account Management
+  confidence: 0.85
+  evidence: POST /bank-accounts  createBankAccount  Create a new bank account
+  reason: Vendor is a chartered bank; the operations open and retrieve deposit bank accounts, which is
+    Deposit Account Management.
+- tag: Check Transfers
+  spec_file: column-check-transfers-api-openapi.yml
+  capability_id: BC-1340.20
+  capability_id_l1: BC-1340
+  capability_name: Payment Processing Management
+  confidence: 0.8
+  evidence: POST /check-transfers/issue  issueCheck  Issue a check; POST /check-transfers/deposit  depositCheck  Deposit
+    a check
+  reason: Issuing and depositing checks is payment instrument processing by the bank; clearly within Payments
+    & Card Management.
+- tag: Wire Transfers
+  spec_file: column-wire-transfers-api-openapi.yml
+  capability_id: BC-1340.20
+  capability_id_l1: BC-1340
+  capability_name: Payment Processing Management
+  confidence: 0.8
+  evidence: POST /wire-transfers  createWireTransfer  Create a wire transfer
+  reason: Domestic wire transfer creation and retrieval is payment initiation/processing on a bank rail;
+    sub-capability between initiation and processing is somewhat ambiguous.
+- tag: Book Transfers
+  spec_file: column-book-transfers-api-openapi.yml
+  capability_id: BC-1340.20
+  capability_id_l1: BC-1340
+  capability_name: Payment Processing Management
+  confidence: 0.75
+  evidence: POST /book-transfers  createBookTransfer  Create a book transfer
+  reason: Internal ledger transfers between accounts at the bank — payment processing/movement of funds.
+    No external rail, so Processing rather than Clearing.
+- tag: Account Numbers
+  spec_file: column-account-numbers-api-openapi.yml
+  capability_id: BC-1330.10
+  capability_id_l1: BC-1330
+  capability_name: Deposit Account Management
+  confidence: 0.7
+  evidence: POST /account-numbers  createAccountNumber  Create an account number
+  reason: Issuing and maintaining account numbers on bank accounts at a chartered bank is deposit account
+    administration; thin context so moderate confidence.
+- tag: Entities
+  spec_file: column-entities-api-openapi.yml
+  capability_id: BC-1300.10
+  capability_id_l1: BC-1300
+  capability_name: Customer Onboarding Management
+  confidence: 0.7
+  evidence: POST /entities/person  createPersonEntity  Create a person entity; POST /entities/business  createBusinessEntity
+  reason: Entities are the bank's customer records (person/business) created prior to account opening
+    — banking customer onboarding/information. Could equally be Customer Information Management, hence
+    0.7.
