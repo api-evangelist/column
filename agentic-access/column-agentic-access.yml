@@ -1,140 +1,25 @@
-generated: '2026-07-15'
+generated: '2026-09-16'
 method: generated
-source: openapi/column-openapi.yml
+source: openapi/column-account-numbers-api-openapi.yml, openapi/column-ach-transfers-api-openapi.yml,
+  openapi/column-bank-accounts-api-openapi.yml, openapi/column-book-transfers-api-openapi.yml,
+  openapi/column-check-transfers-api-openapi.yml, openapi/column-counterparties-api-openapi.yml,
+  openapi/column-entities-api-openapi.yml, openapi/column-events-api-openapi.yml, openapi/column-international-wires-api-openapi.yml,
+  openapi/column-realtime-transfers-api-openapi.yml, openapi/column-webhooks-api-openapi.yml,
+  openapi/column-wire-transfers-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 44
   by_action_class:
-    acting: 21
     connected: 23
+    acting: 21
   by_consequence:
-    write: 12
     read: 23
+    write: 12
     physical: 9
   human_in_the_loop_required: 0
 operations:
-- path: /entities/person
-  method: post
-  operationId: createPersonEntity
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /entities/business
-  method: post
-  operationId: createBusinessEntity
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /entities
-  method: get
-  operationId: listEntities
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /entities/{id}
-  method: get
-  operationId: getEntity
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /entities/{id}
-  method: patch
-  operationId: updateEntity
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /entities/{id}
-  method: delete
-  operationId: deleteEntity
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /bank-accounts
-  method: get
-  operationId: listBankAccounts
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /bank-accounts
-  method: post
-  operationId: createBankAccount
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /bank-accounts/{id}
-  method: get
-  operationId: getBankAccount
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /account-numbers
   method: get
   operationId: listAccountNumbers
@@ -174,58 +59,6 @@ operations:
 - path: /account-numbers/{id}
   method: patch
   operationId: updateAccountNumber
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /counterparties
-  method: get
-  operationId: listCounterparties
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /counterparties
-  method: post
-  operationId: createCounterparty
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /counterparties/{id}
-  method: get
-  operationId: getCounterparty
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /counterparties/{id}
-  method: delete
-  operationId: deleteCounterparty
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -313,9 +146,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /wire-transfers
+- path: /bank-accounts
   method: get
-  operationId: listWireTransfers
+  operationId: listBankAccounts
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -323,103 +156,25 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /wire-transfers
+- path: /bank-accounts
   method: post
-  operationId: createWireTransfer
+  operationId: createBankAccount
   x-agentic-access:
     action-class: acting
-    consequence: physical
+    consequence: write
     subject: required
     audience: null
     token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
+      max-ttl: 900
     escalation:
       human-in-the-loop: conditional
       triggers:
       - abnormal
       - high-value
     audit: required
-- path: /wire-transfers/{id}
+- path: /bank-accounts/{id}
   method: get
-  operationId: getWireTransfer
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /international-wire-transfers
-  method: get
-  operationId: listInternationalWires
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /international-wire-transfers
-  method: post
-  operationId: createInternationalWire
-  x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /international-wire-transfers/{id}
-  method: get
-  operationId: getInternationalWire
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /realtime-transfers
-  method: get
-  operationId: listRealtimeTransfers
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /realtime-transfers
-  method: post
-  operationId: createRealtimeTransfer
-  x-agentic-access:
-    action-class: acting
-    consequence: physical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 300
-      exchange: true
-      purpose-required: true
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /realtime-transfers/{id}
-  method: get
-  operationId: getRealtimeTransfer
+  operationId: getBankAccount
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -511,6 +266,142 @@ operations:
     token:
       max-ttl: 3600
     audit: none
+- path: /counterparties
+  method: get
+  operationId: listCounterparties
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /counterparties
+  method: post
+  operationId: createCounterparty
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /counterparties/{id}
+  method: get
+  operationId: getCounterparty
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /counterparties/{id}
+  method: delete
+  operationId: deleteCounterparty
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/person
+  method: post
+  operationId: createPersonEntity
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/business
+  method: post
+  operationId: createBusinessEntity
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities
+  method: get
+  operationId: listEntities
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{id}
+  method: get
+  operationId: getEntity
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{id}
+  method: patch
+  operationId: updateEntity
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/{id}
+  method: delete
+  operationId: deleteEntity
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /events
   method: get
   operationId: listEvents
@@ -524,6 +415,82 @@ operations:
 - path: /events/{id}
   method: get
   operationId: getEvent
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /international-wire-transfers
+  method: get
+  operationId: listInternationalWires
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /international-wire-transfers
+  method: post
+  operationId: createInternationalWire
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /international-wire-transfers/{id}
+  method: get
+  operationId: getInternationalWire
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /realtime-transfers
+  method: get
+  operationId: listRealtimeTransfers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /realtime-transfers
+  method: post
+  operationId: createRealtimeTransfer
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /realtime-transfers/{id}
+  method: get
+  operationId: getRealtimeTransfer
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -599,3 +566,41 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /wire-transfers
+  method: get
+  operationId: listWireTransfers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /wire-transfers
+  method: post
+  operationId: createWireTransfer
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /wire-transfers/{id}
+  method: get
+  operationId: getWireTransfer
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
