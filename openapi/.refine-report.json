@@ -1,22 +1,11 @@
 {
   "provider": "column",
   "sources": [
-    "column-account-numbers-api-openapi.yml",
-    "column-ach-transfers-api-openapi.yml",
-    "column-bank-accounts-api-openapi.yml",
-    "column-book-transfers-api-openapi.yml",
-    "column-check-transfers-api-openapi.yml",
-    "column-counterparties-api-openapi.yml",
-    "column-entities-api-openapi.yml",
-    "column-events-api-openapi.yml",
-    "column-international-wires-api-openapi.yml",
-    "column-realtime-transfers-api-openapi.yml",
-    "column-webhooks-api-openapi.yml",
-    "column-wire-transfers-api-openapi.yml"
+    "_original/column-openapi.yml"
   ],
   "outputs": [
-    "column-account-numbers-api-openapi.yml",
     "column-ach-transfers-api-openapi.yml",
+    "column-account-numbers-api-openapi.yml",
     "column-bank-accounts-api-openapi.yml",
     "column-book-transfers-api-openapi.yml",
     "column-check-transfers-api-openapi.yml",
@@ -31,6 +20,23 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "column-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "column-account-numbers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-ach-transfers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-bank-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-book-transfers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-check-transfers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-counterparties-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-entities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-international-wires-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-realtime-transfers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "column-wire-transfers-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
