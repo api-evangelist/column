@@ -34,15 +34,17 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/column.png
 tags:
   - Fintech
   - Banking
-  - Backend-as-a-Service
+  - Banking as a Service
   - ACH
   - Wires
+  - Embedded Finance
 tags_raw:
   - Fintech
   - Banking
-  - BaaS
+  - Banking as a Service
   - ACH
   - Wires
+  - Embedded Finance
 created: '2026-05-08'
 modified: '2026-05-30'
 specificationVersion: '0.23'

@@ -106,29 +106,6 @@ paths:
           description: Reversed
 components:
   schemas:
-    AchTransfer:
-      type: object
-      properties:
-        id:
-          type: string
-        bank_account_id:
-          type: string
-        counterparty_id:
-          type: string
-        amount:
-          type: integer
-        currency_code:
-          type: string
-        type:
-          type: string
-          enum:
-          - CREDIT
-          - DEBIT
-        status:
-          type: string
-        created_at:
-          type: string
-          format: date-time
     AchTransferCreate:
       type: object
       required:
@@ -157,6 +134,29 @@ components:
           type: boolean
         sec_code:
           type: string
+    AchTransfer:
+      type: object
+      properties:
+        id:
+          type: string
+        bank_account_id:
+          type: string
+        counterparty_id:
+          type: string
+        amount:
+          type: integer
+        currency_code:
+          type: string
+        type:
+          type: string
+          enum:
+          - CREDIT
+          - DEBIT
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
   securitySchemes:
     basicAuth:
       type: http
