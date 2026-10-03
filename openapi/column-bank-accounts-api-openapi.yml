@@ -90,6 +90,22 @@ paths:
                 $ref: '#/components/schemas/BankAccount'
 components:
   schemas:
+    BankAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        entity_id:
+          type: string
+        description:
+          type: string
+        currency_code:
+          type: string
+        is_overdraftable:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
     BankAccountCreate:
       type: object
       required:
@@ -108,22 +124,6 @@ components:
           type: boolean
         is_interest_bearing:
           type: boolean
-    BankAccount:
-      type: object
-      properties:
-        id:
-          type: string
-        entity_id:
-          type: string
-        description:
-          type: string
-        currency_code:
-          type: string
-        is_overdraftable:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
   securitySchemes:
     basicAuth:
       type: http
