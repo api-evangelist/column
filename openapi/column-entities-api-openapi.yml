@@ -136,24 +136,6 @@ paths:
           description: Deleted
 components:
   schemas:
-    Entity:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum:
-          - person
-          - business
-        is_root:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
     PersonEntityCreate:
       type: object
       required:
@@ -194,6 +176,24 @@ components:
               type: string
             country_code:
               type: string
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - person
+          - business
+        is_root:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
   securitySchemes:
     basicAuth:
       type: http
