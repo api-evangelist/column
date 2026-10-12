@@ -1,5 +1,5 @@
 generated: '2026-10-12'
-method: searched
+method: none
 source:
 - https://zapier.com/apps/column/integrations
 - https://n8n.io/integrations/column/
