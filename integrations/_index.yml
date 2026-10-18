@@ -27,5 +27,5 @@
     - connectors/applications/column
     vendor_link: https://column.com/
     builder: Fivetran
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
