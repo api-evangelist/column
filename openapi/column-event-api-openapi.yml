@@ -1,0 +1,264 @@
+openapi: 3.2.0
+info:
+  title: Column Event API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: Event
+paths:
+  /events:
+    get:
+      description: Lists all events, inclusive of events sent via webhooks.
+      operationId: Event_ListEvents
+      parameters:
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter events by related object IDs.
+        in: query
+        name: object_ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter events by type.
+        in: query
+        name: types
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEventsResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all events
+      tags:
+      - Event
+  /events/{event_id}:
+    get:
+      description: Retrieve a single event by its ID.
+      operationId: Event_GetEvent
+      parameters:
+      - in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get an event
+      tags:
+      - Event
+  /events/webhook:
+    get:
+      description: Lists just the events that resulted in webhooks. Useful for reconciling webhooks.
+      operationId: Event_ListWebhookEvents
+      parameters:
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter events by related object IDs.
+        in: query
+        name: object_ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter events by type.
+        in: query
+        name: types
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEventsResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all webhook events
+      tags:
+      - Event
+components:
+  schemas:
+    Event:
+      description: The event object is a snapshot of a particular data object (ACH, wire, book, return..etc) in time. An event object will be created each time a data object is created, or changes state. For example, you can use events to track state changes of a particular transfer over time - like an ACH transfer that has been initiated, submitted, settled, or returned.
+      properties:
+        created_at:
+          description: The timestamp at which the event was emitted
+          format: date-time
+          type: string
+        data:
+          description: The object instance that triggered the event to be emitted. For example, on an ach.* event, this will be the ACH object.
+          type: object
+        id:
+          description: The unique ID of the object
+          type: string
+        type:
+          description: The type of event which was emitted. See Events and Webhooks for more information.
+          type: string
+      required:
+      - id
+      - created_at
+      - type
+      - data
+      type: object
+    ListEventsResponse:
+      properties:
+        events:
+          description: The list of events matching the request.
+          items:
+            $ref: '#/components/schemas/Event'
+          type: array
+        has_more:
+          description: A flag for use in pagination. Tells whether or not there are more elements available to list after this page. If `false`, this page is the end of the list and there's no more records after it.
+          type: boolean
+      required:
+      - events
+      - has_more
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

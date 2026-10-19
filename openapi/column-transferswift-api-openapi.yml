@@ -1,0 +1,1686 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer Swift API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferSwift
+paths:
+  /transfers/international-wire:
+    get:
+      description: Retrieve all international wire transfers under your platform.
+      operationId: TransferSwift_ListTransfers
+      parameters:
+      - description: Filter international wire transfers by bank account ID.
+        in: query
+        name: bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSwiftTransfersResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all international wire transfers
+      tags:
+      - TransferSwift
+    post:
+      description: Create an international wire transfer between a Column account and a counterparty. Transfer status can be tracked via the Tracking API.
+      operationId: TransferSwift_CreateTransfer
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInternationalWireTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwiftTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create an international wire transfer
+      tags:
+      - TransferSwift
+  /transfers/international-wire/{swift_transfer_id}:
+    get:
+      description: Retrieve a single international wire transfer by its ID.
+      operationId: TransferSwift_GetTransfer
+      parameters:
+      - in: path
+        name: swift_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwiftTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get international wire transfer
+      tags:
+      - TransferSwift
+  /transfers/international-wire/{swift_transfer_id}/amendment:
+    post:
+      description: 'Create an amendment for an international wire transfer that has been delivered. Amendments can only be created for outgoing transfers in specific statuses and only one amendment per transfer is allowed.
+
+        **Amendment Eligibility Requirements**: - Only **outgoing transfers** can be amended - Transfer must be in `initiated`, `submitted`, `delivered`, `settled`, or `completed` status - Only **one amendment per transfer** is allowed'
+      operationId: TransferSwift_CreateAmendment
+      parameters:
+      - in: path
+        name: swift_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAmendmentRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwiftTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create international wire amendment
+      tags:
+      - TransferSwift
+  /transfers/international-wire/{swift_transfer_id}/cancel:
+    post:
+      description: Send a cancellation request to recall funds from the beneficiary for an outgoing international wire transfer. The beneficiary may approve or reject the cancellation request. Cancellation status can be tracked via the Tracking API.
+      operationId: TransferSwift_CancelTransfer
+      parameters:
+      - in: path
+        name: swift_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelInternationalWireRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwiftTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Cancel an outgoing international wire
+      tags:
+      - TransferSwift
+  /transfers/international-wire/{swift_transfer_id}/clear:
+    post:
+      description: 'Release the hold on an international wire in a `hold` state. For an outgoing wire this sends it: the held funds are debited directly from the holding balance and never pass back through the available balance, and an FX transfer fails with `fx_quote_expired` if the hold outlived the quote booked at creation -- cancel the transfer instead. For an incoming wire this releases the held credit into the beneficiary''s available balance and completes the transfer, firing the standard completed event.'
+      operationId: TransferSwift_ClearHeldTransfer
+      parameters:
+      - in: path
+        name: swift_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwiftTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Clear a held international wire transfer
+      tags:
+      - TransferSwift
+  /transfers/international-wire/{swift_transfer_id}/hold-cancel:
+    post:
+      description: Abort an international wire in a `hold` state. The held funds return to the available balance and the wire is never sent. Distinct from a cancellation request, which recalls a wire that has already been sent.
+      operationId: TransferSwift_CancelHeldTransfer
+      parameters:
+      - in: path
+        name: swift_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwiftTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Cancel a held international wire transfer
+      tags:
+      - TransferSwift
+  /transfers/international-wire/{swift_transfer_id}/return:
+    post:
+      description: Return an incoming international wire transfer to the originator. Return status can be tracked via the Tracking API.
+      operationId: TransferSwift_ReturnTransfer
+      parameters:
+      - in: path
+        name: swift_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReturnInternationalWireRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwiftTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Return an incoming international wire
+      tags:
+      - TransferSwift
+  /transfers/international-wire/{swift_transfer_id}/tracking:
+    get:
+      description: Retrieve tracking information for an international wire transfer.
+      operationId: TransferSwift_TrackTransfer
+      parameters:
+      - in: path
+        name: swift_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwiftTracking'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Track an international wire transfer
+      tags:
+      - TransferSwift
+  /transfers/international-wire/fx-rate:
+    post:
+      description: Request a foreign exchange quote to exchange USD to other currencies for international wire transfers. Quotes are not booked until they are used in transfer requests.
+      operationId: TransferSwift_QueryFXQuote
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryFXQuoteRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FXQuote'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Request a foreign exchange quote
+      tags:
+      - TransferSwift
+  /transfers/international-wire/fx-rate-sheet:
+    get:
+      description: Retrieve the FX rate sheet for all foreign currencies that Column supports.
+      operationId: TransferSwift_QueryFXRateSheet
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FXRateSheet'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get FX rate sheet
+      tags:
+      - TransferSwift
+  /transfers/international-wire/fx-rate/{fx_quote_id}:
+    get:
+      description: Retrieve a single foreign exchange quote by its ID.
+      operationId: TransferSwift_GetFXQuote
+      parameters:
+      - in: path
+        name: fx_quote_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FXQuote'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a foreign exchange quote
+      tags:
+      - TransferSwift
+  /transfers/international-wire/fx-rate/{fx_quote_id}/book:
+    post:
+      description: Book a single foreign exchange quote by its ID. If the quote has already been booked before, it will be returned.
+      operationId: TransferSwift_BookFXQuote
+      parameters:
+      - in: path
+        name: fx_quote_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FXQuote'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Book a foreign exchange quote
+      tags:
+      - TransferSwift
+      x-callouts:
+      - body: A FX quote should be booked only with the intention of completing a transfer. If you do not intend to use a booked FX quote, it should be canceled as soon as possible. You may incur costs associated with canceling booked FX quotes given FX rate fluctuations.
+        variant: warning
+  /transfers/international-wire/fx-rate/{fx_quote_id}/cancel:
+    post:
+      description: Cancel a single foreign exchange quote by its ID. If the quote has already been used by an outgoing transfer, it cannot be canceled. If the quote has already been canceled before, it will be returned.
+      operationId: TransferSwift_CancelFXQuote
+      parameters:
+      - in: path
+        name: fx_quote_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FXQuote'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Cancel a foreign exchange quote
+      tags:
+      - TransferSwift
+      x-callouts:
+      - body: If you do not intend to use a booked FX quote, it should be canceled as soon as possible. You may incur costs associated with canceling booked FX quotes given FX rate fluctuations.
+        variant: warning
+components:
+  schemas:
+    ReturnInternationalWireRequest:
+      properties:
+        message_to_originator_bank:
+          description: Message to include with the return
+          type: string
+        return_reason:
+          description: 'The reason for returning the transfer. Possible values: `incorrect_beneficiary_account`, `beneficiary_account_blocked`, `incorrect_amount`, `beneficiary_mismatch`, `refused_by_beneficiary`, `cancellation_requested`, `fraud`, `compliance_rejected`, `missing_originator_data`.'
+          type: string
+      type: object
+    QueryFXQuoteRequest:
+      properties:
+        book_directly:
+          description: If `true`, the quote will be booked immediately upon creation.
+          type: boolean
+        buy_amount:
+          description: Amount to buy in the smallest unit of the buy currency.
+          format: int64
+          type: integer
+        buy_currency_code:
+          description: The three-letter ISO 4217 currency code of the currency to buy.
+          type: string
+        fx_fee_bps:
+          description: Foreign exchange fee in basis points.
+          type:
+          - number
+          - 'null'
+        rate_date:
+          description: 'The calendar date to use for the exchange rate. Format: `YYYY-MM-DD`. If not provided, today''s rate is used.'
+          format: date
+          type:
+          - string
+          - 'null'
+      required:
+      - buy_amount
+      - buy_currency_code
+      - rate_date
+      - book_directly
+      - fx_fee_bps
+      type: object
+    CancelInternationalWireRequest:
+      properties:
+        cancellation_reason:
+          description: 'The reason for canceling the transfer. Possible values: `incorrect_amount`, `incorrect_currency`, `requested_by_originator`, `duplicate`, `fraud`, `tech_failure`, `payment_not_justified`.'
+          type: string
+      type: object
+    FXRateSheet:
+      description: The foreign exchange rate sheet object includes FX rates for all foreign currencies that Column supports. This rate sheet is informational only and should be used to display FX rates to your customers. You can read about more about international wires and creating FX quotes here.
+      properties:
+        data:
+          description: FX rates by currency pair
+          items:
+            $ref: '#/components/schemas/FXRate'
+          type: array
+        fx_rate_margin_bps:
+          description: Platform FX rate margin in basis points
+          type: integer
+        supported_currencies:
+          description: Number of supported currency pairs
+          type: integer
+      required:
+      - fx_rate_margin_bps
+      - supported_currencies
+      - data
+      type: object
+    FXRate:
+      description: The market rate object represents current market rates published by the New York Fed on each business day. They are used as the default pivot rates for various interest-bearing products.
+      properties:
+        buy_currency_code:
+          description: Buy currency ISO code
+          type: string
+        rate:
+          description: Effective exchange rate including platform margin
+          type: string
+        rate_without_margin:
+          description: Effective exchange rate without platform margin
+          type: string
+        sell_currency_code:
+          description: Sell currency ISO code
+          type: string
+        updated_at:
+          description: Time the FX rate was last updated
+          format: date-time
+          type: string
+      required:
+      - updated_at
+      - sell_currency_code
+      - buy_currency_code
+      - rate
+      - rate_without_margin
+      type: object
+    Identity:
+      description: An identity (API key or dashboard user) that performed an action.
+      properties:
+        id:
+          description: The unique ID of the identity (e.g., API key ID or dashboard user ID).
+          type: string
+        name:
+          description: The display name of the identity.
+          type: string
+        type:
+          description: The type of the identity.
+          enum:
+          - API_KEY
+          - DASHBOARD_USER
+          type: string
+      required:
+      - id
+      - name
+      - type
+      type: object
+    CreateCounterparty:
+      properties:
+        account_number:
+          description: The account number for the bank account.
+          type: string
+        account_type:
+          description: The type of the account number. Can be `checking`, `savings`, `general_ledger`, or `loan`.
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Addresses need to adhere to character validation, as addresses are used across multiple payment rails. Characters are validated according to the Fedwire character validation.
+          type:
+          - object
+          - 'null'
+        description:
+          description: 'Description of the counterparty visible only in your platform. Maximum length: `127` characters.'
+          type: string
+        email:
+          description: The email address of the beneficiary.
+          type: string
+        legal_id:
+          description: 'The legal ID (e.g., Tax ID, Cedula Juridica, etc.) of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `127` characters.'
+          type: string
+        legal_type:
+          description: The legal entity type of the beneficiary. Can be `business`, `non_profit`, `individual`, or `sole_proprietor`. This field is recommended for international wire transfers, and required in some countries.
+          type:
+          - string
+          - 'null'
+        local_account_number:
+          description: 'The local account number (e.g. Cuenta Cliente in Costa Rica) in the beneficiary''s bank. This field is recommended for international wire transfers, and required in some countries. Maximum length: 63 characters.'
+          type: string
+        local_bank_code:
+          description: 'The local bank code of the beneficiary''s bank (e.g., India IFSC, Australia BSB, China CNAPS, etc.). This field is recommended for international wire transfers, and required in some countries. Maximum length: `63` characters.'
+          type: string
+        local_bank_country_code:
+          description: The ISO 3166-1 alpha-2 country code of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        local_bank_name:
+          description: Name of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        name:
+          description: The counterparty name who owns the bank account. There is a `127` character limit for this field. For domestic wires, only the first 35 characters are included in the wire message.
+          type: string
+        phone:
+          description: 'The phone number of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `31` characters.'
+          type: string
+        routing_number:
+          description: The routing number of the bank.
+          type: string
+        routing_number_type:
+          description: The type of the routing number. Can be `aba`, `bic`, or `other`.
+          type: string
+        wire_drawdown_allowed:
+          description: Whitelists counterparties for automatic approval of drawdown requests to Column via Fedwire. If `false`, all inbound drawdown requests from this counterparty will require explicit approval.
+          type: boolean
+      required:
+      - routing_number
+      - account_number
+      type: object
+    ApprovalActionRequest:
+      description: Optional request body for the approval decision implied by a clear or hold-cancel endpoint.
+      properties:
+        comment:
+          description: An optional reviewer comment recorded with the approval or rejection when the held transfer requires approval. Ignored for holds that do not require approval.
+          type:
+          - string
+          - 'null'
+      type: object
+    FXQuote:
+      description: The Foreign Exchange Quote object represents the rate quote for an international wire transfer.
+      properties:
+        buy_amount:
+          description: Buy amount in smallest unit
+          format: int64
+          type: integer
+        buy_currency_code:
+          description: Buy currency ISO code
+          type: string
+        created_at:
+          description: Time the FX quote was created
+          format: date-time
+          type: string
+        expired_at:
+          description: Time the FX quote expires
+          format: date-time
+          type: string
+        id:
+          description: The ID of the FX quote
+          type: string
+        rate:
+          description: Effective exchange rate
+          type: string
+        rate_date:
+          description: Calendar date used for the exchange rate
+          format: date
+          type: string
+        sell_amount:
+          description: Sell amount in smallest unit
+          format: int64
+          type: integer
+        sell_currency_code:
+          description: Sell currency ISO code
+          type: string
+        status:
+          description: Current status of the FX quote
+          type: string
+        updated_at:
+          description: Time the FX quote was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - rate
+      - rate_date
+      - expired_at
+      - sell_currency_code
+      - sell_amount
+      - buy_currency_code
+      - buy_amount
+      - status
+      type: object
+    Address:
+      description: A physical address
+      properties:
+        city:
+          description: City name
+          maxLength: 255
+          type: string
+        country_code:
+          description: Two-letter ISO 3166-1 alpha-2 country code (e.g. `US`)
+          maxLength: 3
+          type: string
+        line_1:
+          description: Street address line 1
+          maxLength: 255
+          type: string
+        line_2:
+          description: Street address line 2
+          maxLength: 255
+          type: string
+        postal_code:
+          description: Postal or ZIP code
+          maxLength: 24
+          type: string
+        state:
+          description: State or province
+          maxLength: 255
+          type: string
+      required:
+      - line_1
+      - city
+      - country_code
+      type: object
+    ChargeInfo:
+      properties:
+        agent:
+          description: The agent or institution that applied the charge.
+          type: string
+        amount:
+          description: Amount of the charge in the smallest unit of the currency.
+          format: int64
+          type: integer
+        currency_code:
+          description: The three-letter currency code of the charge.
+          type: string
+      required:
+      - amount
+      - currency_code
+      - agent
+      type: object
+    ListSwiftTransfersResponse:
+      properties:
+        has_more:
+          description: Whether there are more results available after this set.
+          type: boolean
+        transfers:
+          description: List of transfers.
+          items:
+            $ref: '#/components/schemas/SwiftTransfer'
+          type: array
+      required:
+      - transfers
+      - has_more
+      type: object
+    CreateAmendmentRequest:
+      properties:
+        account_number:
+          description: Amended account number
+          type:
+          - string
+          - 'null'
+        account_type:
+          description: Amended account type
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Amended address
+          type:
+          - object
+          - 'null'
+        beneficiary_name:
+          description: Amended beneficiary name
+          type:
+          - string
+          - 'null'
+        email:
+          description: Amended email address
+          type:
+          - string
+          - 'null'
+        intermediary_bank:
+          description: Amended intermediary bank BIC
+          type:
+          - string
+          - 'null'
+        legal_id:
+          description: Amended legal ID
+          type:
+          - string
+          - 'null'
+        message_to_beneficiary_bank:
+          description: Amended message to beneficiary bank
+          type:
+          - string
+          - 'null'
+        phone:
+          description: Amended phone number
+          type:
+          - string
+          - 'null'
+        purpose_codes:
+          description: Amended purpose codes
+          items:
+            type: string
+          type: array
+        remittance_beneficiary_reference:
+          description: Amended remittance beneficiary reference
+          type:
+          - string
+          - 'null'
+        remittance_general_info:
+          description: Amended remittance general info
+          type:
+          - string
+          - 'null'
+      type: object
+    AmendedFields:
+      description: Fields that may be amended on a SWIFT transfer in response to an amendment request.
+      properties:
+        account_number:
+          description: The amended beneficiary account number.
+          type: string
+        account_type:
+          description: The amended beneficiary account type.
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The amended beneficiary address.
+        beneficiary_name:
+          description: The amended beneficiary name.
+          type: string
+        email:
+          description: The amended beneficiary email address.
+          type: string
+        intermediary_bank:
+          description: The amended BIC of the intermediary bank.
+          type: string
+        legal_id:
+          description: The amended beneficiary legal identifier.
+          type: string
+        message_to_beneficiary_bank:
+          description: The amended free-form message to the beneficiary bank.
+          type: string
+        phone:
+          description: The amended beneficiary phone number.
+          type: string
+        purpose_codes:
+          description: The amended list of purpose codes for the transfer.
+          items:
+            type: string
+          type: array
+        remittance_beneficiary_reference:
+          description: The amended remittance reference identifying the beneficiary's invoice or payment.
+          type: string
+        remittance_general_info:
+          description: The amended general remittance information.
+          type: string
+      type: object
+    SwiftTracking:
+      example:
+        cancellation_reason: null
+        cancellation_status: null
+        completed_amount: null
+        completed_at: null
+        completed_currency_code: null
+        events:
+        - cancellation_reason: null
+          cancellation_status: null
+          cancellation_status_reason: null
+          charge_bearer: DEBT
+          charges: null
+          fx_rate: null
+          instructed_amount: 500
+          instructed_currency_code: EUR
+          instructed_fi: null
+          is_cover_transfer_event: false
+          network_reference: 20230821CLNOUS66AXXX0161234567
+          settled_amount: 500
+          settled_currency_code: EUR
+          transfer_status: pending
+          transfer_status_reason: Credit transfer has been forwarded to the next bank that does not provide tracking service
+          type: transfer_initiated
+          updated_at: '2023-08-22T04:01:02Z'
+          updated_by: CLNOUS66XXX
+        - cancellation_reason: null
+          cancellation_status: null
+          cancellation_status_reason: null
+          charge_bearer: DEBT
+          charges: null
+          fx_rate: null
+          instructed_amount: 500
+          instructed_currency_code: EUR
+          instructed_fi: null
+          is_cover_transfer_event: false
+          network_reference: swi00004-2023-08-22T04:03:08.44682.781207Z
+          settled_amount: 500
+          settled_currency_code: EUR
+          transfer_status: pending
+          transfer_status_reason: Credit transfer has been forwarded to the next bank that does not provide tracking service
+          type: transfer_initiated
+          updated_at: '2023-08-22T04:03:33Z'
+          updated_by: CHASUS33XXX
+        id: swft_2F3BYA9aMdHag8iUtsDE8ji0KOK
+        transfer_status: pending
+        transfer_status_reason: Credit transfer has been forwarded to the next bank that does not provide tracking service
+        uetr: d6e4313a-e186-4b21-83a5-43fa4cbaa38e
+        updated_at: '2023-08-22T04:03:33Z'
+      properties:
+        cancellation_reason:
+          description: The reason if the transfer is requested to be canceled. [Read more]({{intl-wire.cancellations}}).
+          type:
+          - string
+          - 'null'
+        cancellation_status:
+          description: 'The latest status of cancellation request ([Read more]({{intl-wire.cancellations}})). Can be one of the following:
+
+            - `pending`: the beneficiary bank is still processing the cancellation request.
+
+            - `accepted`: the beneficiary bank has accepted the cancellation request. Funds have been returned, or will be returned shortly.
+
+            - `rejected`: the beneficiary bank has rejected the cancellation request. Funds won''t be returned.'
+          type:
+          - string
+          - 'null'
+        completed_amount:
+          description: The amount (in the smallest unit of the currency) credited to the beneficiary account by the beneficiary bank. e.g., 1756 means 1.756 in `KWD`, 17.56 in `USD`, or 1756 in `JPY`.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        completed_at:
+          description: The timestamp when the international wire was completed by the beneficiary bank
+          format: date-time
+          type:
+          - string
+          - 'null'
+        completed_currency_code:
+          description: Currency code of the completed amount. The three-letter currency code defined in ISO 4217 (e.g. `USD`).
+          type:
+          - string
+          - 'null'
+        events:
+          description: List of tracking updates of the transfer in ascending order of event timestamp
+          items:
+            $ref: '#/components/schemas/SwiftTrackingEvent'
+          type: array
+        id:
+          description: The ID of this international wire transfer
+          type: string
+        transfer_status:
+          description: 'The latest transfer status in the SWIFT tracking system. Possible values: `pending`, `rejected`, or `completed`.'
+          type:
+          - string
+          - 'null'
+        transfer_status_reason:
+          description: The reason if the transfer is still pending or rejected
+          type:
+          - string
+          - 'null'
+        uetr:
+          description: 'Universally unique ID to provide an end-to-end reference for this transfer. Format: UUID v4.'
+          type: string
+        updated_at:
+          description: The timestamp when the transfer was last updated by the SWIFT tracking system
+          format: date-time
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      - uetr
+      - transfer_status
+      - transfer_status_reason
+      - cancellation_status
+      - cancellation_reason
+      - completed_at
+      - updated_at
+      - completed_amount
+      - completed_currency_code
+      - events
+      type: object
+    SwiftTrackingEvent:
+      properties:
+        cancellation_reason:
+          description: The reason if the transfer is requested to be canceled. [Read more]({{intl-wire.cancellations}}).
+          type:
+          - string
+          - 'null'
+        cancellation_status:
+          description: 'The current status of cancellation request by this event ([Read more]({{intl-wire.cancellations}})). Can be one of the following:
+
+            - `pending`: the beneficiary bank is still processing the cancellation request.
+
+            - `accepted`: the beneficiary bank has accepted the cancellation request. Funds have been returned, or will be returned shortly.
+
+            - `rejected`: the beneficiary bank has rejected the cancellation request. Funds won''t be returned.'
+          type:
+          - string
+          - 'null'
+        cancellation_status_reason:
+          description: The reason if the cancellation request is still pending or rejected
+          type:
+          - string
+          - 'null'
+        charge_bearer:
+          description: 'The charge bearer code. Possible values: `DEBT`, `CRED`, or `SHAR`.'
+          type: string
+        charges:
+          description: List of fees charged by financial institutions involved in this transfer. Charges are only listed if the intermediary and beneficiary banks are part of the SWIFT GPI tracking system.
+          items:
+            $ref: '#/components/schemas/ChargeInfo'
+          type:
+          - array
+          - 'null'
+        fx_rate:
+          description: The foreign exchange rate used for currency exchange by this financial institution
+          type:
+          - string
+          - 'null'
+        instructed_amount:
+          description: Instructed amount (in the smallest unit of the currency) of the transfer. e.g., 1756 means 1.756 in `KWD`, 17.56 in `USD`, or 1756 in `JPY`.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        instructed_currency_code:
+          description: Instructed currency. The three-letter currency code defined in ISO 4217 (e.g. `USD`). [Read more]({{intl-wire.amounts}}).
+          type:
+          - string
+          - 'null'
+        instructed_fi:
+          description: The SWIFT BIC code of the instructed financial institution (i.e., the next FI in the routing)
+          type:
+          - string
+          - 'null'
+        is_cover_transfer_event:
+          description: Indicate if this event is for the cover transfer that settles funds. Cover transfer events will not impact the corresponding customer transfer status.
+          type: boolean
+        network_reference:
+          description: The event ID in the SWIFT tracking system. Unique per transfer.
+          type: string
+        settled_amount:
+          description: Settlement amount (in the smallest unit of the currency) of the transfer. e.g., 1756 means 1.756 in `KWD`, 17.56 in `USD`, or 1756 in `JPY`.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        settled_currency_code:
+          description: Settlement currency. The three-letter currency code defined in ISO 4217 (e.g. `USD`).
+          type:
+          - string
+          - 'null'
+        transfer_status:
+          description: 'The current transfer status in the SWIFT tracking system by this event. Possible values: `pending`, `rejected`, or `completed`.'
+          type:
+          - string
+          - 'null'
+        transfer_status_reason:
+          description: The reason if the transfer is still pending or rejected
+          type:
+          - string
+          - 'null'
+        type:
+          description: 'The tracking event type. Possible values: `fi_transfer_initiated`, `fi_transfer_updated`, `fi_transfer_cancellation_requested`, `fi_transfer_cancellation_responded`, `fi_transfer_cancellation_tracking_updated`, `fi_transfer_return_initiated`, `fi_transfer_return_updated`, `fi_transfer_cover_initiated`, `fi_transfer_cover_updated`, `fi_transfer_cover_return_initiated`, `fi_transfer_cover_return_updated`, `transfer_initiated`, `transfer_updated`, `transfer_cancellation_requested`, `transfer_cancellation_responded`, `transfer_cancellation_tracking_updated`, `transfer_return_initiated`, `transfer_return_updated`, `transfer_cover_initiated`, `transfer_cover_updated`, `transfer_cover_return_initiated`, `transfer_cover_return_updated`.'
+          type: string
+        updated_at:
+          description: The timestamp when the event was last updated by the SWIFT tracking system
+          format: date-time
+          type: string
+        updated_by:
+          description: The SWIFT BIC code of the financial institution posting this status update, or the SWIFT tracking system (TRCKCHZZXXX)
+          type: string
+      required:
+      - network_reference
+      - updated_by
+      - instructed_fi
+      - updated_at
+      - type
+      - transfer_status
+      - transfer_status_reason
+      - is_cover_transfer_event
+      - cancellation_status
+      - cancellation_reason
+      - cancellation_status_reason
+      - instructed_amount
+      - instructed_currency_code
+      - settled_amount
+      - settled_currency_code
+      - fx_rate
+      - charge_bearer
+      - charges
+      type: object
+    CreateInternationalWireTransferRequest:
+      properties:
+        account_number_id:
+          description: ID of the account number sending the transfer. Exactly one of `bank_account_id` or `account_number_id` must be provided.
+          type: string
+        allow_overdraft:
+          description: Whether overdraft is allowed for this transfer
+          type: boolean
+        amount:
+          description: Amount in the smallest unit of the currency. e.g., 1756 means 1.756 in `KWD`, 17.56 in `USD`, or 1756 in `JPY`.
+          format: int64
+          type: integer
+        bank_account_id:
+          description: ID of the bank account sending the transfer. Exactly one of `bank_account_id` or `account_number_id` must be provided.
+          type: string
+        charge_bearer:
+          description: The charge bearer code. Can be `DEBT`, `CRED`, or `SHAR`.
+          type: string
+        counterparty_id:
+          description: ID of the counterparty receiving the transfer
+          type: string
+        currency_code:
+          description: Currency code (ISO 4217). e.g. `EUR`, `GBP`, `JPY`.
+          type: string
+        description:
+          description: A description of the transfer
+          type: string
+        fx_quote_id:
+          description: The ID of an FX quote to use for this transfer
+          type: string
+        hold:
+          description: Create the transfer with the funds held instead of submitting it. The amount is locked out of the available balance and nothing is sent until it is cleared; the settlement path is decided when the transfer is cleared. FX transfers can be held (the quote is booked at creation; clearing fails with fx_quote_expired if the hold outlives it).
+          type: boolean
+        intermediary_bank:
+          description: SWIFT BIC of the intermediary bank
+          type: string
+        message_to_beneficiary_bank:
+          description: Message to the beneficiary bank
+          type: string
+        purpose_code:
+          description: Purpose code for the transfer
+          type: string
+        remittance_info:
+          description: Remittance information for the transfer
+          properties:
+            beneficiary_reference:
+              description: Reference for the beneficiary
+              maxLength: 30
+              type: string
+            general_info:
+              description: General remittance information
+              maxLength: 140
+              type: string
+          type:
+          - object
+          - 'null'
+        ultimate_originator_counterparty:
+          allOf:
+          - $ref: '#/components/schemas/CreateCounterparty'
+          description: Inline ultimate originator counterparty details. See counterparty creation for full field reference.
+        ultimate_originator_counterparty_id:
+          description: ID of the ultimate originator counterparty
+          type: string
+      required:
+      - counterparty_id
+      - amount
+      - currency_code
+      - charge_bearer
+      - allow_overdraft
+      - description
+      - fx_quote_id
+      - remittance_info
+      - message_to_beneficiary_bank
+      - purpose_code
+      - intermediary_bank
+      - ultimate_originator_counterparty_id
+      type: object
+    AmendmentInfo:
+      properties:
+        amended_fields:
+          allOf:
+          - $ref: '#/components/schemas/AmendedFields'
+          description: The fields that were actually amended with their new values.
+          type:
+          - object
+          - 'null'
+        request_summary:
+          description: A summary of the amendment request.
+          type:
+          - string
+          - 'null'
+        requested_at:
+          description: The timestamp when the amendment was requested.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        requested_fields:
+          description: List of field names that were requested to be amended.
+          items:
+            type: string
+          type: array
+        sent_at:
+          description: The timestamp when the amendment was sent.
+          format: date-time
+          type:
+          - string
+          - 'null'
+      required:
+      - requested_at
+      - request_summary
+      - requested_fields
+      - sent_at
+      - amended_fields
+      type: object
+    SwiftTransfer:
+      description: The international wire transfer object represents the current state of a single international wire transfer initiated by or received by Column. International wire transfers are used to send/receive money to/from outside of the United States via the SWIFT network. The international wire transfer object exposes all relevant information about the wire transfer to developers.
+      example:
+        account_number_id: acno_2F37RhDUnWtB4GD9JXQEDYu7YAY
+        allow_overdraft: false
+        amendment_info: null
+        amount: 17965
+        bank_account_id: bacc_2F37RbG3NZAr7Yn2d1i5hITz9O4
+        beneficiary_account_number: '1234567890'
+        beneficiary_address:
+          city: London
+          country_code: GB
+          line_1: 123 Threadneedle Street
+          line_2: ''
+          postal_code: EC2R 8AH
+          state: LND
+        beneficiary_fi: BKENGB20
+        beneficiary_name: Bob Trimble
+        cancellation_reason: null
+        cancellation_status: null
+        charge_bearer: SHAR
+        charges:
+        - agent: CLNOUS66
+          amount: 500
+          currency_code: USD
+        - agent: CHASGBGLT
+          amount: 500
+          currency_code: CNY
+        column_fixed_fee: 2500
+        completed_at: null
+        counterparty_id: cpty_2ESSJPnpof38GraQR5C6EnfFGKw
+        created_at: '2022-09-20T21:55:31Z'
+        currency_code: USD
+        description: SWIFT transfer with CNY
+        end_to_end_id: ''
+        fx_quote_id: fxqt_2F3BY6XCpKQUy5cGCqPgLf3Kit7
+        fx_rate: '6.872100000'
+        id: swft_2F3BYA9aMdHag8iUtsDE8ji0KOK
+        idempotency_key: null
+        initiated_at: '2022-09-20T21:55:31Z'
+        instructed_amount: 123456
+        instructed_currency_code: CNY
+        instruction_id: XF7MBKI09TUNZXIL
+        instruction_to_beneficiary_fi: please contact with the beneficiary before releasing the funds
+        intermediary_fis: []
+        is_incoming: false
+        manual_review_at: null
+        originator_account_number: '366763686659680'
+        originator_address:
+          city: San Francisco
+          country_code: US
+          line_1: 12345 Mission St.
+          line_2: ''
+          postal_code: '94016'
+          state: CA
+        originator_fi: CLNOUS66
+        originator_name: Alice Biden
+        pending_submission_at: '2022-09-20T21:55:32Z'
+        platform_fixed_fee: 1000
+        platform_fx_fee: 500
+        raw_message: null
+        remittance_info:
+          general_info: downpayment for mortgage ID 123546
+        return_reason: null
+        returned_amount: null
+        returned_at: null
+        returned_currency_code: null
+        settled_amount: 123456
+        settled_currency_code: CNY
+        settlement_date: '2022-09-20'
+        status: submitted
+        submitted_at: '2022-09-20T21:59:16Z'
+        uetr: d6e4313a-e186-4b21-83a5-43fa4cbaa38e
+        ultimate_beneficiary_address: null
+        ultimate_beneficiary_name: ''
+        ultimate_originator_address: null
+        ultimate_originator_counterparty_id: ''
+        ultimate_originator_name: ''
+        updated_at: '2022-09-20T22:09:18Z'
+      properties:
+        account_number_id:
+          description: ID of the account number that is sending/receiving the transfer
+          type: string
+        allow_overdraft:
+          description: Allows the account to go negative for an outgoing transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it
+          type: boolean
+        amendment_info:
+          allOf:
+          - $ref: '#/components/schemas/AmendmentInfo'
+          description: Information about any amendments made to this international wire transfer after creation.
+          type:
+          - object
+          - 'null'
+        amount:
+          description: Amount (in the smallest unit of the currency) of the funds that will be debited from the originator account for an outgoing transfer (including all fees), or credited to the beneficiary account for an incoming transfer (after deducting any fees). e.g. $1.75 would be represented by 175.
+          format: int64
+          type: integer
+        bank_account_id:
+          description: ID of the bank account that is sending/receiving the transfer
+          type: string
+        beneficiary_account_number:
+          description: The account number of the beneficiary
+          type: string
+        beneficiary_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The address of the beneficiary
+          type:
+          - object
+          - 'null'
+        beneficiary_fi:
+          description: The SWIFT BIC code or US ABA routing number of the beneficiary's financial institution
+          type: string
+        beneficiary_name:
+          description: The name of the beneficiary
+          type: string
+        canceled_at:
+          description: The timestamp when a held international wire was canceled and the funds returned to the available balance
+          format: date-time
+          type:
+          - string
+          - 'null'
+        cancellation_reason:
+          description: The reason if the transfer is requested to be canceled
+          type:
+          - string
+          - 'null'
+        cancellation_status:
+          description: The status of cancellation request. Possible statuses are `pending`, `accepted`, and `rejected`.
+          type:
+          - string
+          - 'null'
+        charge_bearer:
+          description: The charge bearer code. Can be `DEBT`, `CRED`, or `SHAR`.
+          type: string
+        charges:
+          description: List of fees charged by financial institutions involved in this transfer. Charges are only listed if the intermediary and beneficiary banks are part of the SWIFT GPI tracking system.
+          items:
+            $ref: '#/components/schemas/ChargeInfo'
+          type:
+          - array
+          - 'null'
+        column_fixed_fee:
+          description: The amount (in the smallest unit of `currency_code`) of fixed fee charged by Column for an outgoing transfer. This is not included in the charges field.
+          format: int64
+          type: integer
+        completed_at:
+          description: The timestamp when the international wire was completed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        counterparty_id:
+          description: ID of the counterparty that is receiving/sending the transfer
+          type: string
+        created_at:
+          description: The timestamp when the international wire was created
+          format: date-time
+          type: string
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+          description: The identity (API key or dashboard user) that created the international wire transfer.
+          type:
+          - object
+          - 'null'
+        currency_code:
+          description: Currency of amount. The three-letter currency code defined in ISO 4217 (e.g. `USD`).
+          type: string
+        description:
+          description: The description of the transfer visible only in your platform
+          type:
+          - string
+          - 'null'
+        end_to_end_id:
+          description: Unique ID to unambiguously identify the transaction. This ID is passed on, unchanged, throughout the entire end-to-end chain, and can be used for reconciliation or to link tasks relating to the transaction.
+          type:
+          - string
+          - 'null'
+        fx_quote_id:
+          description: The ID of the foreign exchange quote
+          type: string
+        fx_rate:
+          description: The foreign exchange rate used for currency exchange of this transfer, including your platform FX rate margin markup
+          type: string
+        hold_at:
+          description: The timestamp when the international wire entered the hold state
+          format: date-time
+          type:
+          - string
+          - 'null'
+        id:
+          description: The ID of this international wire transfer
+          type: string
+        idempotency_key:
+          description: The idempotency key specified in the wire transfer
+          type:
+          - string
+          - 'null'
+        initiated_at:
+          description: The timestamp when the international wire was initiated
+          format: date-time
+          type:
+          - string
+          - 'null'
+        instructed_amount:
+          description: Instructed amount (in the smallest unit of the currency) of the transfer. e.g., 1756 means 1.756 in `KWD`, 17.56 in `USD`, or 1756 in `JPY`.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        instructed_currency_code:
+          description: Instructed currency. The three-letter currency code defined in ISO 4217 (e.g. `USD`).
+          type: string
+        instruction_id:
+          description: Unique ID assigned by the sender of this message
+          type:
+          - string
+          - 'null'
+        instruction_to_beneficiary_fi:
+          description: Further information for the beneficiary's financial institution
+          type: string
+        intermediary_fis:
+          description: The SWIFT BIC codes of intermediary financial institutions
+          items:
+            type: string
+          type: array
+        is_incoming:
+          description: Indicates whether the wire transfer was incoming ( `true` or outgoing `false` )
+          type: boolean
+        manual_review_at:
+          description: The timestamp when the international wire went into the manual review state
+          format: date-time
+          type:
+          - string
+          - 'null'
+        originator_account_number:
+          description: The account number of the originator
+          type: string
+        originator_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The address of the originator
+          type:
+          - object
+          - 'null'
+        originator_fi:
+          description: The SWIFT BIC code or US ABA routing number of the originator's financial institution
+          type: string
+        originator_name:
+          description: The name of the originator
+          type: string
+        pending_submission_at:
+          description: The timestamp when the international wire was pending for submission
+          format: date-time
+          type:
+          - string
+          - 'null'
+        platform_fixed_fee:
+          description: The amount (in the smallest unit of the `currency_code`) of fixed fee charged by your platform for an outgoing transfer. This is not included in the charges field.
+          format: int64
+          type: integer
+        platform_fx_fee:
+          description: The amount (in the smallest unit of the `currency_code`) of FX fee charged by your platform for an outgoing FX transfer. This is not included in the charges field.
+          format: int64
+          type: integer
+        raw_message:
+          description: Raw initial transfer message in the Swift MT103 or ISO 20022/MX pacs.008 format. Only populated if it is queried with `expand=raw_message` parameter.
+          type:
+          - string
+          - 'null'
+        remittance_info:
+          description: Remittance information for the transfer, including general info and beneficiary reference.
+          properties:
+            beneficiary_reference:
+              description: Reference for the beneficiary
+              maxLength: 30
+              type: string
+            general_info:
+              description: General remittance information
+              maxLength: 140
+              type: string
+          type:
+          - object
+          - 'null'
+        return_reason:
+          description: The reason if this transfer is returned
+          type:
+          - string
+          - 'null'
+        returned_amount:
+          description: The amount (in the smallest unit of the currency) if this transfer is returned. e.g., 1756 means 1.756 in `KWD`, 17.56 in `USD`, or 1756 in `JPY`.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        returned_at:
+          description: The timestamp when the international wire was returned
+          format: date-time
+          type:
+          - string
+          - 'null'
+        returned_currency_code:
+          description: The currency if this transfer is returned. The three-letter currency code defined in ISO 4217 (e.g. `USD`).
+          type:
+          - string
+          - 'null'
+        reviews:
+          description: List of approval reviews associated with the international wire transfer.
+          items:
+            type: object
+          type: array
+        settled_amount:
+          description: Settlement amount (in the smallest unit of the currency) of the transfer. e.g., 1756 means 1.756 in `KWD`, 17.56 in `USD`, or 1756 in `JPY`.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        settled_currency_code:
+          description: Settlement currency. The three-letter currency code defined in ISO 4217 (e.g. `USD`).
+          type: string
+        settlement_date:
+          description: 'The date (in ET time zone) when funds are sent to the beneficiary bank for an outgoing transfer, or received from the originator bank for an incoming transfer. Format: `YYYY-MM-DD`.'
+          type: string
+        status:
+          description: The current status of the international wire transfer. Possible statuses are `pre_review`, `initiated`, `hold`, `canceled`, `manual_review`, `pending_review`, `pending_submission`, `submitted`, `completed`, `pending_return` and `returned`. `pending_review` indicates an incoming international wire is on hold pending creditor/debtor data repair.
+          enum:
+          - pre_review
+          - hold
+          - canceled
+          - initiated
+          - manual_review
+          - pending_review
+          - pending_submission
+          - submitted
+          - completed
+          - pending_return
+          - returned
+          type: string
+        submitted_at:
+          description: The timestamp when the international wire was submitted to the SWIFT network
+          format: date-time
+          type:
+          - string
+          - 'null'
+        uetr:
+          description: 'Universally unique ID to provide an end-to-end reference for this transfer. Format: UUID v4.'
+          type:
+          - string
+          - 'null'
+        ultimate_beneficiary_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The address of the ultimate beneficiary to which this transfer is due
+          type:
+          - object
+          - 'null'
+        ultimate_beneficiary_name:
+          description: The name of the ultimate beneficiary to which this transfer is due
+          type: string
+        ultimate_originator_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The address of the ultimate party that owes an amount to the (ultimate) beneficiary
+          type:
+          - object
+          - 'null'
+        ultimate_originator_counterparty_id:
+          description: ID of the ultimate originating counterparty that ordered the payment. Only populated for Direct `USD` settlement transfers that include an ultimate originator. Empty for traditional SWIFT transfers or transfers without an ultimate originator.
+          type: string
+        ultimate_originator_name:
+          description: The name of the ultimate party that owes an amount to the (ultimate) beneficiary
+          type: string
+        updated_at:
+          description: The timestamp when the international wire was updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - idempotency_key
+      - bank_account_id
+      - account_number_id
+      - counterparty_id
+      - status
+      - is_incoming
+      - allow_overdraft
+      - description
+      - fx_quote_id
+      - amount
+      - currency_code
+      - instructed_amount
+      - instructed_currency_code
+      - settled_amount
+      - settled_currency_code
+      - return_reason
+      - returned_amount
+      - returned_currency_code
+      - cancellation_reason
+      - cancellation_status
+      - created_at
+      - updated_at
+      - initiated_at
+      - pending_submission_at
+      - submitted_at
+      - completed_at
+      - returned_at
+      - manual_review_at
+      - column_fixed_fee
+      - platform_fixed_fee
+      - platform_fx_fee
+      - settlement_date
+      - instruction_id
+      - end_to_end_id
+      - uetr
+      - fx_rate
+      - charge_bearer
+      - charges
+      - originator_name
+      - originator_address
+      - originator_account_number
+      - originator_fi
+      - ultimate_originator_name
+      - ultimate_originator_address
+      - ultimate_originator_counterparty_id
+      - beneficiary_name
+      - beneficiary_address
+      - beneficiary_account_number
+      - beneficiary_fi
+      - instruction_to_beneficiary_fi
+      - ultimate_beneficiary_name
+      - ultimate_beneficiary_address
+      - remittance_info
+      - intermediary_fis
+      - raw_message
+      - amendment_info
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

@@ -1,0 +1,447 @@
+openapi: 3.2.0
+info:
+  title: Column Lending Payments API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: LendingPayments
+paths:
+  /loans/{loan_id}/apply_collateral:
+    post:
+      description: Apply locked collateral to the principal balance of a secured loan.
+      operationId: LendingPayments_ApplyLoanCollateral
+      parameters:
+      - in: path
+        name: loan_id
+        required: true
+        schema:
+          type: string
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyLoanCollateralRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanPayment'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Apply collateral
+      tags:
+      - LendingPayments
+      x-response-example:
+        account_number_id: acno_2zI1Da9Ro0dvk6HT2gla1H0UTyS
+        amount: 1000
+        bank_account_id: bacc_2zI1DavEbJQbbOIJeExDVJczhqM
+        collection_account_number_id: acno_2zI1Da9Ro0dvk6HT2gla1H0UTyS
+        collection_bank_account_id: bacc_2zI1DavEbJQbbOIJeExDVJczhqM
+        created_at: '2025-08-03T16:05:12Z'
+        currency: USD
+        description: Apply collateral
+        effective_at: '2025-08-03T16:05:12Z'
+        id: lpmt_30mdxZgaXqKELJ5xRVKKj2x3Vrz
+        idempotency_key: collateral-payment-1
+        ignore_retained_balances: false
+        interest_amount: 0
+        is_offline: false
+        loan_id: loan_30mcttnSZBlSahXy6LUFzbeemlk
+        principal_amount: 1000
+        retained_interest_amount: 0
+        retained_principal_amount: 0
+        status: completed
+  /loans/payments:
+    get:
+      description: List all payments under the platform. Filtered results can be retrieved with extra parameters in the query.
+      operationId: LendingPayments_ListLoanPayments
+      parameters:
+      - description: Filter loan payments by bank account ID.
+        in: query
+        name: bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter loan payments by loan ID.
+        in: query
+        name: loan_id
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLoanPayment'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all payments
+      tags:
+      - LendingPayments
+    post:
+      description: Creates a payment for a loan. Read more.
+      operationId: LendingPayments_CreateLoanPayment
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanPaymentRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanPayment'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a payment
+      tags:
+      - LendingPayments
+  /loans/payments/{loan_payment_id}:
+    get:
+      description: Retrieve a single loan payment by its ID.
+      operationId: LendingPayments_GetLoanPayment
+      parameters:
+      - in: path
+        name: loan_payment_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanPayment'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a payment
+      tags:
+      - LendingPayments
+  /loans/payments/{loan_payment_id}/return:
+    post:
+      description: Return a loan payment by its ID.
+      operationId: LendingPayments_ReturnLoanPayment
+      parameters:
+      - in: path
+        name: loan_payment_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanPayment'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Return a payment
+      tags:
+      - LendingPayments
+      x-response-example:
+        account_number_id: acno_2zI1Da9Ro0dvk6HT2gla1H0UTyS
+        amount: 1000
+        bank_account_id: bacc_2zI1DavEbJQbbOIJeExDVJczhqM
+        collection_account_number_id: ''
+        collection_bank_account_id: ''
+        created_at: '2025-08-03T16:05:12Z'
+        currency: USD
+        description: first payment
+        effective_at: '2025-08-03T16:05:12Z'
+        id: lpmt_30mdxZgaXqKELJ5xRVKKj2x3Vrz
+        idempotency_key: ''
+        ignore_retained_balances: false
+        interest_amount: 200
+        is_offline: false
+        loan_id: loan_30mcttnSZBlSahXy6LUFzbeemlk
+        principal_amount: 800
+        retained_interest_amount: 0
+        retained_principal_amount: 0
+        status: returned
+components:
+  schemas:
+    CreateLoanPaymentRequest:
+      properties:
+        account_number_id:
+          description: ID of the source account number. Source account is required if this payment is not offline, or the loan is not completely owned by your platform. Either `bank_account_id` or `account_number_id` must be specified.
+          type: string
+        amount:
+          description: Amount in cents for principal and interest payments. At least one of `amount` or `principal_amount` must be specified.
+          type: integer
+        bank_account_id:
+          description: ID of the source bank account. Source account is required if this payment is not offline, or the loan is not completely owned by your platform. Either `bank_account_id` or `account_number_id` must be specified.
+          type: string
+        currency:
+          description: The currency of the payment. Currently only `USD` is supported.
+          type: string
+        description:
+          description: 'The description of the loan payment. Maximum: `127` characters.'
+          maxLength: 127
+          type: string
+        ignore_retained_balances:
+          description: Indicates whether this payment should be applied to sold balances only. [Read more]({{lending.payment}}).
+          type: boolean
+        is_offline:
+          description: 'Indicates if this payment is an offline payment. Default value: `false`.'
+          type: boolean
+        loan_id:
+          description: The ID of the loan to which the payment is being made. The `principal_outstanding` of the loan will decrease by the payment amount.
+          type: string
+        principal_amount:
+          description: Amount in cents for principal payments. At least one of `amount` or `principal_amount` must be specified.
+          type: integer
+      required:
+      - loan_id
+      - currency
+      type: object
+    ListLoanPayment:
+      properties:
+        has_more:
+          description: Whether additional payments exist beyond this page
+          type: boolean
+        payments:
+          description: List of loan payments
+          items:
+            $ref: '#/components/schemas/LoanPayment'
+          type: array
+      required:
+      - payments
+      - has_more
+      type: object
+    ApplyLoanCollateralRequest:
+      properties:
+        amount:
+          description: Amount of locked collateral to apply to loan principal, in cents.
+          minimum: 1
+          type: integer
+        currency_code:
+          description: Currency of the collateral application. Must match the loan currency.
+          type: string
+        description:
+          description: 'Description of the collateral application. Maximum: `127` characters.'
+          maxLength: 127
+          type: string
+      required:
+      - amount
+      - currency_code
+      type: object
+    LoanPayment:
+      description: A loan payment object represents a repayment made toward a loan. It is associated with one loan object and typically occurs after one or more loan disbursements have been made. Payments can be made by the borrower directly or through a loan servicer. [Read more]({{lending.payment}}).
+      example:
+        account_number_id: acno_2zI1Da9Ro0dvk6HT2gla1H0UTyS
+        amount: 1000
+        bank_account_id: bacc_2zI1DavEbJQbbOIJeExDVJczhqM
+        collection_account_number_id: ''
+        collection_bank_account_id: ''
+        created_at: '2025-08-03T16:05:12Z'
+        currency: USD
+        description: first payment
+        effective_at: '2025-08-03T16:05:12Z'
+        id: lpmt_30mdxZgaXqKELJ5xRVKKj2x3Vrz
+        idempotency_key: ''
+        ignore_retained_balances: false
+        interest_amount: 200
+        is_offline: false
+        loan_id: loan_30mcttnSZBlSahXy6LUFzbeemlk
+        principal_amount: 800
+        retained_interest_amount: 0
+        retained_principal_amount: 0
+        status: completed
+      properties:
+        account_number_id:
+          description: The unique ID of the account to which the payment was made
+          type: string
+        amount:
+          description: Total payment amount in cents
+          type: integer
+        bank_account_id:
+          description: The bank account to which funds are paid back to
+          type: string
+        collection_account_number_id:
+          description: ID of your collections account number
+          type: string
+        collection_bank_account_id:
+          description: ID of your collections account
+          type: string
+        created_at:
+          description: The timestamp the loan payment was created
+          format: date-time
+          type: string
+        currency:
+          description: The currency of the loan. Currently only `USD` is supported.
+          type: string
+        description:
+          description: The description of the loan payment in the Column dashboard
+          type: string
+        effective_at:
+          description: The timestamp the loan payment was marked effective
+          format: date-time
+          type: string
+        id:
+          description: The ID of the loan payment object
+          type: string
+        idempotency_key:
+          description: The idempotency key specified in the loan payment. Returns an empty string `""` when not set.
+          type: string
+        ignore_retained_balances:
+          description: Indicates whether the loan payment was applied to sold balances only. [Read more]({{lending.payment}}).
+          type: boolean
+        interest_amount:
+          description: Total paid interest receivable
+          type: integer
+        is_offline:
+          description: Indicates whether the loan payment was made offline
+          type: boolean
+        loan_id:
+          description: The ID of the loan object the loan payment is associated to
+          type: string
+        principal_amount:
+          description: Amount of the payment applied to the loan principal
+          type: integer
+        retained_interest_amount:
+          description: Paid interest receivable owned by Column
+          type: integer
+        retained_principal_amount:
+          description: Paid principal amount owned by Column
+          type: integer
+        status:
+          description: 'The current status of the loan payment. Possible values: `completed`, or `returned`.'
+          type: string
+      required:
+      - id
+      - idempotency_key
+      - loan_id
+      - description
+      - status
+      - is_offline
+      - ignore_retained_balances
+      - bank_account_id
+      - account_number_id
+      - collection_bank_account_id
+      - collection_account_number_id
+      - created_at
+      - effective_at
+      - currency
+      - amount
+      - principal_amount
+      - interest_amount
+      - retained_interest_amount
+      - retained_principal_amount
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

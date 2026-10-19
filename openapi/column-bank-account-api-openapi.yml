@@ -1,0 +1,909 @@
+openapi: 3.2.0
+info:
+  title: Column Bank Account API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: Bank Account
+paths:
+  /bank-accounts:
+    get:
+      description: List all bank accounts under the platform. Filtered results can be retrieved with extra parameters in the query.
+      operationId: BankAccount_ListBankAccounts
+      parameters:
+      - description: Return results where the balance is greater than this value, in the smallest unit of `currency_code`. When `currency_code` is omitted, the value is interpreted with two decimal digits and applied across all currencies.
+        in: query
+        name: balance.gt
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Return results where the balance is greater than or equal to this value, in the smallest unit of `currency_code`. When `currency_code` is omitted, the value is interpreted with two decimal digits and applied across all currencies.
+        in: query
+        name: balance.gte
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Return results where the balance is less than this value, in the smallest unit of `currency_code`. When `currency_code` is omitted, the value is interpreted with two decimal digits and applied across all currencies.
+        in: query
+        name: balance.lt
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Return results where the balance is less than or equal to this value, in the smallest unit of `currency_code`. When `currency_code` is omitted, the value is interpreted with two decimal digits and applied across all currencies.
+        in: query
+        name: balance.lte
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Filter bank accounts by their three-letter ISO 4217 currency code. When omitted, accounts in all currencies are returned; if `balance.*` filters are also set, their amounts are interpreted with two decimal digits and applied across all currencies, so pass `currency_code` for exact filtering on currencies with other decimal counts.
+        in: query
+        name: currency_code
+        required: false
+        schema:
+          type: string
+      - description: Filter bank accounts by description.
+        in: query
+        name: description
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: List all accounts that belong to the entity with the given `entity_id`.
+        in: query
+        name: entity_id
+        required: false
+        schema:
+          type: string
+      - description: List all accounts that are overdraftable.
+        in: query
+        name: is_overdraftable
+        required: false
+        schema:
+          type: boolean
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: List all bank accounts with the given `overdraft_reserve_account_id`.
+        in: query
+        name: overdraft_reserve_account_id
+        required: false
+        schema:
+          type: string
+      - description: Search query to match against bank accounts.
+        in: query
+        name: query
+        required: false
+        schema:
+          type: string
+      - description: Field to sort results by.
+        in: query
+        name: sort
+        required: false
+        schema:
+          type: string
+      - description: Sort direction. Can be `asc` or `desc`.
+        in: query
+        name: sort_order
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter bank accounts by status. Can be `open`, `closed`, or `frozen`.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - description: Bank account type. Can be `CHECKING`, `OVERDRAFT_RESERVE`, `PROGRAM_RESERVE`, or `NETWORK_SETTLEMENT_ACCOUNT`.
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountList'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all bank accounts
+      tags:
+      - Bank Account
+    post:
+      description: Creates a new bank account under an entity.
+      operationId: BankAccount_CreateBankAccount
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBankAccountRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountWithDetails'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a new bank account
+      tags:
+      - Bank Account
+  /bank-accounts/{bank_account_id}:
+    delete:
+      description: This deletes a bank account.
+      operationId: BankAccount_DeleteBankAccount
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Delete a bank account
+      tags:
+      - Bank Account
+      x-callouts:
+      - body: Bank Accounts can only be deleted when they have a $0 balance.
+        title: Removing accounts
+    get:
+      description: Get a bank account by its ID.
+      operationId: BankAccount_GetBankAccount
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountWithDetails'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a bank account by ID
+      tags:
+      - Bank Account
+    patch:
+      description: Updates a bank account by its ID.
+      operationId: BankAccount_UpdateBankAccount
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBankAccountRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountWithDetails'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Update a bank account
+      tags:
+      - Bank Account
+  /bank-accounts/{bank_account_id}/activities:
+    get:
+      description: List the activity line items on a bank account, newest first. Each line item is one posting to the account, as it would appear on a bank statement, with the account's running balance after it posted. Transfers in a batch that is rolled up on statements, such as a check deposit batch, are combined into one line item per batch per day (UTC). Amounts are in the smallest unit of the account's currency, which the response returns as `currency_code`. Filter by posting time with the `effective_at_*` parameters.
+      operationId: BankAccount_ListBankAccountActivities
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      - description: Return activities where the `settlement_date` field is greater than this value. Cannot be combined with `effective_at_gte`.
+        in: query
+        name: effective_at_gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return activities where the `settlement_date` field is greater than or equal to this value. Cannot be combined with `effective_at_gt`.
+        in: query
+        name: effective_at_gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return activities where the `settlement_date` field is less than this value. Cannot be combined with `effective_at_lte`.
+        in: query
+        name: effective_at_lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return activities where the `settlement_date` field is less than or equal to this value. Cannot be combined with `effective_at_lt`.
+        in: query
+        name: effective_at_lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an `activity_line_item_id` that defines your place in the list. For instance, if you make a list request and receive 20 activities, starting with `lent_2zEuf3oP0xR9sYdZ5oLT6SvXpQa`, your subsequent call can include `ending_before=lent_2zEuf3oP0xR9sYdZ5oLT6SvXpQa` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an `activity_line_item_id` that defines your place in the list. For instance, if you make a list request and receive 20 activities, ending with `lent_2zEuf3oP0xR9sYdZ5oLT6SvXpQa`, your subsequent call can include `starting_after=lent_2zEuf3oP0xR9sYdZ5oLT6SvXpQa` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBankAccountActivitiesResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List bank account activities
+      tags:
+      - Bank Account
+      x-callouts:
+      - body: The bank account activities endpoint is eventually consistent, typically activities within a few seconds are reflected on this endpoint but occasionally it may lag up to a few minutes. Ordering is always guaranteed and activities will never appear out of order.
+        title: Eventual consistency
+      x-response-example:
+        activity_line_items:
+        - activity_line_item_id: lent_2zEuf7tU4aV3wCgD9rPX0XyZaPv
+          amount: 25000
+          bank_account_id: bacc_2YHAXVyuS2xcJW12Buh9zsxV7vC
+          description: Internal transfer
+          running_balance: 125000
+          settlement_date: '2024-01-17T15:04:05Z'
+          transaction_id: book_2zEuf5rS2zT1uAfB7qNV8UwXzOt
+          type: Book
+        - activity_line_item_id: lent_2zEuf6sT3zU2vBfC8qOW9VxYzOu
+          amount: -50000
+          bank_account_id: bacc_2YHAXVyuS2xcJW12Buh9zsxV7vC
+          description: Vendor payment
+          running_balance: 100000
+          settlement_date: '2024-01-16T18:22:41Z'
+          transaction_id: wire_2zEuf4qR1yS0tZeA6pMU7TvWyNs
+          type: Wire
+        currency_code: USD
+        has_more: true
+  /bank-accounts/{bank_account_id}/history:
+    get:
+      description: Get the summary history of a bank account. This endpoint returns a list of summaries, one summary per day, for a single bank account. Only summaries for the latest 366 days are available. You must set your platform reporting time zone in Platform Settings on Dashboard to use this endpoint (read more).
+      operationId: BankAccount_GetBankAccountHistory
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      - description: Inclusive start date for the summary history, in `YYYY-MM-DD` format and the platform's reporting time zone. Must be on or before `to_date`.
+        in: query
+        name: from_date
+        required: true
+        schema:
+          format: date
+          type: string
+      - description: Inclusive end date for the summary history, in `YYYY-MM-DD` format and the platform's reporting time zone. Must be on or after `from_date`.
+        in: query
+        name: to_date
+        required: true
+        schema:
+          format: date
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountSummaryHistory'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get bank account summary history
+      tags:
+      - Bank Account
+  /bank-accounts/{bank_account_id}/owner:
+    post:
+      description: Adds an additional owner to an existing bank account. This enables joint ownership where multiple entities can have ownership rights. The entity must be verified before being added as an owner and must belong to the same platform as the bank account.
+      operationId: BankAccount_AddBankAccountOwner
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddBankAccountOwnerRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountWithDetails'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Add a bank account owner
+      tags:
+      - Bank Account
+  /reporting/customized-bank-account-statement:
+    get:
+      description: Generate a customized bank account statement for a specific bank account and date range. The response is a CSV file download.
+      operationId: BankAccount_ExportBankAccountActivities
+      parameters:
+      - description: The ID of the bank account to generate the statement for.
+        in: query
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      - description: Start date for the statement period, in `YYYY-MM-DD` format.
+        in: query
+        name: from_date
+        required: true
+        schema:
+          type: string
+      - description: End date for the statement period, in `YYYY-MM-DD` format.
+        in: query
+        name: to_date
+        required: true
+        schema:
+          type: string
+      - description: The format of the statement. Currently only `csv` is supported.
+        in: query
+        name: type
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a customized bank account statement
+      tags:
+      - Bank Account
+components:
+  schemas:
+    CreateBankAccountRequest:
+      properties:
+        account_structure_id:
+          description: The account structure ID
+          type: string
+        currency_code:
+          default: USD
+          description: The three-letter ISO 4217 currency code for this bank account. Availability of non-USD currencies depends on your platform configuration. Defaults to `USD` if not set.
+          type: string
+        description:
+          description: 'A name for the bank account (minimum: 3 characters)'
+          type: string
+        display_name:
+          description: The display name for the bank account. Display name is an account nickname used on Column's Dashboard.
+          type: string
+        entity_id:
+          description: The entity ID of the owner
+          type: string
+        fdic_insurance:
+          description: The type of FDIC insurance offered on this account. The default value is `standard`.
+          type: string
+        interest_config_id:
+          description: The ID of interest config for this account. If it is not set, the default interest config of your platform will be used for this account. Please contact our support team for more details.
+          type: string
+        is_interest_bearing:
+          description: Whether your platform needs to accrue and pay interest to this account. Please contact our support team for more details.
+          type: boolean
+        is_overdraftable:
+          description: Whether the account can be overdrafted, must include an `overdraft_reserve_account_id`
+          type: boolean
+        overdraft_reserve_account_id:
+          description: 'The overdraft reserve account that this account is linked to. If `is_overdraftable`: `true` then this field is required.'
+          type: string
+      required:
+      - entity_id
+      type: object
+    ListBankAccountActivitiesResponse:
+      properties:
+        activity_line_items:
+          description: The activity line items on this page, ordered from newest to oldest.
+          items:
+            $ref: '#/components/schemas/ActivityLineItemResponse'
+          type: array
+        currency_code:
+          description: The ISO 4217 currency code of the bank account. Every `amount` and `running_balance` in `activity_line_items` is in the smallest unit of this currency.
+          type: string
+        has_more:
+          description: Whether more activities are available beyond this page.
+          type: boolean
+      required:
+      - activity_line_items
+      - has_more
+      - currency_code
+      type: object
+    AddBankAccountOwnerRequest:
+      properties:
+        entity_id:
+          description: The entity ID to add as owner
+          type: string
+      required:
+      - entity_id
+      type: object
+    ActivityLineItemResponse:
+      description: A single line of activity on a bank account, as it would appear on a bank statement. Amounts are in the smallest unit of the bank account's currency, which the list response returns as `currency_code`; line items do not carry a currency of their own. Transfers in a batch that is rolled up on statements, such as a check deposit batch, appear as one line item per batch per day (UTC) instead of one per transfer, with credits and debits as separate line items.
+      properties:
+        activity_line_item_id:
+          description: The ID of the activity line item, prefixed with `lent_`. Use it as the `starting_after` or `ending_before` cursor to paginate.
+          type: string
+        amount:
+          description: The signed amount of the activity in the smallest unit of the bank account's currency (e.g., cents for `USD`). Credits are positive and debits are negative. For a rolled-up batch, the sum of the batch's transfers that posted that day.
+          format: int64
+          type: integer
+        bank_account_id:
+          description: The ID of the bank account the activity belongs to.
+          type: string
+        description:
+          description: A human-readable description of the activity. For a rolled-up batch that settled across more than one day, it ends with `(partial batch, part settled on M/D/YY)`.
+          type: string
+        running_balance:
+          description: The bank account's balance immediately after the activity posted, in the smallest unit of the bank account's currency (e.g., cents for `USD`).
+          format: int64
+          type: integer
+        settlement_date:
+          description: The time the activity posted to the bank account. For a rolled-up batch, the time the last of the batch's transfers that day posted.
+          format: date-time
+          type: string
+        transaction_id:
+          description: The ID of the transfer that produced the activity. For a rolled-up batch, the ID of the transfer batch (`tbat_…`).
+          type: string
+        type:
+          description: The kind of activity, as shown on bank statements. `ACH Batch`, `Check Deposit Batch`, and `Check Issuance Batch` are rolled-up batches.
+          enum:
+          - Other
+          - ACH
+          - Wire
+          - Check
+          - Book
+          - Realtime
+          - Intl Wire
+          - Overdraft
+          - Loan Disbursement
+          - Loan Payment
+          - Correction
+          - Interest Payout
+          - Administrative
+          - Loan Sale
+          - Letter of Credit
+          - Check Deposit Batch
+          - Stablecoin
+          - Debit Card
+          - ACH Batch
+          - Check Issuance Batch
+          - Local Payment
+          - Loan Collateral
+          - FX Trade
+          type: string
+      required:
+      - activity_line_item_id
+      - settlement_date
+      - type
+      - bank_account_id
+      - transaction_id
+      - description
+      - amount
+      - running_balance
+      type: object
+    BankAccountSummaryHistory:
+      properties:
+        history:
+          description: Summary history entries
+          items:
+            $ref: '#/components/schemas/BankAccountSummary'
+          type: array
+        id:
+          description: The ID of the bank account
+          type: string
+      required:
+      - id
+      - history
+      type: object
+    AccountBalancesWithoutCurrency:
+      properties:
+        available_amount:
+          description: The amount available for immediate use, in the smallest unit of the currency (e.g., cents for `USD`).
+          format: int64
+          type: integer
+        holding_amount:
+          description: The amount on hold and not available for use, in the smallest unit of the currency (e.g., cents for `USD`).
+          format: int64
+          type: integer
+        locked_amount:
+          description: The amount locked due to overdraft coverage, in the smallest unit of the currency (e.g., cents for `USD`).
+          format: int64
+          type: integer
+        pending_amount:
+          description: The amount of pending transactions that have not yet settled, in the smallest unit of the currency (e.g., cents for `USD`).
+          format: int64
+          type: integer
+      type: object
+    BankAccountSummary:
+      properties:
+        available_balance_close:
+          description: Close `available_balance` in the currency's smallest unit at the end of `effective_on` in `time_zone`.
+          type: string
+        available_balance_credit:
+          description: Total credit amount in the currency's smallest unit applied to `available_balance`. Zero or positive.
+          type: string
+        available_balance_debit:
+          description: Total debit amount in the currency's smallest unit applied to `available_balance`. Zero or negative.
+          type: string
+        currency:
+          description: The currency of the balances.
+          type: string
+        effective_on:
+          description: Effective date of the summary.
+          format: date
+          type: string
+        holding_balance_close:
+          description: Close `holding_balance` in the currency's smallest unit at the end of `effective_on` in `time_zone`.
+          type: string
+        holding_balance_credit:
+          description: Total credit amount in the currency's smallest unit applied to `holding_balance`. Zero or positive.
+          type: string
+        holding_balance_debit:
+          description: Total debit amount in the currency's smallest unit applied to `holding_balance`. Zero or negative.
+          type: string
+        locked_balance_close:
+          description: Close `locked_balance` in the currency's smallest unit at the end of `effective_on` in `time_zone`.
+          type: string
+        locked_balance_credit:
+          description: Total credit amount in the currency's smallest unit applied to `locked_balance`. Zero or positive.
+          type: string
+        locked_balance_debit:
+          description: Total debit amount in the currency's smallest unit applied to `locked_balance`. Zero or negative.
+          type: string
+        pending_balance_close:
+          description: Close `pending_balance` in the currency's smallest unit at the end of `effective_on` in `time_zone`.
+          type: string
+        pending_balance_credit:
+          description: Total credit amount in the currency's smallest unit applied to `pending_balance`. Zero or positive.
+          type: string
+        pending_balance_debit:
+          description: Total debit amount in the currency's smallest unit applied to `pending_balance`. Zero or negative.
+          type: string
+        time_zone:
+          description: Time zone of `effective_on` to decide day boundaries. You can set your platform reporting time zone in Platform Settings on Dashboard.
+          type: string
+        transaction_count:
+          description: Total number of transactions on the day of `effective_on`.
+          type: integer
+      required:
+      - effective_on
+      - time_zone
+      - currency
+      - transaction_count
+      - available_balance_credit
+      - available_balance_debit
+      - available_balance_close
+      - pending_balance_credit
+      - pending_balance_debit
+      - pending_balance_close
+      - locked_balance_credit
+      - locked_balance_debit
+      - locked_balance_close
+      - holding_balance_credit
+      - holding_balance_debit
+      - holding_balance_close
+      type: object
+    BankAccountWithDetails:
+      description: A bank account is the object in the Column data model that has the ability to hold, send, and receive funds. Bank accounts are children of entities. An entity can have multiple bank accounts. Bank accounts can have one or multiple account numbers. Read about bank accounts in our data model section for more information.
+      properties:
+        balances:
+          allOf:
+          - $ref: '#/components/schemas/AccountBalancesWithoutCurrency'
+          description: Lists all possible balance amounts for an account represented in the smallest unit of the currency.
+          type:
+          - object
+          - 'null'
+        bic:
+          description: The SWIFT BIC code for this bank account for international wire payments.
+          type: string
+        created_at:
+          description: The timestamp at which the bank account was created.
+          format: date-time
+          type: string
+        currency_code:
+          description: The three-letter ISO 4217 currency code for the account and its balances.
+          type: string
+        default_account_number:
+          description: The externally facing default account number tied to this bank account.
+          type: string
+        default_account_number_id:
+          description: The default account number ID tied to this account.
+          type: string
+        description:
+          description: 'A name for the bank account (minimum: 3 characters)'
+          type: string
+        display_name:
+          description: The display name for the bank account. Display name is an account nickname used on Column's Dashboard.
+          type: string
+        fdic_insurance:
+          description: The type of FDIC insurance offered on this account. The default value is `standard`.
+          type: string
+        id:
+          description: Unique ID for this account.
+          type: string
+        interest_config_id:
+          description: The ID of interest config for this account. If it is not set, the default interest config of your platform will be used for this account. Please contact our support team for more details.
+          type: string
+        is_interest_bearing:
+          description: Whether your platform needs to accrue and pay interest to this account. Please contact our support team for more details.
+          type: boolean
+        is_overdraftable:
+          description: Whether the account can be overdrafted, must include an `overdraft_reserve_account_id`
+          type: boolean
+        overdraft_reserve_account_id:
+          description: 'The overdraft reserve account that this account is linked to. If `is_overdraftable`: `true` then this field is required.'
+          type: string
+        owners:
+          description: List of `entity_id`'s which are tied to this bank account
+          items:
+            type: string
+          type: array
+        routing_number:
+          description: The 9-digit ABA routing number for this bank account.
+          type: string
+        search_metadata:
+          allOf:
+          - $ref: '#/components/schemas/SearchMetadata'
+          type:
+          - object
+          - 'null'
+        status:
+          description: The current status of the bank account. Can be `open`, `closed`, or `frozen`.
+          enum:
+          - open
+          - closed
+          - frozen
+          type: string
+        type:
+          description: Bank Account type. Can be `CHECKING`, `OVERDRAFT_RESERVE`, `PROGRAM_RESERVE`, or `NETWORK_SETTLEMENT_ACCOUNT`.
+          type: string
+      required:
+      - id
+      - description
+      - owners
+      - default_account_number_id
+      - default_account_number
+      - routing_number
+      - bic
+      - balances
+      - currency_code
+      - created_at
+      - type
+      - is_overdraftable
+      - overdraft_reserve_account_id
+      - is_interest_bearing
+      - interest_config_id
+      - fdic_insurance
+      - status
+      type: object
+    BankAccountList:
+      properties:
+        bank_accounts:
+          description: List of bank accounts with details
+          items:
+            $ref: '#/components/schemas/BankAccountWithDetails'
+          type: array
+        has_more:
+          description: Whether more bank accounts are available
+          type: boolean
+      required:
+      - bank_accounts
+      - has_more
+      type: object
+    SearchMetadata:
+      description: Search-specific metadata returned when a query is provided.
+      properties:
+        highlights:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Matched field fragments with highlighted terms
+          type: object
+        score:
+          description: Relevance score
+          format: double
+          type: number
+      type: object
+    UpdateBankAccountRequest:
+      properties:
+        account_structure_id:
+          description: The account structure ID
+          type: string
+        description:
+          description: Updated description
+          type:
+          - string
+          - 'null'
+        display_name:
+          description: Updated display name
+          type:
+          - string
+          - 'null'
+        interest_config_id:
+          description: The interest config ID
+          type:
+          - string
+          - 'null'
+        is_ach_creditable:
+          description: Whether ACH credits are enabled
+          type:
+          - boolean
+          - 'null'
+        is_ach_debitable:
+          description: Whether ACH debits are enabled
+          type:
+          - boolean
+          - 'null'
+        is_interest_bearing:
+          description: Whether interest bearing is enabled
+          type:
+          - boolean
+          - 'null'
+        is_overdraftable:
+          description: Whether overdraft is enabled
+          type:
+          - boolean
+          - 'null'
+        overdraft_reserve_account_id:
+          description: The overdraft reserve account ID
+          type: string
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

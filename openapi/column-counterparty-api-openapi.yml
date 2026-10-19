@@ -1,0 +1,447 @@
+openapi: 3.2.0
+info:
+  title: Column Counterparty API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: Counterparty
+paths:
+  /counterparties:
+    get:
+      description: Retrieve all counterparties under your developer account. Filtered results can be retrieved with extra parameters in the query (`account_number`, `routing_number`, etc.).
+      operationId: Counterparty_ListCounterparties
+      parameters:
+      - description: Filter counterparties by account number.
+        in: query
+        name: account_number
+        required: false
+        schema:
+          type: string
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: When `true`, collapses duplicate counterparties (same account/routing) into a single result.
+        in: query
+        name: deduplicate
+        required: false
+        schema:
+          type: boolean
+      - description: Filter counterparties by description (substring match).
+        in: query
+        name: description
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Free-form search query that matches against counterparty fields.
+        in: query
+        name: query
+        required: false
+        schema:
+          type: string
+      - description: Filter counterparties by routing number.
+        in: query
+        name: routing_number
+        required: false
+        schema:
+          type: string
+      - description: Field to sort results by.
+        in: query
+        name: sort
+        required: false
+        schema:
+          type: string
+      - description: Sort direction. Can be `asc` or `desc`.
+        in: query
+        name: sort_order
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCounterpartiesResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all counterparties
+      tags:
+      - Counterparty
+    post:
+      description: A counterparty is the legal entity on the other side of the transaction. Depending on the type of transaction, we may need to know more or less about them. A domestic ACH only requires a counterparty's account and routing number. If you include a counterparty name, Column will by default populate `receiver_name` on the ACH transfer request. Domestic and international wires require full name and address. Certain countries may require additional fields. Learn more about country-specific details here.
+      operationId: Counterparty_CreateCounterparty
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCounterparty'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Counterparty'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a counterparty
+      tags:
+      - Counterparty
+  /counterparties/{counterparty_id}:
+    delete:
+      description: Delete a counterparty.
+      operationId: Counterparty_DeleteCounterparty
+      parameters:
+      - in: path
+        name: counterparty_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Delete a counterparty
+      tags:
+      - Counterparty
+    get:
+      description: Retrieve a single counterparty by its ID.
+      operationId: Counterparty_GetCounterparty
+      parameters:
+      - in: path
+        name: counterparty_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Counterparty'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a counterparty by ID
+      tags:
+      - Counterparty
+components:
+  schemas:
+    ListCounterpartiesResponse:
+      properties:
+        counterparties:
+          description: List of counterparties.
+          items:
+            $ref: '#/components/schemas/Counterparty'
+          type: array
+        has_more:
+          description: Whether there are more results available after this set.
+          type: boolean
+      required:
+      - counterparties
+      - has_more
+      type: object
+    CreateCounterparty:
+      properties:
+        account_number:
+          description: The account number for the bank account.
+          type: string
+        account_type:
+          description: The type of the account number. Can be `checking`, `savings`, `general_ledger`, or `loan`.
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Addresses need to adhere to character validation, as addresses are used across multiple payment rails. Characters are validated according to the Fedwire character validation.
+          type:
+          - object
+          - 'null'
+        description:
+          description: 'Description of the counterparty visible only in your platform. Maximum length: `127` characters.'
+          type: string
+        email:
+          description: The email address of the beneficiary.
+          type: string
+        legal_id:
+          description: 'The legal ID (e.g., Tax ID, Cedula Juridica, etc.) of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `127` characters.'
+          type: string
+        legal_type:
+          description: The legal entity type of the beneficiary. Can be `business`, `non_profit`, `individual`, or `sole_proprietor`. This field is recommended for international wire transfers, and required in some countries.
+          type:
+          - string
+          - 'null'
+        local_account_number:
+          description: 'The local account number (e.g. Cuenta Cliente in Costa Rica) in the beneficiary''s bank. This field is recommended for international wire transfers, and required in some countries. Maximum length: 63 characters.'
+          type: string
+        local_bank_code:
+          description: 'The local bank code of the beneficiary''s bank (e.g., India IFSC, Australia BSB, China CNAPS, etc.). This field is recommended for international wire transfers, and required in some countries. Maximum length: `63` characters.'
+          type: string
+        local_bank_country_code:
+          description: The ISO 3166-1 alpha-2 country code of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        local_bank_name:
+          description: Name of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        name:
+          description: The counterparty name who owns the bank account. There is a `127` character limit for this field. For domestic wires, only the first 35 characters are included in the wire message.
+          type: string
+        phone:
+          description: 'The phone number of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `31` characters.'
+          type: string
+        routing_number:
+          description: The routing number of the bank.
+          type: string
+        routing_number_type:
+          description: The type of the routing number. Can be `aba`, `bic`, or `other`.
+          type: string
+        wire_drawdown_allowed:
+          description: Whitelists counterparties for automatic approval of drawdown requests to Column via Fedwire. If `false`, all inbound drawdown requests from this counterparty will require explicit approval.
+          type: boolean
+      required:
+      - routing_number
+      - account_number
+      type: object
+    Counterparty:
+      description: A counterparty is an external account that you can transfer money to and from. All ACH and Wire transfers originated by Column take in a `counterparty_id` to identify the transfer destination. Once you have created a counterparty, you can send money to it (or pull from it)! A counterparty stores an external bank account and can also store additional transaction details, as desired or required. Read about counterparties in our data model section for more information.
+      properties:
+        account_number:
+          description: The account number for the bank account.
+          type: string
+        account_type:
+          description: The type of the account number. Can be `checking`, `savings`, `general_ledger`, or `loan`.
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Addresses need to adhere to character validation, as addresses are used across multiple payment rails. Characters are validated according to the Fedwire character validation.
+          type:
+          - object
+          - 'null'
+        created_at:
+          description: The timestamp the object was created.
+          format: date-time
+          type: string
+        description:
+          description: 'Description of the counterparty visible only in your platform. Maximum length: `127` characters.'
+          type: string
+        email:
+          description: The email address of the beneficiary.
+          type: string
+        id:
+          description: The unique ID of the object
+          type: string
+        is_column_account:
+          description: Indicates whether this counterparty account is actually a Column account.
+          type: boolean
+        legal_id:
+          description: 'The legal ID (e.g., Tax ID, Cedula Juridica, etc.) of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `127` characters.'
+          type: string
+        legal_type:
+          description: The legal entity type of the beneficiary. Can be `business`, `non_profit`, `individual`, or `sole_proprietor`. This field is recommended for international wire transfers, and required in some countries.
+          type: string
+        local_account_number:
+          description: 'The local account number (e.g. Cuenta Cliente in Costa Rica) in the beneficiary''s bank. This field is recommended for international wire transfers, and required in some countries. Maximum length: 63 characters.'
+          type: string
+        local_bank_code:
+          description: 'The local bank code of the beneficiary''s bank (e.g., India IFSC, Australia BSB, China CNAPS, etc.). This field is recommended for international wire transfers, and required in some countries. Maximum length: `63` characters.'
+          type: string
+        local_bank_country_code:
+          description: ISO 3166-1 Alpha-2 country code of the beneficiary's bank.
+          type: string
+        local_bank_name:
+          description: Name of the beneficiary's local bank.
+          type: string
+        name:
+          description: The counterparty name who owns the bank account. There is a `127` character limit for this field. For domestic wires, only the first 35 characters are included in the wire message.
+          type: string
+        phone:
+          description: 'The phone number of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `31` characters.'
+          type: string
+        routing_number:
+          description: The routing number of the bank.
+          type: string
+        routing_number_type:
+          description: The type of the routing number. Can be `aba`, `bic`, or `other`.
+          type: string
+        search_metadata:
+          allOf:
+          - $ref: '#/components/schemas/SearchMetadata'
+          type:
+          - object
+          - 'null'
+        updated_at:
+          description: The timestamp the object was last updated.
+          format: date-time
+          type: string
+        wire_drawdown_allowed:
+          description: Whitelists counterparties for automatic approval of drawdown requests to Column via Fedwire. If `false`, all inbound drawdown requests from this counterparty will require explicit approval.
+          type: boolean
+      required:
+      - id
+      - account_number
+      - routing_number
+      - created_at
+      - updated_at
+      - is_column_account
+      - wire_drawdown_allowed
+      - routing_number_type
+      - description
+      - account_type
+      - name
+      - address
+      - phone
+      - email
+      - legal_id
+      - legal_type
+      - local_bank_code
+      - local_bank_name
+      - local_account_number
+      - local_bank_country_code
+      type: object
+    Address:
+      description: A physical address
+      properties:
+        city:
+          description: City name
+          maxLength: 255
+          type: string
+        country_code:
+          description: Two-letter ISO 3166-1 alpha-2 country code (e.g. `US`)
+          maxLength: 3
+          type: string
+        line_1:
+          description: Street address line 1
+          maxLength: 255
+          type: string
+        line_2:
+          description: Street address line 2
+          maxLength: 255
+          type: string
+        postal_code:
+          description: Postal or ZIP code
+          maxLength: 24
+          type: string
+        state:
+          description: State or province
+          maxLength: 255
+          type: string
+      required:
+      - line_1
+      - city
+      - country_code
+      type: object
+    EmptyResponse:
+      description: Empty response object
+      type: object
+    SearchMetadata:
+      description: Search-specific metadata returned when a query is provided.
+      properties:
+        highlights:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Matched field fragments with highlighted terms
+          type: object
+        score:
+          description: Relevance score
+          format: double
+          type: number
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

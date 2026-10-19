@@ -1,0 +1,290 @@
+openapi: 3.2.0
+info:
+  title: Column Account Number API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: AccountNumber
+paths:
+  /account-numbers/{account_number_id}:
+    get:
+      description: Gets a specific account number by its ID.
+      operationId: AccountNumber_GetAccountNumber
+      parameters:
+      - in: path
+        name: account_number_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountNumber'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get an account number
+      tags:
+      - AccountNumber
+      x-response-example:
+        account_number: '256783259046169'
+        bank_account_id: bacc_25nVQr05nZybpyEzw8j0wV6VRUh
+        bic: CLNOUS66
+        check_issuing_positive_pay_required: true
+        created_at: '2022-03-01T20:09:42Z'
+        description: Travel Checking Account Number
+        id: acno_25nacNsLD8qLI1Vc6x67sxFU27c
+        routing_number: '121145307'
+    patch:
+      description: Updates an account number by its ID.
+      operationId: AccountNumber_UpdateAccountNumber
+      parameters:
+      - in: path
+        name: account_number_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountNumberRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountNumber'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Update an account number
+      tags:
+      - AccountNumber
+      x-response-example:
+        account_number: '256783259046169'
+        bank_account_id: bacc_25nVQr05nZybpyEzw8j0wV6VRUh
+        bic: CLNOUS66
+        check_issuing_positive_pay_required: false
+        created_at: '2022-03-01T20:09:42Z'
+        description: Account Number for Checkbook
+        id: acno_25nacNsLD8qLI1Vc6x67sxFU27c
+        routing_number: '121145307'
+  /bank-accounts/{bank_account_id}/account-numbers:
+    get:
+      description: Lists all the account numbers that point to a specific bank account.
+      operationId: AccountNumber_ListAccountNumbers
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAccountNumbersResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all account numbers from a bank account
+      tags:
+      - AccountNumber
+      x-response-example:
+        account_numbers:
+        - account_number: '256783259046169'
+          bank_account_id: bacc_25nVQr05nZybpyEzw8j0wV6VRUh
+          bic: CLNOUS66
+          check_issuing_positive_pay_required: true
+          created_at: '2022-03-01T20:09:42Z'
+          description: Travel Checking Account Number
+          id: acno_25nacNsLD8qLI1Vc6x67sxFU27c
+          routing_number: '121145307'
+        has_more: false
+    post:
+      description: Creates a new account number that points to the associated bank account.
+      operationId: AccountNumber_CreateAccountNumber
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountNumberParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountNumber'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a new account number
+      tags:
+      - AccountNumber
+      x-request-example:
+        check_issuing_positive_pay_required: true
+        description: Travel Checking Account Number
+      x-response-example:
+        account_number: '256783259046169'
+        bank_account_id: bacc_25nVQr05nZybpyEzw8j0wV6VRUh
+        bic: CLNOUS66
+        check_issuing_positive_pay_required: true
+        created_at: '2022-03-01T20:09:42Z'
+        description: Travel Checking Account Number
+        id: acno_25nacNsLD8qLI1Vc6x67sxFU27c
+        routing_number: '121145307'
+components:
+  schemas:
+    ListAccountNumbersResponse:
+      properties:
+        account_numbers:
+          description: List of account numbers.
+          items:
+            $ref: '#/components/schemas/AccountNumber'
+          type: array
+        has_more:
+          description: Whether more records are available beyond this page.
+          type: boolean
+      required:
+      - account_numbers
+      - has_more
+      type: object
+    CreateAccountNumberParams:
+      description: An account number is the child of a bank account. A bank account can have one or more account numbers. Think of account numbers as a pointer to a bank account. Account numbers will be used by external banks to transact with Column bank accounts.
+      properties:
+        check_issuing_manual_settlement_required:
+          description: Whether manual settlement is required for check issuing. Only available when check issuing NSF grace period is enabled on the platform.
+          type: boolean
+        check_issuing_positive_pay_required:
+          description: Whether check issuing positive pay is required for this account number
+          type: boolean
+        check_issuing_prefund_required:
+          description: Whether prefund is required for check issuing. Omit to inherit the platform default.
+          type: boolean
+        description:
+          description: A description for this account number
+          maxLength: 255
+          type: string
+      type: object
+    AccountNumber:
+      description: An account number that routes incoming payments to a bank account.
+      properties:
+        account_number:
+          description: The account number
+          type: string
+        bank_account_id:
+          description: The bank account this account number is associated with
+          type: string
+        bic:
+          description: The BIC (SWIFT code)
+          type: string
+        check_issuing_manual_settlement_required:
+          description: Whether manual settlement is required for check issuing
+          type: boolean
+        check_issuing_positive_pay_required:
+          description: Whether check issuing positive pay is required
+          type: boolean
+        check_issuing_prefund_required:
+          description: Whether prefund is required for check issuing. `null` inherits the platform default.
+          type:
+          - boolean
+          - 'null'
+        created_at:
+          description: Timestamp when the account number was created
+          format: date-time
+          type: string
+        description:
+          description: A description for this account number
+          type: string
+        id:
+          description: Unique identifier for the account number
+          type: string
+        routing_number:
+          description: The ABA routing number
+          type: string
+      required:
+      - id
+      - created_at
+      - bank_account_id
+      - routing_number
+      - account_number
+      type: object
+    UpdateAccountNumberRequest:
+      properties:
+        check_issuing_manual_settlement_required:
+          description: Whether manual settlement is required for check issuing. Only available when check issuing NSF grace period is enabled on the platform.
+          type: boolean
+        check_issuing_positive_pay_required:
+          description: Whether check issuing positive pay is required for this account number
+          type: boolean
+        check_issuing_prefund_required:
+          description: Whether prefund is required for check issuing. Omit to inherit the platform default.
+          type: boolean
+        description:
+          description: A description for this account number
+          maxLength: 255
+          type:
+          - string
+          - 'null'
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

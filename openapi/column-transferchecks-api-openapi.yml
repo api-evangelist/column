@@ -1,0 +1,104 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer Checks API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferChecks
+paths:
+  /simulate/deposit-issued-check:
+    post:
+      description: Simulates the deposit of an issued check. This API is always enabled, and is not affected by the operating hours of the sandbox Fed Check21 system.
+      operationId: TransferChecks_DepositIssuedCheck
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateDepositIssuedCheckRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Deposit an issued check
+      tags:
+      - TransferChecks
+  /simulate/transfers/checks/settle:
+    post:
+      description: Forces the settlement of a deposited check. After a check is deposited in sandbox, it is going to move from a `pending_deposit` state to a `deposited` state within an hour to simulate check forwarding to the Fed. This endpoint allows you to force settlement after the check is transitioned to a `deposited` state. This will transition the transfer to `settled` and make funds available immediately.
+      operationId: TransferChecks_SettleCheckTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateSettleCheckTransferRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Settle check deposit
+      tags:
+      - TransferChecks
+components:
+  schemas:
+    SimulateDepositIssuedCheckRequest:
+      properties:
+        account_number_id:
+          description: The account number ID to deposit an externally issued check against
+          type: string
+        check_number:
+          description: The externally issued check number to deposit
+          format: int64
+          type: integer
+        check_transfer_id:
+          description: The ID of the check transfer to deposit
+          type: string
+        deposited_amount:
+          description: The amount to deposit, used for positive pay testing
+          type: integer
+      type: object
+    SimulateSettleCheckTransferRequest:
+      properties:
+        check_transfer_id:
+          description: The ID of the check transfer to settle
+          type: string
+      required:
+      - check_transfer_id
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

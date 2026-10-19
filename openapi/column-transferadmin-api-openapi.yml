@@ -1,0 +1,110 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer Admin API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferAdmin
+paths:
+  /transfers/admin/{admin_transfer_id}:
+    get:
+      description: Retrieve details of an admin transfer by its ID.
+      operationId: TransferAdmin_GetAdminTransfer
+      parameters:
+      - in: path
+        name: admin_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerFacingAdminTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get an admin transfer
+      tags:
+      - TransferAdmin
+components:
+  schemas:
+    CustomerFacingAdminTransfer:
+      properties:
+        admin_transfer_id:
+          description: The unique ID of the admin transfer
+          type: string
+        amount:
+          description: The amount of the transfer in the currency's smallest unit
+          type: string
+        bank_account_id:
+          description: The bank account the admin transfer was executed against
+          type: string
+        created_at:
+          description: Timestamp of when the admin transfer was created
+          format: date-time
+          type: string
+        currency:
+          description: The currency code of the transfer
+          type: string
+        description:
+          description: The reason for the transfer
+          type: string
+        details:
+          description: Additional metadata related to the transfer, the schema is defined by the `details_type` field
+          type: object
+        details_type:
+          description: The type of the details struct
+          type: string
+        idempotency_key:
+          description: The idempotency key supplied when the admin transfer was created
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/AdminTransferType'
+          description: credit or debit depending on the direction of the transfer
+      required:
+      - created_at
+      - admin_transfer_id
+      - bank_account_id
+      - type
+      - currency
+      - amount
+      - description
+      type: object
+    AdminTransferType:
+      enum:
+      - credit
+      - debit
+      type: string
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

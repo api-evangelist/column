@@ -1,0 +1,418 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: Transfer
+paths:
+  /transfers:
+    get:
+      description: List all transfers across all transfer types under your platform.
+      operationId: Transfer_SearchTransfers
+      parameters:
+      - description: Filter by account number
+        in: query
+        name: account_number
+        required: false
+        schema:
+          type: string
+      - description: Filter by account number ID (matches either sender or receiver)
+        in: query
+        name: account_number_id
+        required: false
+        schema:
+          type: string
+      - description: Filter by ACH transfer type
+        in: query
+        name: ach_type
+        required: false
+        schema:
+          type: string
+      - description: Filter by exact amount in centi units (hundredths of a major currency unit), regardless of currency
+        in: query
+        name: amount
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Filter by amount greater than this centi-unit value, regardless of currency
+        in: query
+        name: amount_gt
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Filter by amount greater than or equal to this centi-unit value, regardless of currency
+        in: query
+        name: amount_gte
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Filter by amount less than this centi-unit value, regardless of currency
+        in: query
+        name: amount_lt
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Filter by amount less than or equal to this centi-unit value, regardless of currency
+        in: query
+        name: amount_lte
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - description: Filter by bank account ID (matches either sender or receiver)
+        in: query
+        name: bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Filter by counterparty ID
+        in: query
+        name: counterparty_id
+        required: false
+        schema:
+          type: string
+      - description: Filter by created_at after this timestamp
+        in: query
+        name: created_at_gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Filter by created_at at or after this timestamp
+        in: query
+        name: created_at_gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Filter by created_at before this timestamp
+        in: query
+        name: created_at_lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Filter by created_at at or before this timestamp
+        in: query
+        name: created_at_lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Filter by transfer description
+        in: query
+        name: description
+        required: false
+        schema:
+          type: string
+      - description: Cursor for backward pagination. Provide the ID of the first item in the previous page.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter by whether the transfer is incoming
+        in: query
+        name: is_incoming
+        required: false
+        schema:
+          type: boolean
+      - description: Maximum number of results to return (1-100)
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter by the receiver account number ID
+        in: query
+        name: receiver_account_number_id
+        required: false
+        schema:
+          type: string
+      - description: Filter by the receiver bank account ID
+        in: query
+        name: receiver_bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Filter by routing number
+        in: query
+        name: routing_number
+        required: false
+        schema:
+          type: string
+      - description: Filter by the sender account number ID
+        in: query
+        name: sender_account_number_id
+        required: false
+        schema:
+          type: string
+      - description: Filter by the sender bank account ID
+        in: query
+        name: sender_bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Field to sort results by
+        in: query
+        name: sort_by
+        required: false
+        schema:
+          type: string
+      - description: Sort order (asc or desc)
+        in: query
+        name: sort_order
+        required: false
+        schema:
+          type: string
+      - description: Cursor for forward pagination. Provide the ID of the last item in the previous page.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter by transfer status
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - description: Filter by transfer batch ID
+        in: query
+        name: transfer_batch_id
+        required: false
+        schema:
+          type: string
+      - description: Filter by a specific transfer ID
+        in: query
+        name: transfer_id
+        required: false
+        schema:
+          type: string
+      - description: Filter by transfer type (e.g., ach, wire, book, realtime, check, swift)
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTransfers'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all transfers
+      tags:
+      - Transfer
+components:
+  schemas:
+    ListTransfers:
+      properties:
+        has_more:
+          description: Whether more results are available
+          type: boolean
+        total_results_count:
+          description: The total number of results.
+          format: int64
+          type: integer
+        transfers:
+          description: List of unified transfers
+          items:
+            $ref: '#/components/schemas/UnifiedTransfer'
+          type: array
+      required:
+      - transfers
+      - has_more
+      type: object
+    Identity:
+      description: An identity (API key or dashboard user) that performed an action.
+      properties:
+        id:
+          description: The unique ID of the identity (e.g., API key ID or dashboard user ID).
+          type: string
+        name:
+          description: The display name of the identity.
+          type: string
+        type:
+          description: The type of the identity.
+          enum:
+          - API_KEY
+          - DASHBOARD_USER
+          type: string
+      required:
+      - id
+      - name
+      - type
+      type: object
+    ExternalDestination:
+      properties:
+        counterparty_id:
+          description: The counterparty ID
+          type: string
+        receiver_name:
+          description: The receiver name
+          type: string
+      type: object
+    UnifiedTransfer:
+      properties:
+        amount:
+          description: The transfer amount in the smallest unit of the currency
+          format: int64
+          type: integer
+        auxiliary_on_us:
+          description: The auxiliary on-us field
+          type: string
+        check_number:
+          description: The check number
+          type: string
+        completed_at:
+          description: The completion timestamp
+          format: date-time
+          type:
+          - string
+          - 'null'
+        created_at:
+          description: The creation timestamp
+          format: date-time
+          type:
+          - string
+          - 'null'
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+          description: The identity (API key or dashboard user) that created the transfer. Currently populated for ACH, wire, and realtime results when available.
+          type:
+          - object
+          - 'null'
+        currency_code:
+          description: The ISO 4217 currency code
+          type: string
+        description:
+          description: The transfer description
+          type: string
+        effective_on:
+          description: The effective date
+          format: date-time
+          type: string
+        external_destination:
+          allOf:
+          - $ref: '#/components/schemas/ExternalDestination'
+          description: The external destination
+        external_source:
+          allOf:
+          - $ref: '#/components/schemas/ExternalSource'
+          description: The external source
+        id:
+          description: The transfer ID
+          type: string
+        idempotency_key:
+          description: The idempotency key
+          type: string
+        is_incoming:
+          description: Whether the transfer is incoming
+          type: boolean
+        receiver_internal_account:
+          allOf:
+          - $ref: '#/components/schemas/InternalAccount'
+          description: The receiver internal account
+        sender_internal_account:
+          allOf:
+          - $ref: '#/components/schemas/InternalAccount'
+          description: The sender internal account
+        settled_at:
+          description: The settlement timestamp
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: The transfer status
+          type: string
+        transfer_batch_id:
+          description: The transfer batch ID
+          type: string
+        type:
+          description: The transfer type
+          type: string
+        updated_at:
+          description: The last update timestamp
+          format: date-time
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      - created_at
+      - updated_at
+      - settled_at
+      - completed_at
+      - status
+      - type
+      - amount
+      - currency_code
+      - is_incoming
+      - idempotency_key
+      - description
+      type: object
+    ExternalSource:
+      properties:
+        bank_name:
+          description: The bank name
+          type: string
+        counterparty_id:
+          description: The counterparty ID
+          type: string
+        sender_name:
+          description: The sender name
+          type: string
+      type: object
+    InternalAccount:
+      properties:
+        account_number_id:
+          description: The account number ID
+          type: string
+        bank_account_id:
+          description: The bank account ID
+          type: string
+      required:
+      - bank_account_id
+      - account_number_id
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

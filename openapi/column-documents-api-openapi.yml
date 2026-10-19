@@ -1,0 +1,283 @@
+openapi: 3.2.0
+info:
+  title: Column Documents API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: Documents
+paths:
+  /documents:
+    get:
+      description: List all documents under the platform. Filtered results can be retrieved with extra parameters in the query.
+      operationId: Documents_ListDocuments
+      parameters:
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Filter documents by description.
+        in: query
+        name: description
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter documents by file name.
+        in: query
+        name: file_name
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter documents by tag.
+        in: query
+        name: tag
+        required: false
+        schema:
+          type: string
+      - description: Filter documents by type.
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentList'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all documents
+      tags:
+      - Documents
+    post:
+      description: 'To upload a file to Column, you will need to send a request with `Content-Type: multipart/form-data`. The request should contain the file you would like to upload, as well as other metadata. The `type` field cannot be `card_dispute_evidence`: card dispute evidence documents are uploaded via `POST /issuing/card-disputes/documents`.'
+      operationId: Documents_UploadRegularDocument
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Upload a document
+      tags:
+      - Documents
+  /documents/{document_id}:
+    get:
+      description: Retrieves the details of an existing document.
+      operationId: Documents_GetDocument
+      parameters:
+      - in: path
+        name: document_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a document
+      tags:
+      - Documents
+components:
+  schemas:
+    DocumentListItem:
+      properties:
+        created_at:
+          description: The creation date of the document
+          format: date-time
+          type: string
+        description:
+          description: The description of the document
+          type:
+          - string
+          - 'null'
+        ext:
+          description: The file extension
+          type: string
+        id:
+          description: The ID of the document
+          example: docu_2x8gszy5folpA9s0TOCseE9ABDM
+          pattern: ^docu_[0-9A-Za-z]{27}$
+          type: string
+        size:
+          description: The file size in bytes
+          example: 204800
+          format: int64
+          type: integer
+        tag:
+          description: The tag of the document
+          type:
+          - string
+          - 'null'
+        type:
+          description: The type of the document
+          type: string
+      required:
+      - id
+      - created_at
+      - type
+      - ext
+      - size
+      type: object
+    DocumentList:
+      properties:
+        documents:
+          description: List of documents
+          items:
+            $ref: '#/components/schemas/DocumentListItem'
+          type: array
+        has_more:
+          description: Whether more documents are available
+          type: boolean
+      required:
+      - documents
+      - has_more
+      type: object
+    Document:
+      description: 'Document objects are a pointer to documents that are created or stored on Column. There are two main types of documents: Documents you upload to Column which support KYC/KYB verification for entities. And report documents generated by Column, which you can download.'
+      properties:
+        checksum:
+          description: The SHA-256 checksum of the uploaded document
+          type: string
+        created_at:
+          description: Timestamp at which the document was created in the Column system
+          format: date-time
+          type: string
+        description:
+          description: Description of the document provided when the document was created
+          example: Receipt for order 2024-001
+          type: string
+        id:
+          description: The unique id of this object
+          example: docu_2x8gszy5folpA9s0TOCseE9ABDM
+          pattern: ^docu_[0-9A-Za-z]{27}$
+          type: string
+        size:
+          description: The file size in bytes
+          example: 204800
+          format: int64
+          type: integer
+        tag:
+          description: The tag of the document
+          type: string
+        type:
+          description: The type of document
+          example: other
+          type: string
+        updated_at:
+          description: The timestamp the document was updated
+          format: date-time
+          type: string
+        url:
+          description: URL to download the document. Expires after 60 seconds.
+          example: https://example.com/documents/receipt.pdf
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - type
+      - description
+      - tag
+      - size
+      - checksum
+      - url
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

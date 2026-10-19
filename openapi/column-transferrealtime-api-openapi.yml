@@ -1,0 +1,1419 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer Realtime API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferRealtime
+paths:
+  /simulate/transfers/realtime/receive-credit:
+    post:
+      description: Simulates an incoming realtime transfer to an account for the amount specified.
+      operationId: TransferRealtime_ReceiveCredit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateRealtimeReceiveCreditRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulateRealtimeReceiveCreditResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Receive a realtime transfer
+      tags:
+      - TransferRealtime
+  /simulate/transfers/realtime/receive-rfp:
+    post:
+      description: Simulates an incoming Realtime RFP to an account for the amount specified.
+      operationId: TransferRealtime_ReceiveRFP
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateRealtimeReceiveRFPRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulateRealtimeReceiveRFPResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Receive a realtime RFP (Request for Payment)
+      tags:
+      - TransferRealtime
+  /transfers/realtime:
+    get:
+      description: Retrieve all realtime transfers under your platform.
+      operationId: TransferRealtime_ListTransfers
+      parameters:
+      - description: Filter realtime transfers by bank account ID.
+        in: query
+        name: bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter for incoming realtime transfers only.
+        in: query
+        name: is_incoming
+        required: false
+        schema:
+          type: boolean
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeTransfersList'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all realtime transfers
+      tags:
+      - TransferRealtime
+    post:
+      description: Create a realtime transfer between a Column account and a counterparty.
+      operationId: TransferRealtime_CreateTransfer
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRealtimeTransfer'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a realtime transfer
+      tags:
+      - TransferRealtime
+  /transfers/realtime/{realtime_transfer_id}:
+    get:
+      description: Retrieve a single realtime transfer by its ID.
+      operationId: TransferRealtime_GetTransfer
+      parameters:
+      - in: path
+        name: realtime_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a realtime transfer
+      tags:
+      - TransferRealtime
+  /transfers/realtime/{realtime_transfer_id}/cancel:
+    post:
+      description: Abort an outgoing realtime transfer in a `hold` state. The held funds return to the available balance and nothing is ever routed or sent. Completed outgoing transfers require a return request instead.
+      operationId: TransferRealtime_CancelTransfer
+      parameters:
+      - in: path
+        name: realtime_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Cancel a held realtime transfer
+      tags:
+      - TransferRealtime
+  /transfers/realtime/{realtime_transfer_id}/clear:
+    post:
+      description: Release the hold on a realtime transfer in a `hold` state. For an outgoing transfer the rail (FedNow or RTP) is selected at clear time and the transfer is sent, with the held funds debited directly from the holding balance. For an incoming transfer the received funds move from the holding balance into the available balance and the transfer completes; nothing is sent to the network.
+      operationId: TransferRealtime_ClearTransfer
+      parameters:
+      - in: path
+        name: realtime_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Clear a held realtime transfer
+      tags:
+      - TransferRealtime
+  /transfers/realtime/{realtime_transfer_id}/return:
+    post:
+      description: Return a realtime transfer by its ID.
+      operationId: TransferRealtime_ReturnTransfer
+      parameters:
+      - in: path
+        name: realtime_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReturnRealtimeTransferParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Return a realtime transfer
+      tags:
+      - TransferRealtime
+      x-response-example:
+        accepted_at: '2023-12-29T19:45:11Z'
+        account_number_id: acno_2XrFelm5efqwGkPsu3B1DtSEDDg
+        allow_overdraft: false
+        amount: 10000
+        bank_account_id: bacc_2XrFelZxSUOXXTswfr0h9KByzNp
+        blocked_at: null
+        completed_at: '2023-12-29T19:45:13Z'
+        counterparty_id: cpty_2aELmewqaBj5Bp6oraJ7Pl6LH1p
+        created_at: '2023-12-29T19:45:10Z'
+        currency_code: USD
+        description: Example realtime transfer
+        id: rttr_2aEM6RbzozxcvVY11ArHJw1Ka4E
+        idempotency_key: null
+        initiated_at: '2023-12-29T19:45:10Z'
+        is_incoming: false
+        is_on_us: false
+        manual_review_approved_at: null
+        manual_review_at: null
+        manual_review_rejected_at: null
+        pending_at: null
+        rejected_at: null
+        rejection_additional_info: null
+        rejection_code: null
+        rejection_code_description: null
+        return_pair_transfer_id: rttr_2ipl7TLOLY0Kyv5flfi2NHAIqJm
+        status: completed
+        updated_at: '2023-12-29T19:45:13Z'
+  /transfers/realtime/{realtime_transfer_id}/return-request:
+    post:
+      description: Create a return request for a realtime transfer by its ID.
+      operationId: TransferRealtime_CreateReturnRequest
+      parameters:
+      - in: path
+        name: realtime_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRealtimeRequestForReturn'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeReturnRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a realtime return request
+      tags:
+      - TransferRealtime
+      x-response-example:
+        accepted_at: null
+        id: rtrr_334MvwETg0RW4uS6SifgrpSw7QA
+        is_incoming: false
+        original_transfer_id: rttr_334LjBzSfBIie2ddjXf6k6ssEg3
+        pending_at: '2025-09-22T20:15:25Z'
+        reason_code: CUST
+        reason_code_description: 'CUST: Cancellation requested by the Debtor'
+        rejected_at: null
+        return_transfer_id: null
+        status: pending
+  /transfers/realtime/request-for-payment:
+    get:
+      description: Retrieve all Realtime Requests for Payment (RFPs) under your platform.
+      operationId: TransferRealtime_ListRFP
+      parameters:
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeRFPList'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all realtime RFPs
+      tags:
+      - TransferRealtime
+    post:
+      description: Create a Realtime Request For Payment (RFP) between a Column account and a counterparty.
+      operationId: TransferRealtime_CreateRFP
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRealtimeRFP'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeRFP'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a realtime RFP
+      tags:
+      - TransferRealtime
+  /transfers/realtime/request-for-payment/{realtime_rfp_id}:
+    get:
+      description: Retrieve a single Realtime Request for Payment (RFP) by its ID.
+      operationId: TransferRealtime_GetRFP
+      parameters:
+      - in: path
+        name: realtime_rfp_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeRFP'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a realtime RFP
+      tags:
+      - TransferRealtime
+  /transfers/realtime/request-for-payment/{realtime_rfp_id}/accept:
+    patch:
+      description: Accept an outstanding Realtime RFP by its ID. Only incoming Realtime RFPs with status presented or received can be accepted.
+      operationId: TransferRealtime_AcceptRFP
+      parameters:
+      - in: path
+        name: realtime_rfp_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeRFP'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Accept a realtime RFP
+      tags:
+      - TransferRealtime
+  /transfers/realtime/request-for-payment/{realtime_rfp_id}/reject:
+    patch:
+      description: Reject an outstanding Realtime RFP by its ID. Only incoming Realtime RFPs in status presented or received can be rejected.
+      operationId: TransferRealtime_RejectRFP
+      parameters:
+      - in: path
+        name: realtime_rfp_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectRealtimeRFP'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeRFP'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Reject a realtime RFP
+      tags:
+      - TransferRealtime
+  /transfers/realtime/return-requests:
+    get:
+      description: Retrieve all Realtime returns under your developer account.
+      operationId: TransferRealtime_ListReturnRequests
+      parameters:
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeReturnRequestsList'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all realtime return requests
+      tags:
+      - TransferRealtime
+  /transfers/realtime/return-requests/{realtime_return_request_id}:
+    get:
+      description: Retrieves a single Realtime return request by its ID.
+      operationId: TransferRealtime_GetReturnRequest
+      parameters:
+      - in: path
+        name: realtime_return_request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeReturnRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a realtime return request by ID
+      tags:
+      - TransferRealtime
+  /transfers/realtime/return-requests/{realtime_return_request_id}/accept:
+    patch:
+      description: Accept an outstanding Realtime Return Request by its ID. Only incoming Realtime Return Requests with a pending status can be accepted.
+      operationId: TransferRealtime_AcceptReturnRequest
+      parameters:
+      - in: path
+        name: realtime_return_request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeReturnRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Accept a realtime return request
+      tags:
+      - TransferRealtime
+  /transfers/realtime/return-requests/{realtime_return_request_id}/reject:
+    patch:
+      description: Reject an outstanding Realtime Return Request by its ID. Only incoming Realtime Return Requests with a pending status can be rejected.
+      operationId: TransferRealtime_RejectReturnRequest
+      parameters:
+      - in: path
+        name: realtime_return_request_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectRealtimeReturnRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeReturnRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Reject a realtime return request
+      tags:
+      - TransferRealtime
+components:
+  schemas:
+    RejectRealtimeReturnRequest:
+      properties:
+        rejection_reason:
+          description: Reason for rejecting the return request
+          type: string
+      type: object
+    RealtimeReturnRequestsList:
+      properties:
+        has_more:
+          description: Whether more return requests are available
+          type: boolean
+        realtime_return_requests:
+          description: List of realtime return requests
+          items:
+            $ref: '#/components/schemas/RealtimeReturnRequest'
+          type: array
+      required:
+      - realtime_return_requests
+      - has_more
+      type: object
+    Identity:
+      description: An identity (API key or dashboard user) that performed an action.
+      properties:
+        id:
+          description: The unique ID of the identity (e.g., API key ID or dashboard user ID).
+          type: string
+        name:
+          description: The display name of the identity.
+          type: string
+        type:
+          description: The type of the identity.
+          enum:
+          - API_KEY
+          - DASHBOARD_USER
+          type: string
+      required:
+      - id
+      - name
+      - type
+      type: object
+    RealtimeRFPList:
+      properties:
+        has_more:
+          description: Whether more RFPs are available
+          type: boolean
+        realtime_rfps:
+          description: List of realtime requests for payment
+          items:
+            $ref: '#/components/schemas/RealtimeRFP'
+          type: array
+      required:
+      - realtime_rfps
+      - has_more
+      type: object
+    CreateRealtimeRequestForReturn:
+      properties:
+        description:
+          description: Free-form return request description
+          maxLength: 105
+          type: string
+        reason:
+          description: Return request reason
+          enum:
+          - incorrect_beneficiary_account
+          - incorrect_amount
+          - requested_by_originator
+          - duplicate
+          - fraud
+          - tech_failure
+          - payment_not_justified
+          type: string
+      required:
+      - reason
+      type: object
+    SimulateRealtimeReceiveRFPResponse:
+      description: Empty response object
+      type: object
+    CreateCounterparty:
+      properties:
+        account_number:
+          description: The account number for the bank account.
+          type: string
+        account_type:
+          description: The type of the account number. Can be `checking`, `savings`, `general_ledger`, or `loan`.
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Addresses need to adhere to character validation, as addresses are used across multiple payment rails. Characters are validated according to the Fedwire character validation.
+          type:
+          - object
+          - 'null'
+        description:
+          description: 'Description of the counterparty visible only in your platform. Maximum length: `127` characters.'
+          type: string
+        email:
+          description: The email address of the beneficiary.
+          type: string
+        legal_id:
+          description: 'The legal ID (e.g., Tax ID, Cedula Juridica, etc.) of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `127` characters.'
+          type: string
+        legal_type:
+          description: The legal entity type of the beneficiary. Can be `business`, `non_profit`, `individual`, or `sole_proprietor`. This field is recommended for international wire transfers, and required in some countries.
+          type:
+          - string
+          - 'null'
+        local_account_number:
+          description: 'The local account number (e.g. Cuenta Cliente in Costa Rica) in the beneficiary''s bank. This field is recommended for international wire transfers, and required in some countries. Maximum length: 63 characters.'
+          type: string
+        local_bank_code:
+          description: 'The local bank code of the beneficiary''s bank (e.g., India IFSC, Australia BSB, China CNAPS, etc.). This field is recommended for international wire transfers, and required in some countries. Maximum length: `63` characters.'
+          type: string
+        local_bank_country_code:
+          description: The ISO 3166-1 alpha-2 country code of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        local_bank_name:
+          description: Name of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        name:
+          description: The counterparty name who owns the bank account. There is a `127` character limit for this field. For domestic wires, only the first 35 characters are included in the wire message.
+          type: string
+        phone:
+          description: 'The phone number of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `31` characters.'
+          type: string
+        routing_number:
+          description: The routing number of the bank.
+          type: string
+        routing_number_type:
+          description: The type of the routing number. Can be `aba`, `bic`, or `other`.
+          type: string
+        wire_drawdown_allowed:
+          description: Whitelists counterparties for automatic approval of drawdown requests to Column via Fedwire. If `false`, all inbound drawdown requests from this counterparty will require explicit approval.
+          type: boolean
+      required:
+      - routing_number
+      - account_number
+      type: object
+    ApprovalActionRequest:
+      description: Optional request body for the approval decision implied by a clear or hold-cancel endpoint.
+      properties:
+        comment:
+          description: An optional reviewer comment recorded with the approval or rejection when the held transfer requires approval. Ignored for holds that do not require approval.
+          type:
+          - string
+          - 'null'
+      type: object
+    RejectRealtimeRFP:
+      properties:
+        rejection_reason:
+          description: Optional rejection reason text
+          maxLength: 105
+          type: string
+      type: object
+    Address:
+      description: A physical address
+      properties:
+        city:
+          description: City name
+          maxLength: 255
+          type: string
+        country_code:
+          description: Two-letter ISO 3166-1 alpha-2 country code (e.g. `US`)
+          maxLength: 3
+          type: string
+        line_1:
+          description: Street address line 1
+          maxLength: 255
+          type: string
+        line_2:
+          description: Street address line 2
+          maxLength: 255
+          type: string
+        postal_code:
+          description: Postal or ZIP code
+          maxLength: 24
+          type: string
+        state:
+          description: State or province
+          maxLength: 255
+          type: string
+      required:
+      - line_1
+      - city
+      - country_code
+      type: object
+    SimulateRealtimeReceiveRFPRequest:
+      properties:
+        amount:
+          description: Amount (in cents) to credit the account. e.g. $1.75 would be represented by 175
+          format: int64
+          type: integer
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        destination_account_number_id:
+          description: Identifier for the account to credit
+          type: string
+      required:
+      - destination_account_number_id
+      - amount
+      - currency_code
+      type: object
+    RealtimeReturnRequest:
+      description: The Realtime Return Request represents a request to return funds from a previously completed Realtime transfer.
+      properties:
+        accepted_at:
+          description: The timestamp at which the Return Request was accepted
+          format: date-time
+          type:
+          - string
+          - 'null'
+        id:
+          description: The unique id of the Return Request object
+          type: string
+        is_incoming:
+          description: Indicates whether the Return Request is incoming (`true`) or outgoing (`false`)
+          type: boolean
+        original_transfer_id:
+          description: ID of the original Realtime transfer for which the return of funds is being requested
+          type:
+          - string
+          - 'null'
+        pending_at:
+          description: The timestamp at which the Return Request was created and status was set to pending
+          format: date-time
+          type:
+          - string
+          - 'null'
+        reason_code:
+          description: 'Code representing a reason for the Return Request. Reason code types include: AC03, AM09, CUST, DUPL, FRAD, TECH, and UPAY'
+          type:
+          - string
+          - 'null'
+        reason_code_description:
+          description: 'Description for the `reason_code`. Reason code descriptions include: AC03 - Account number is invalid or has been closed, AM09 - Amount is not the amount agreed or expected, CUST - Cancellation requested by the Debtor, DUPL - Payment is a duplicate of another payment, FRAD - Cancellation requested following a transaction that was originated fraudulently, TECH - Cancellation requested following technical problems resulting in an erroneous transaction, UPAY - Payment is not justified (missing critical information)'
+          type:
+          - string
+          - 'null'
+        rejected_at:
+          description: The timestamp at which the Return Request was rejected
+          format: date-time
+          type:
+          - string
+          - 'null'
+        return_transfer_id:
+          description: ID of the Realtime transfer created when the Return Request is accepted, representing the return of funds
+          type:
+          - string
+          - 'null'
+        status:
+          description: The current status of the Return Request. Possible statuses are `pending`, `accepted`, and `rejected`.
+          type: string
+      required:
+      - id
+      - status
+      - is_incoming
+      type: object
+    RealtimeRFP:
+      description: The Realtime Request For Payment (RFP) object represents the current state of a single Realtime RFP initiated by or received by Column. Realtime RFPs are used to initiate and receive debit requests called Request for Payments over FedNow or the RTP network. The Realtime RFP object exposes all relevant information about the Realtime RFP to developers.
+      properties:
+        accepted_at:
+          description: The timestamp when the Realtime RFP was accepted
+          format: date-time
+          type:
+          - string
+          - 'null'
+        account_number_id:
+          description: ID of the account number that is sending/receiving the RFP
+          type: string
+        amount:
+          description: Amount (in cents) of the funds that will be transferred between originator and counterparty accounts. e.g. $1.75 would be represented by 175
+          format: int64
+          type: integer
+        bank_account_id:
+          description: ID of the bank account that is sending/receiving the RFP
+          type: string
+        canceled_at:
+          description: The timestamp at which the Realtime RFP was canceled
+          format: date-time
+          type:
+          - string
+          - 'null'
+        completed_at:
+          description: The timestamp at which the Realtime RFP was completed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        counterparty_id:
+          description: ID of the counterparty that is receiving/sending the RFP
+          type: string
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        description:
+          description: A description of the RFP visible in account statements
+          type: string
+        end_to_end_id:
+          description: A unique identifier for the transfer that is passed through to the receiving bank. This is used for reconciliation purposes between originator and receiver.
+          type:
+          - string
+          - 'null'
+        expired_at:
+          description: The timestamp when the Realtime RFP expired
+          format: date-time
+          type:
+          - string
+          - 'null'
+        id:
+          description: The unique id of the RFP object
+          type: string
+        idempotency_key:
+          description: The idempotency key specified in the Realtime RFP
+          type:
+          - string
+          - 'null'
+        initiated_at:
+          description: The timestamp when the Realtime RFP was initiated
+          format: date-time
+          type:
+          - string
+          - 'null'
+        is_incoming:
+          description: Indicates the Realtime RFP is incoming (`true`) or outgoing (`false`)
+          type: boolean
+        is_on_us:
+          description: Indicates the Realtime RFP is between two bank accounts held at Column
+          type: boolean
+        presented_at:
+          description: Time the RFP was presented
+          format: date-time
+          type:
+          - string
+          - 'null'
+        realtime_transfer_id:
+          description: Realtime transfer object of a credit transfer that was sent/received to settle an accepted RFP
+          type:
+          - string
+          - 'null'
+        received_at:
+          description: Time the RFP was received
+          format: date-time
+          type:
+          - string
+          - 'null'
+        rejected_at:
+          description: The timestamp at which the Realtime transfer was rejected after acceptance without posting
+          format: date-time
+          type:
+          - string
+          - 'null'
+        rejection_additional_info:
+          description: Contains further information on the rejection reason in free-formatted text, if available
+          type:
+          - string
+          - 'null'
+        rejection_code:
+          description: Code representing a reason for Realtime payment rejection
+          type:
+          - string
+          - 'null'
+        rejection_code_description:
+          description: Description for the `rejection_code`
+          type:
+          - string
+          - 'null'
+        status:
+          description: The current status of the Realtime transfer. Possible statuses are `initiated`, `presented`, `received`, `accepted`, `completed`, `rejected`, `expired`, `canceled`.
+          type: string
+      required:
+      - id
+      - description
+      - bank_account_id
+      - account_number_id
+      - counterparty_id
+      - is_incoming
+      - is_on_us
+      - status
+      - amount
+      - currency_code
+      type: object
+    RealtimeTransfer:
+      description: The Realtime transfer object represents the current state of a single Realtime transfer initiated by or received by Column. Realtime transfers are used to send and receive money over FedNow or RTP. The Realtime transfer object exposes all relevant information about the Realtime transfer to developers.
+      properties:
+        accepted_at:
+          description: The timestamp when the realtime transfer was accepted without posting
+          format: date-time
+          type:
+          - string
+          - 'null'
+        account_number_id:
+          description: ID of the account number that is sending/receiving the transfer
+          type: string
+        allow_overdraft:
+          description: Allows the account to go negative for an outgoing transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it
+          type: boolean
+        amount:
+          description: Amount (in cents) of the funds that will be transferred between originator and counterparty accounts. e.g. $1.75 would be represented by 175
+          format: int64
+          type: integer
+        bank_account_id:
+          description: ID of the bank account that is sending/receiving the transfer
+          type: string
+        blocked_at:
+          description: The timestamp when the realtime transfer was blocked after accepting without posting
+          format: date-time
+          type:
+          - string
+          - 'null'
+        canceled_at:
+          description: The timestamp when a held realtime transfer was canceled and the funds returned to the available balance
+          format: date-time
+          type:
+          - string
+          - 'null'
+        completed_at:
+          description: The timestamp when the realtime transfer was completed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        counterparty_id:
+          description: ID of the counterparty that is receiving/sending the transfer
+          type: string
+        created_at:
+          description: The timestamp when the realtime transfer was created
+          format: date-time
+          type: string
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+          description: The identity (API key or dashboard user) that created the realtime transfer.
+          type:
+          - object
+          - 'null'
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        description:
+          description: A description of the transfer visible in account statements
+          type: string
+        end_to_end_id:
+          description: A unique identifier for the transfer that is passed through to the receiving bank. This is used for reconciliation purposes between originator and receiver. This ID may not be populated on an incoming Realtime transfer.
+          type:
+          - string
+          - 'null'
+        hold_at:
+          description: The timestamp when the realtime transfer entered the hold state
+          format: date-time
+          type:
+          - string
+          - 'null'
+        id:
+          description: The unique ID of the object
+          type: string
+        idempotency_key:
+          description: The idempotency key specified in the realtime transfer
+          type:
+          - string
+          - 'null'
+        initiated_at:
+          description: The timestamp when the realtime transfer was initiated
+          format: date-time
+          type:
+          - string
+          - 'null'
+        is_incoming:
+          description: Indicates whether the realtime transfer was incoming ( `true` or outgoing `false` ).
+          type: boolean
+        is_on_us:
+          description: Indicates whether the realtime transfer was between two bank accounts held at Column
+          type: boolean
+        manual_review_approved_at:
+          description: The timestamp when the realtime transfer was approved after manual review
+          format: date-time
+          type:
+          - string
+          - 'null'
+        manual_review_at:
+          description: The timestamp when the realtime transfer went into the manual review state
+          format: date-time
+          type:
+          - string
+          - 'null'
+        manual_review_rejected_at:
+          description: The timestamp when the realtime transfer was rejected after manual review
+          format: date-time
+          type:
+          - string
+          - 'null'
+        pending_at:
+          description: The timestamp when the realtime transfer was accepted without posting and is pending
+          format: date-time
+          type:
+          - string
+          - 'null'
+        pre_review_at:
+          description: The timestamp when transfer approval became required for the realtime transfer
+          format: date-time
+          type:
+          - string
+          - 'null'
+        realtime_rfp_id:
+          description: The linked realtime request for payment ID
+          type:
+          - string
+          - 'null'
+        rejected_at:
+          description: The timestamp when the realtime transfer was rejected after acceptance without posting
+          format: date-time
+          type:
+          - string
+          - 'null'
+        rejection_additional_info:
+          description: Contains further information on the payment status reason in free-formatted text, if available
+          type:
+          - string
+          - 'null'
+        rejection_code:
+          description: Code representing a reason for rejecting realtime payment
+          type:
+          - string
+          - 'null'
+        rejection_code_description:
+          description: Description for the `rejection_reason_code`
+          type:
+          - string
+          - 'null'
+        return_pair_transfer_id:
+          description: Provides a reference to a pair return transfer created when return was accepted. It is either the original transfer or the return transfer ID.
+          type:
+          - string
+          - 'null'
+        reviews:
+          description: The transfer approval decisions recorded on the realtime transfer. Each entry is a dashboard user approving or rejecting the transfer while it was in `pre_review`. This list is only populated when transfer approvals are enabled for the platform, or for the API key that created the transfer; otherwise it is omitted from the response.
+          items:
+            $ref: '#/components/schemas/TransferReview'
+          type: array
+        status:
+          description: The current status of the realtime transfer. Possible statuses are `pre_review`, `hold`, `canceled`, `initiated`, `pending`, `accepted`, `completed`, `blocked`, `rejected`, `manual_review`, `manual_review_approved`, `manual_review_rejected`.
+          enum:
+          - pre_review
+          - hold
+          - canceled
+          - initiated
+          - pending
+          - accepted
+          - completed
+          - blocked
+          - rejected
+          - manual_review
+          - manual_review_approved
+          - manual_review_rejected
+          type: string
+        ultimate_debtor_counterparty_id:
+          description: ID of the ultimate debtor counterparty that was set on the transfer
+          type:
+          - string
+          - 'null'
+        updated_at:
+          description: The timestamp when the realtime transfer was updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - bank_account_id
+      - account_number_id
+      - counterparty_id
+      - status
+      - is_incoming
+      - is_on_us
+      - allow_overdraft
+      - description
+      - amount
+      - currency_code
+      - created_at
+      - updated_at
+      type: object
+    TransferReview:
+      description: A transfer review records a single approve or reject decision made on a transfer while it was awaiting approval in `pre_review`. Transfer reviews are only created when transfer approvals are enabled for the platform, or for the API key that created the transfer.
+      properties:
+        comment:
+          description: Comment provided by the reviewer
+          type: string
+        created_at:
+          description: Timestamp of when the review was created
+          format: date-time
+          type: string
+        decision:
+          description: 'Review decision. Possible values: `approved`, `rejected`'
+          enum:
+          - approved
+          - rejected
+          type: string
+        id:
+          description: Unique identifier of the review
+          type: string
+        reviewed_by:
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+          description: Identity of the reviewer (API key or dashboard user)
+          type:
+          - object
+          - 'null'
+        updated_at:
+          description: Timestamp of when the review was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - reviewed_by
+      - decision
+      type: object
+    SimulateRealtimeReceiveCreditRequest:
+      properties:
+        amount:
+          description: Amount (in cents) to credit the account. e.g. $1.75 would be represented by 175
+          format: int64
+          type: integer
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        destination_account_number_id:
+          description: Identifier for the account to credit
+          type: string
+      required:
+      - destination_account_number_id
+      - amount
+      - currency_code
+      type: object
+    CreateRealtimeTransfer:
+      properties:
+        account_number_id:
+          description: Source account number ID
+          type: string
+        allow_overdraft:
+          description: Whether overdraft is allowed
+          type: boolean
+        amount:
+          description: Transfer amount in smallest unit
+          format: int64
+          minimum: 1
+          type: integer
+        bank_account_id:
+          description: Source bank account ID
+          type: string
+        counterparty_id:
+          description: Counterparty ID
+          type: string
+        currency_code:
+          description: ISO 4217 currency code
+          enum:
+          - USD
+          type: string
+        description:
+          description: Free-form transfer description
+          maxLength: 255
+          type: string
+        end_to_end_id:
+          description: End-to-end identifier
+          maxLength: 35
+          type: string
+        hold:
+          description: Create the transfer with the funds held instead of submitting it. The amount is locked out of the available balance and nothing is routed or sent until it is cleared; the rail (FedNow or RTP) is decided when the transfer is cleared.
+          type: boolean
+        ultimate_debtor_counterparty:
+          allOf:
+          - $ref: '#/components/schemas/CreateCounterparty'
+          description: Inline ultimate debtor counterparty details
+        ultimate_debtor_counterparty_id:
+          description: Ultimate debtor counterparty ID
+          type: string
+      required:
+      - amount
+      - currency_code
+      - counterparty_id
+      type: object
+    SimulateRealtimeReceiveCreditResponse:
+      description: Empty response object
+      type: object
+    RealtimeTransfersList:
+      properties:
+        has_more:
+          description: Whether more transfers are available
+          type: boolean
+        transfers:
+          description: List of realtime transfers
+          items:
+            $ref: '#/components/schemas/RealtimeTransfer'
+          type: array
+      required:
+      - transfers
+      - has_more
+      type: object
+    ReturnRealtimeTransferParams:
+      properties:
+        reason:
+          description: Return reason
+          enum:
+          - incorrect_beneficiary_account
+          - beneficiary_account_blocked
+          - incorrect_amount
+          - beneficiary_mismatch
+          - refused_by_beneficiary
+          - requested_by_originator
+          - fraud
+          - compliance_rejected
+          type: string
+      required:
+      - reason
+      type: object
+    CreateRealtimeRFP:
+      properties:
+        account_number_id:
+          description: Source account number ID
+          type: string
+        amount:
+          description: RFP amount in smallest unit
+          format: int64
+          minimum: 1
+          type: integer
+        bank_account_id:
+          description: Source bank account ID
+          type: string
+        counterparty_id:
+          description: Counterparty ID
+          type: string
+        currency_code:
+          description: ISO 4217 currency code
+          enum:
+          - USD
+          type: string
+        description:
+          description: Free-form RFP description
+          maxLength: 255
+          type: string
+      required:
+      - amount
+      - currency_code
+      - counterparty_id
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

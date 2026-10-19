@@ -1,0 +1,445 @@
+openapi: 3.2.0
+info:
+  title: Column Lending Sale API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: LendingSale
+paths:
+  /loans/{loan_id}/sales:
+    post:
+      description: Creates a loan sale for a specific loan.
+      operationId: LendingSale_CreateSale
+      parameters:
+      - in: path
+        name: loan_id
+        required: true
+        schema:
+          type: string
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanSaleRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanSale'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a loan sale
+      tags:
+      - LendingSale
+  /loans/sales:
+    get:
+      description: List loan sales under your platform.
+      operationId: LendingSale_ListSales
+      parameters:
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter loan sales by loan ID.
+        in: query
+        name: loan_id
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLoanSalesResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all loan sales
+      tags:
+      - LendingSale
+  /loans/sales/{loan_sale_id}:
+    get:
+      description: Retrieve a single loan sale by its ID.
+      operationId: LendingSale_GetSale
+      parameters:
+      - in: path
+        name: loan_sale_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanSale'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a loan sale
+      tags:
+      - LendingSale
+  /loans/sales/summaries/available:
+    get:
+      description: Get loan sale summaries for loans available for sale. Data returned by this API are updated daily after `loan_daily_summary` reports are generated. Read more.
+      operationId: LendingSale_GetDailyLoansAvailableForSale
+      parameters:
+      - description: 'Effective date of the loan daily summary report. Format: `YYYY-MM-DD`. If not specified, loan sale summaries from the latest `loan_daily_summary` report will be returned.'
+        in: query
+        name: date
+        required: false
+        schema:
+          type: string
+      - description: 'List of fields to be expanded. Format: `expand=field_1&expand=field_2`. Available values: `loans` (return list of loan sale details).'
+        in: query
+        name: expand
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      - description: Filter loan sale summaries by loan program ID.
+        in: query
+        name: loan_program_id
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanSaleSummary'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get loan sale summaries for loans available for sale
+      tags:
+      - LendingSale
+  /loans/sales/summaries/sold:
+    get:
+      description: Get loan sale summaries for loans already sold. Data returned by this API are updated daily after `loan_daily_summary` reports are generated. Read more.
+      operationId: LendingSale_GetDailySoldLoans
+      parameters:
+      - description: 'Effective date of the loan daily summary report. Format: `YYYY-MM-DD`. If not specified, loan sale summaries from the latest `loan_daily_summary` report will be returned.'
+        in: query
+        name: date
+        required: false
+        schema:
+          type: string
+      - description: 'List of fields to be expanded. Format: `expand=field_1&expand=field_2`. Available values: `loans` (return list of loan sale details).'
+        in: query
+        name: expand
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      - description: Filter loan sale summaries by loan program ID.
+        in: query
+        name: loan_program_id
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanSaleSummary'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get loan sale summaries for loans already sold
+      tags:
+      - LendingSale
+components:
+  schemas:
+    LoanSummaryDistill:
+      properties:
+        fee:
+          description: Fee in cents of the loan for sale
+          type: string
+        id:
+          description: ID of the loan
+          type: string
+        interest:
+          description: Interest in cents of the loan for sale
+          type: string
+        loan_program_id:
+          description: ID of the loan program
+          type: string
+        principal:
+          description: Principal in cents of the loan for sale
+          type: string
+        sale_price:
+          description: Sale price in cents of the loan
+          type: string
+      required:
+      - id
+      - loan_program_id
+      - sale_price
+      - principal
+      - interest
+      - fee
+      type: object
+    CreateLoanSaleRequest:
+      properties:
+        amount:
+          description: Amount in cents that will be purchased. This amount cannot exceed the current sale price of the loan. Either `amount` or `percentage` must be specified, but not both.
+          type: integer
+        currency_code:
+          description: ISO 4217 currency code. It must be the same as the currency code on the loan.
+          type: string
+        description:
+          description: 'The description of the loan sale. Maximum: `255` characters.'
+          maxLength: 255
+          type: string
+        percentage:
+          description: 'Percentage of the current sale price of the loan to purchase (e.g., `"0.80"` for 80%). Maximum value: `"1.00"`. Either `amount` or `percentage` must be specified, but not both.'
+          type: string
+        purchase_funding_account_number_id:
+          description: ID of the account number in your platform to fund this purchase. If this field is not set, the default purchase funding account number for the loan program of this loan will be used.
+          type: string
+      required:
+      - currency_code
+      type: object
+    LoanSale:
+      description: A loan sale object represents the sale of a loan by Column to your platform. When a loan is sold, you purchase the principal and interest receivables from Column, and are paid a servicing fee. [Read more]({{lending.sale}}).
+      properties:
+        amount:
+          description: The total sale amount in cents
+          type: integer
+        created_at:
+          description: The timestamp at which the loan sale was created
+          format: date-time
+          type: string
+        currency_code:
+          description: The currency code of the sale amount. Currently only `USD` is supported.
+          type: string
+        description:
+          description: The description of the loan sale
+          type:
+          - string
+          - 'null'
+        id:
+          description: The ID of the loan sale object
+          type: string
+        idempotency_key:
+          description: The idempotency key specified in the loan sale
+          type:
+          - string
+          - 'null'
+        loan_id:
+          description: The ID of the loan being sold
+          type: string
+        paid_servicing_fee:
+          description: The amount of servicing fees in cents paid to your platform by Column
+          type: integer
+        purchase_funding_account_number_id:
+          description: The ID of the account number in your platform that was funded to complete this sale
+          type: string
+        sold_at:
+          description: The timestamp at which the loan sale was completed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        sold_interest_receivable:
+          description: The amount of interest receivable in cents sold to your platform
+          type: integer
+        sold_principal_receivable:
+          description: The amount of principal receivable in cents sold to your platform
+          type: integer
+        updated_at:
+          description: The timestamp at which the loan sale was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - idempotency_key
+      - loan_id
+      - sold_at
+      - amount
+      - currency_code
+      - sold_principal_receivable
+      - sold_interest_receivable
+      - paid_servicing_fee
+      - purchase_funding_account_number_id
+      - description
+      type: object
+    ListLoanSalesResponse:
+      properties:
+        has_more:
+          description: Whether additional loan sales exist beyond this page
+          type: boolean
+        loan_sales:
+          description: List of loan sales
+          items:
+            $ref: '#/components/schemas/LoanSale'
+          type: array
+      required:
+      - loan_sales
+      - has_more
+      type: object
+    LoanSaleSummary:
+      description: Loan sale summaries are aggregated from our `loan_daily_summary` reports. [Read more]({{lending.report}}).
+      example:
+        currency_code: USD
+        effective_date: '2025-08-07'
+        loan_count: 2
+        loans:
+        - fee: '100'
+          id: loan_3112JdNBZLqeFREfkTIkGZR0fpw
+          interest: '1000'
+          loan_program_id: lpgm_3112JdzqLGdrBCljdV6UPSKqhJf
+          principal: '100000'
+          sale_price: '100900'
+        - fee: '100'
+          id: loan_3112Jm6zh5BBnQQUq5BODMzODWY
+          interest: '1000'
+          loan_program_id: lpgm_3112JqzDIjsvbsJ5XYLA9amU1VS
+          principal: '100000'
+          sale_price: '100900'
+        total_fee: '200'
+        total_interest: '2000'
+        total_principal: '200000'
+        total_sale_price: '201800'
+      properties:
+        currency_code:
+          description: Currency of the loan
+          type: string
+        effective_date:
+          description: 'Effective date of loan sales. Format: `YYYY-MM-DD`'
+          type: string
+        loan_count:
+          description: Number of loans for sale
+          type: integer
+        loans:
+          description: List of loans with loan details for sale
+          items:
+            $ref: '#/components/schemas/LoanSummaryDistill'
+          type: array
+        total_fee:
+          description: Total fee amount in cents of loans for sale
+          type: string
+        total_interest:
+          description: Total interest amount in cents of loans for sale
+          type: string
+        total_principal:
+          description: Total principal amount in cents of loans for sale
+          type: string
+        total_sale_price:
+          description: Total sale price for loans at the end of the effective date
+          type: string
+      required:
+      - effective_date
+      - currency_code
+      - total_sale_price
+      - total_principal
+      - total_interest
+      - total_fee
+      - loan_count
+      - loans
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

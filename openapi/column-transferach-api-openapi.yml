@@ -1,0 +1,1357 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer ACH API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferACH
+paths:
+  /simulate/receive-ach-credit:
+    post:
+      description: Simulates an incoming ACH Credit transfer to an account for the amount specified. To more accurately represent a production environment, we process incoming ACH transfers every hour. You will not see the effects of an incoming ACH transfer until the ACH is processed.
+      operationId: TransferACH_ReceiveACHCreditTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateReceiveACHTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Receive an ACH Credit
+      tags:
+      - TransferACH
+  /simulate/receive-ach-debit:
+    post:
+      description: Simulates an incoming ACH Debit transfer from an account for the amount specified. To more accurately represent a production environment, we process incoming ACH transfers every hour. You will not see the effects of an incoming ACH transfer until the ACH is processed.
+      operationId: TransferACH_ReceiveACHDebitTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateReceiveACHTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Receive an ACH Debit
+      tags:
+      - TransferACH
+  /simulate/transfers/ach/settle:
+    post:
+      description: Forces the settlement of an outgoing ACH transfer, regardless of the operating hours of the Sandbox Fed.
+      operationId: TransferACH_SettleACHTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateSettleACHTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Settle ACH transfer
+      tags:
+      - TransferACH
+  /transfers/ach:
+    get:
+      description: Retrieve all ACH transfers under your developer account. Filtered results can be retrieved with extra parameters in the query (`bank_account_id`, `counterparty_id`, etc.).
+      operationId: TransferACH_ListTransfers
+      parameters:
+      - description: Filter ACH transfers by bank account ID.
+        in: query
+        name: bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Filter ACH transfers by counterparty ID.
+        in: query
+        name: counterparty_id
+        required: false
+        schema:
+          type: string
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter for incoming ACH transfers only.
+        in: query
+        name: is_incoming
+        required: false
+        schema:
+          type: boolean
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter ACH transfers by status.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - description: Filter by ACH transfer type. Can be `debit` or `credit`.
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHTransferListResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all ACH transfers
+      tags:
+      - TransferACH
+    post:
+      description: Creates an ACH transfer between an account and a `counterparty`.
+      operationId: TransferACH_CreateTransfer
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAchTransfer'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create an ACH transfer
+      tags:
+      - TransferACH
+  /transfers/ach/{ach_transfer_id}:
+    get:
+      description: Retrieves a single transfer by its ID.
+      operationId: TransferACH_GetTransfer
+      parameters:
+      - in: path
+        name: ach_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get an ACH transfer
+      tags:
+      - TransferACH
+  /transfers/ach/{ach_transfer_id}/cancel:
+    post:
+      description: Cancels an ACH transfer before it is sent to the Federal Reserve. This action can be performed only if a given transfer is `INITIATED` or `HOLD`. Canceling a held transfer returns the held funds to the available balance. You can read more about ACH states here.
+      operationId: TransferACH_CancelTransfer
+      parameters:
+      - in: path
+        name: ach_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Cancel an ACH transfer
+      tags:
+      - TransferACH
+  /transfers/ach/{ach_transfer_id}/clear:
+    post:
+      description: 'Release the hold on an ACH transfer in a `hold` state. The transfer is initiated as if it had just been created: the effective date and same-day eligibility are resolved against the clear time, and limits, sanctions screening and fraud checks are all evaluated now rather than when the hold was created. A held credit''s funds are debited directly from the holding balance; a held debit never segregated funds, so clearing it simply resumes initiation.'
+      operationId: TransferACH_ClearTransfer
+      parameters:
+      - in: path
+        name: ach_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Clear a held ACH transfer
+      tags:
+      - TransferACH
+  /transfers/ach/{ach_transfer_id}/return:
+    get:
+      description: Retrieve the return processing details of an ACH transfer. The return may be either filed by your platform, or sent to you by other RDFIs.
+      operationId: TransferACH_GetReturn
+      parameters:
+      - in: path
+        name: ach_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHReturn'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get an ACH return
+      tags:
+      - TransferACH
+    post:
+      description: Submit a request to return an incoming ACH transfer that is sent by other ODFIs (i.e. Column is the RDFI). At most one return request can be submitted for each incoming ACH transfer. You can read more about ACH returns here.
+      operationId: TransferACH_CreateReturn
+      parameters:
+      - in: path
+        name: ach_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateACHReturnRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHReturn'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create an ACH return
+      tags:
+      - TransferACH
+  /transfers/ach/{ach_transfer_id}/reverse:
+    post:
+      description: Reverse an erroneous outgoing ACH transfer. You can read more about ACH Reversals.
+      operationId: TransferACH_ReverseTransfer
+      parameters:
+      - in: path
+        name: ach_transfer_id
+        required: true
+        schema:
+          type: string
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReverseACHTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Reverse an ACH transfer
+      tags:
+      - TransferACH
+  /transfers/ach/returns:
+    get:
+      description: Retrieve the return processing details of all ACH transfers under your developer account, including both returns filed by your platform and returns sent by other RDFIs.
+      operationId: TransferACH_ListReturns
+      parameters:
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHReturnListResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all ACH returns
+      tags:
+      - TransferACH
+components:
+  schemas:
+    CreateAchTransfer:
+      properties:
+        account_number_id:
+          description: ID of the account number from which the transfer is sent. If no `account_number_id` is specified, the default account number on a provided `bank_account_id` is used. `account_number_id` or `bank_account_id` is required.
+          type: string
+        allow_overdraft:
+          description: Allow the account to go negative for the transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it.
+          type: boolean
+        amount:
+          description: 'Amount (in cents) of the funds that will be transferred between originator and counterparty accounts. e.g. $1.75 would be represented by 175. A `0` amount creates a non-monetary entry: with `payment_related_info` on a CCD/CTX credit it is a zero-dollar remittance (transaction code 24/34); without `payment_related_info` it is a prenotification (prenote, transaction codes 23/28/33/38) used to validate the counterparty account before live entries. Both require the corresponding feature to be enabled for your platform, and prenotes are not supported for IAT. A non-monetary entry requires an explicit `0`; omitting the field is invalid.'
+          format: int64
+          type: integer
+        bank_account_id:
+          description: ID of the bank account from which the transfer is sent. If no `account_number_id` is specified, the default account number on the `bank_account_id` is used. `account_number_id` or `bank_account_id` is required.
+          type: string
+        company_discretionary_data:
+          description: 'This optional field allows you to include codes (one or more), of significance only to you, to enable specialized handling of the transfer. There is no standardized interpretation for the value of the field. Maximum length: `20` characters.'
+          type: string
+        company_entry_description:
+          description: 'You can use this optional field to provide the Receiver with a description of the purpose of the transfer. Default value: `PAYMENT`. Maximum length: `10` characters.'
+          type: string
+        company_name:
+          description: 'This optional field identifies the source of the transfer and is used for descriptive purposes for the Receiver. Default value: the root entity name of your platform, or "COLUMN NA" if no root entity exists. Maximum length: `16` characters.'
+          type: string
+        counterparty:
+          allOf:
+          - $ref: '#/components/schemas/CreateCounterparty'
+          description: Counterparty object to create a counterparty for the receiver of the transfer at transfer creation. Either counterparty or `counterparty_id` is required.
+        counterparty_id:
+          description: ID of the counterparty that will receive the transfer. Either counterparty or `counterparty_id` is required.
+          type: string
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        description:
+          description: 'Description of the transfer visible only in your platform. Maximum length: `255` characters.'
+          type: string
+        effective_date:
+          description: 'Date (format: `YYYY-MM-DD` ) on which the transfer will be effective'
+          type: string
+        entry_class_code:
+          description: 'Standard Entry Class code of the transfer. Valid values: `CCD`, `CTX`, `CIE`, `PPD`, `TEL`, `WEB`.'
+          type: string
+        hold:
+          description: Create the transfer held instead of submitting it. Nothing is batched or sent until it is cleared; the effective date and same-day eligibility are decided when the transfer is cleared. For credits the amount is locked out of the available balance while held; a held debit locks nothing, since an outgoing debit pulls funds in at settlement.
+          type: boolean
+        intermediate_financial_institutions:
+          description: List of intermediary financial institutions involved in an IAT (International ACH Transaction) transfer.
+          items:
+            type: object
+          type: array
+        payment_related_info:
+          description: Provides an additional `80` characters to give details on the ACH transaction for outgoing transfers. This information will be surfaced to the RDFI.
+          type: string
+        receiver_id:
+          description: 'This field contains the accounting reference number by which the Receiver is known to the Originator. It is included for further identification and for descriptive purposes. Maximum length: `15` characters.'
+          type: string
+        receiver_name:
+          description: 'The name of the receiver, usually the name on the bank account of the Receiver. If omitted, counterparty.name will be automatically used. Default value: beneficiary name of the counterparty. Maximum length: `22` characters for all entry class codes except CIE it is 15 characters.'
+          type: string
+        same_day:
+          description: Specify if the transfer is a same-day ACH transfer. If it is set as `true`, it takes precedence over `effective_date` and overrides it.
+          type: boolean
+        transaction_type_code:
+          description: 'This is a required code on IAT transfers used to identify reason for payment. Possible values: `ANN`, `BUS`, `DEP`, `LOA`, `MIS`, `MOR`, `PEN`, `REM`, `RLS`, `SAL`, `TAX`.'
+          type: string
+        type:
+          description: 'ACH transfer type: `CREDIT` or `DEBIT`. [Learn more]({{ach}}).'
+          type: string
+        ultimate_beneficiary_counterparty:
+          allOf:
+          - $ref: '#/components/schemas/CreateCounterparty'
+          description: Counterparty object to create an ultimate beneficiary counterparty at the time of transfer creation. This is only required on outgoing IAT debits. Either `ultimate_beneficiary_counterparty` or `ultimate_beneficiary_counterparty_id` is required.
+        ultimate_beneficiary_counterparty_id:
+          description: ID of the ultimate beneficiary counterparty that will receive the transfer. This is only required on outgoing IAT debits. Either `ultimate_beneficiary_counterparty` or `ultimate_beneficiary_counterparty_id` is required.
+          type: string
+        ultimate_originator_counterparty:
+          allOf:
+          - $ref: '#/components/schemas/CreateCounterparty'
+          description: Counterparty object to create an ultimate originator counterparty at the time of transfer creation. This is only required on outgoing IAT credits. Either `ultimate_originator_counterparty` or `ultimate_originator_counterparty_id` is required.
+        ultimate_originator_counterparty_id:
+          description: ID of the ultimate originating counterparty that will sent the transfer. This is only required on outgoing IAT credits. Either `ultimate_originator_counterparty` or `ultimate_originator_counterparty_id` is required.
+          type: string
+      required:
+      - currency_code
+      - type
+      - entry_class_code
+      type: object
+    SimulateSettleACHTransferRequest:
+      properties:
+        ach_transfer_id:
+          description: The ID of the ACH transfer to settle
+          type: string
+      required:
+      - ach_transfer_id
+      type: object
+    Identity:
+      description: An identity (API key or dashboard user) that performed an action.
+      properties:
+        id:
+          description: The unique ID of the identity (e.g., API key ID or dashboard user ID).
+          type: string
+        name:
+          description: The display name of the identity.
+          type: string
+        type:
+          description: The type of the identity.
+          enum:
+          - API_KEY
+          - DASHBOARD_USER
+          type: string
+      required:
+      - id
+      - name
+      - type
+      type: object
+    ACHReturnEvent:
+      properties:
+        addenda:
+          description: Optional information provided about the ACH return
+          type: string
+        created_at:
+          description: The timestamp at which the ACH return is created
+          format: date-time
+          type: string
+        description:
+          description: Description of the ACH return
+          type: string
+        return_code:
+          description: Reason for the ACH return
+          type: string
+        status:
+          description: Status of the ACH return
+          type: string
+        updated_at:
+          description: The timestamp at which the ACH return is updated
+          format: date-time
+          type: string
+      required:
+      - created_at
+      - updated_at
+      - status
+      - return_code
+      - description
+      - addenda
+      type: object
+    ACHTransferListResponse:
+      properties:
+        has_more:
+          description: Whether there are more results available after this set.
+          type: boolean
+        transfers:
+          description: List of transfers.
+          items:
+            $ref: '#/components/schemas/ACHTransfer'
+          type: array
+      required:
+      - transfers
+      - has_more
+      type: object
+    CreateCounterparty:
+      properties:
+        account_number:
+          description: The account number for the bank account.
+          type: string
+        account_type:
+          description: The type of the account number. Can be `checking`, `savings`, `general_ledger`, or `loan`.
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Addresses need to adhere to character validation, as addresses are used across multiple payment rails. Characters are validated according to the Fedwire character validation.
+          type:
+          - object
+          - 'null'
+        description:
+          description: 'Description of the counterparty visible only in your platform. Maximum length: `127` characters.'
+          type: string
+        email:
+          description: The email address of the beneficiary.
+          type: string
+        legal_id:
+          description: 'The legal ID (e.g., Tax ID, Cedula Juridica, etc.) of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `127` characters.'
+          type: string
+        legal_type:
+          description: The legal entity type of the beneficiary. Can be `business`, `non_profit`, `individual`, or `sole_proprietor`. This field is recommended for international wire transfers, and required in some countries.
+          type:
+          - string
+          - 'null'
+        local_account_number:
+          description: 'The local account number (e.g. Cuenta Cliente in Costa Rica) in the beneficiary''s bank. This field is recommended for international wire transfers, and required in some countries. Maximum length: 63 characters.'
+          type: string
+        local_bank_code:
+          description: 'The local bank code of the beneficiary''s bank (e.g., India IFSC, Australia BSB, China CNAPS, etc.). This field is recommended for international wire transfers, and required in some countries. Maximum length: `63` characters.'
+          type: string
+        local_bank_country_code:
+          description: The ISO 3166-1 alpha-2 country code of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        local_bank_name:
+          description: Name of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        name:
+          description: The counterparty name who owns the bank account. There is a `127` character limit for this field. For domestic wires, only the first 35 characters are included in the wire message.
+          type: string
+        phone:
+          description: 'The phone number of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `31` characters.'
+          type: string
+        routing_number:
+          description: The routing number of the bank.
+          type: string
+        routing_number_type:
+          description: The type of the routing number. Can be `aba`, `bic`, or `other`.
+          type: string
+        wire_drawdown_allowed:
+          description: Whitelists counterparties for automatic approval of drawdown requests to Column via Fedwire. If `false`, all inbound drawdown requests from this counterparty will require explicit approval.
+          type: boolean
+      required:
+      - routing_number
+      - account_number
+      type: object
+    ApprovalActionRequest:
+      description: Optional request body for the approval decision implied by a clear or hold-cancel endpoint.
+      properties:
+        comment:
+          description: An optional reviewer comment recorded with the approval or rejection when the held transfer requires approval. Ignored for holds that do not require approval.
+          type:
+          - string
+          - 'null'
+      type: object
+    Address:
+      description: A physical address
+      properties:
+        city:
+          description: City name
+          maxLength: 255
+          type: string
+        country_code:
+          description: Two-letter ISO 3166-1 alpha-2 country code (e.g. `US`)
+          maxLength: 3
+          type: string
+        line_1:
+          description: Street address line 1
+          maxLength: 255
+          type: string
+        line_2:
+          description: Street address line 2
+          maxLength: 255
+          type: string
+        postal_code:
+          description: Postal or ZIP code
+          maxLength: 24
+          type: string
+        state:
+          description: State or province
+          maxLength: 255
+          type: string
+      required:
+      - line_1
+      - city
+      - country_code
+      type: object
+    ACHReturnListResponse:
+      properties:
+        ach_returns:
+          description: List of ACH returns
+          items:
+            $ref: '#/components/schemas/ACHReturn'
+          type: array
+        has_more:
+          description: Whether additional returns exist beyond this page
+          type: boolean
+      required:
+      - ach_returns
+      - has_more
+      type: object
+    NotificationChanges:
+      properties:
+        account_number:
+          description: Latest account number of the counterparty
+          type: string
+        account_type:
+          description: Account type derived from the corrected ACH transaction code, when supported
+          type: string
+        change_code:
+          description: NACHA code identifying the information corrected by the Notification of Change
+          type: string
+        receiver_id:
+          description: Latest accounting reference number by which the beneficiary should be referred by the originator
+          type: string
+        routing_number:
+          description: Latest routing number of the counterparty
+          type: string
+        transaction_code:
+          description: Corrected ACH transaction code, when supplied by the Notification of Change
+          type: integer
+      required:
+      - account_number
+      - routing_number
+      - receiver_id
+      - change_code
+      type: object
+    CreateACHReturnRequest:
+      properties:
+        addenda:
+          description: 'Addenda information for the return. Maximum length: `44` characters.'
+          type: string
+        date_of_death:
+          description: 'Date (format: `YYYY-MM-DD`) of the account holder''s or representative payee''s death. Required by Nacha in the return addenda for return codes `R14` and `R15`, and rejected for any other return code.'
+          type: string
+        description:
+          description: 'Description for the return. Maximum length: `255` characters.'
+          type: string
+        return_code:
+          description: The ACH return reason code (e.g. R01, R02, etc.)
+          type: string
+      required:
+      - return_code
+      type: object
+    TransferReview:
+      description: A transfer review records a single approve or reject decision made on a transfer while it was awaiting approval in `pre_review`. Transfer reviews are only created when transfer approvals are enabled for the platform, or for the API key that created the transfer.
+      properties:
+        comment:
+          description: Comment provided by the reviewer
+          type: string
+        created_at:
+          description: Timestamp of when the review was created
+          format: date-time
+          type: string
+        decision:
+          description: 'Review decision. Possible values: `approved`, `rejected`'
+          enum:
+          - approved
+          - rejected
+          type: string
+        id:
+          description: Unique identifier of the review
+          type: string
+        reviewed_by:
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+          description: Identity of the reviewer (API key or dashboard user)
+          type:
+          - object
+          - 'null'
+        updated_at:
+          description: Timestamp of when the review was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - reviewed_by
+      - decision
+      type: object
+    ReverseACHTransferRequest:
+      properties:
+        description:
+          description: Description for the reversal.
+          type: string
+        reason:
+          description: The reason for reversing the ACH transfer.
+          type: string
+      type: object
+    IATAddenda:
+      example:
+        foreign_correspondent_bank_info:
+        - branch_country_code: branch_country_code
+          identification_number: identification_number
+          identification_number_qualifier: identification_number_qualifier
+          name: name
+        foreign_payment_amount: 11500
+        foreign_trace_number: ''
+        odfi_branch_country_code: IE
+        odfi_identification: 02800008
+        odfi_identification_number_qualifier: '01'
+        odfi_name: CITIBANK EUROPE PLC
+        originator_city_state_province: LONDON*GB\
+        originator_country_postal_code: REDACTED
+        originator_name: REDACTED
+        originator_street_address: REDACTED
+        payment_related_info: []
+        rdfi_branch_country_code: US
+        rdfi_identification: REDACTED
+        rdfi_identification_number_qualifier: '01'
+        rdfi_name: COLUMN N.A.
+        receiver_city_state_province: x\
+        receiver_country_postal_code: US*74110\
+        receiver_identification_number: REDACTED
+        receiver_street_address: REDACTED
+        receiving_company_or_individual_name: REDACTED
+        transaction_type_code: BUS
+      properties:
+        foreign_correspondent_bank_info:
+          description: Provides additional details around foreign correspondent banks used in the IAT transfer
+          items:
+            $ref: '#/components/schemas/Addenda18'
+          type: array
+        foreign_payment_amount:
+          description: The amount for which the transfer was originated by the Foreign ODFI. This will be in `USD`, since Column will receive IATs from a domestic correspondent bank.
+          format: int64
+          type: integer
+        foreign_trace_number:
+          description: Contains the trace number assigned to the transfer in the originating national payments system
+          type: string
+        odfi_branch_country_code:
+          description: The two-character country code which identifies the country in which the branch of the bank that originated the transfer is located
+          type: string
+        odfi_identification:
+          description: The routing number of the DFI originating the transfer
+          type: string
+        odfi_identification_number_qualifier:
+          description: The two digit numbering scheme used in the ODFI identification number. Possible values are `01` (National Clearing System Number), `02` (BIC Code), or `03` (IBAN).
+          type: string
+        odfi_name:
+          description: The name of the ODFI
+          type: string
+        originator_city_state_province:
+          description: Contains the city, and if applicable the state or province of the originator
+          type: string
+        originator_country_postal_code:
+          description: Contains the postal code for the originator street address
+          type: string
+        originator_name:
+          description: Contains the name of the originator of the transaction
+          type: string
+        originator_street_address:
+          description: Contains the physical street address of the originator
+          type: string
+        payment_related_info:
+          description: Additional payment-related information included in the IAT addenda records
+          items:
+            type: string
+          type: array
+        rdfi_branch_country_code:
+          description: The two-character country code which identifies the country in which the branch of the bank that received the transfer is located
+          type: string
+        rdfi_identification:
+          description: Contains the bank identification number of the DFI at which the receiver maintains their account
+          type: string
+        rdfi_identification_number_qualifier:
+          description: The two digit numbering scheme used in the RDFI identification number. Possible values are `01` (National Clearing System Number), `02` (BIC Code), or `03` (IBAN).
+          type: string
+        rdfi_name:
+          description: The name of the RDFI
+          type: string
+        receiver_city_state_province:
+          description: Contains the city, and if applicable the state or province of the receiver
+          type: string
+        receiver_country_postal_code:
+          description: Contains the postal code for the receiver street address
+          type: string
+        receiver_identification_number:
+          description: This field is used by the originator to insert its own number for tracing purposes
+          type: string
+        receiver_street_address:
+          description: Contains the physical street address of the receiver
+          type: string
+        receiving_company_or_individual_name:
+          description: Contains the name of the receiver of the transaction
+          type: string
+        transaction_type_code:
+          description: 'A code identifying the reason for payment. Possible values: `ANN`, `BUS`, `DEP`, `LOA`, `MIS`, `MOR`, `PEN`, `REM`, `RLS`, `SAL`, `TAX`.'
+          type: string
+      required:
+      - foreign_payment_amount
+      - foreign_trace_number
+      - receiving_company_or_individual_name
+      - originator_name
+      - originator_street_address
+      - originator_city_state_province
+      - originator_country_postal_code
+      - odfi_name
+      - odfi_identification_number_qualifier
+      - odfi_identification
+      - odfi_branch_country_code
+      - rdfi_name
+      - rdfi_identification_number_qualifier
+      - rdfi_identification
+      - rdfi_branch_country_code
+      - receiver_identification_number
+      - receiver_street_address
+      - receiver_city_state_province
+      - receiver_country_postal_code
+      - foreign_correspondent_bank_info
+      - payment_related_info
+      - transaction_type_code
+      type: object
+    SimulateReceiveACHTransferRequest:
+      properties:
+        amount:
+          description: Amount in cents. e.g. $1.75 would be represented by 175
+          type: integer
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        destination_account_number_id:
+          description: Identifier for the destination account number
+          type: string
+      required:
+      - destination_account_number_id
+      - amount
+      - currency_code
+      type: object
+    Addenda18:
+      properties:
+        branch_country_code:
+          description: The two-character country code of the foreign correspondent bank
+          type: string
+        identification_number:
+          description: The identification number of the foreign correspondent bank
+          type: string
+        identification_number_qualifier:
+          description: The numbering scheme used in the identification number. Possible values are `01` (National Clearing System Number), `02` (BIC Code), or `03` (IBAN).
+          type: string
+        name:
+          description: The name of the foreign correspondent bank
+          type: string
+      required:
+      - name
+      - identification_number_qualifier
+      - identification_number
+      - branch_country_code
+      type: object
+    EmptyResponse:
+      description: Empty response object
+      type: object
+    ACHReturn:
+      description: The ACH return object represents the current state of a single ACH return originated by or received by Column. The ACH return object will contain all relevant information about the specific return, which are described in the parameters below.
+      properties:
+        ach_transfer_id:
+          description: The id of the ACH transfer that is being returned
+          type: string
+        created_at:
+          description: The timestamp at which the return was created
+          format: date-time
+          type: string
+        details:
+          description: Includes an object containing detailed information about the return
+          items:
+            $ref: '#/components/schemas/ACHReturnEvent'
+          type: array
+        is_incoming:
+          description: Indicates if the return was initiated by an RDFI ( `true` ) or by Column ( `false` ).
+          type: boolean
+        status:
+          description: The current state of the ACH return. The possible states are `INITIATED`, `SENT`, `DISHONORED`, `CONTESTED`, `COMPLETED`, and `REJECTED`.
+          type: string
+        updated_at:
+          description: The timestamp at which the return was updated (typically a status update)
+          format: date-time
+          type: string
+      required:
+      - ach_transfer_id
+      - created_at
+      - updated_at
+      - status
+      - is_incoming
+      - details
+      type: object
+    ACHTransfer:
+      description: The ACH transfer object represents the current state of a single ACH transfers originated by or received by Column. The ACH object will contain all relevant information about the specific transfer, which are described in the parameters below.
+      properties:
+        account_number_id:
+          description: ID of the account number that is sending the transfer
+          type: string
+        ach_transfer_batch_id:
+          description: ID of the ACH transfer batch this transfer belongs to.
+          type:
+          - string
+          - 'null'
+        acknowledged_at:
+          description: The timestamp at which an acknowledgement is received for a `CCD` or `CTX` ACH transfer.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        allow_overdraft:
+          description: Allow the account to go negative for the transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it.
+          type: boolean
+        amount:
+          description: Amount (in cents) of the funds that will be transferred between originator and counterparty accounts. e.g. $1.75 would be represented by 175.
+          format: int64
+          type: integer
+        bank_account_id:
+          description: ID of the bank account that is sending the transfer
+          type: string
+        cancelled_at:
+          description: The timestamp at which the transfer is cancelled
+          format: date-time
+          type:
+          - string
+          - 'null'
+        company_discretionary_data:
+          description: 'This optional field allows you to include codes (one or more), of significance only to you, to enable specialized handling of the transfer. There is no standardized interpretation for the value of the field. Maximum length: `20` characters. CIE: This field may contain the Biller''s name. CTX: The Originator''s bank account number may be placed in this field.'
+          type: string
+        company_entry_description:
+          description: 'You can use this optional field to provide the Receiver with a description of the purpose of the transfer. For example, "Gas bill", "Reg. Salary", "ins. prem.", "Soc. Sec.", "DTC", "Trade Pay", "PURCHASE", etc. Default value: `PAYMENT`. Maximum length: `10` characters.'
+          type: string
+        company_id:
+          description: Typically, a 10-digit unique identifier used for identifying entities, called originators, sending or collecting payments via ACH credit or ACH debit. For WEB entries it can be alphanumeric and less than 10 characters. If you would like to use a specific company ID when originating ACH transactions, please contact us.
+          type: string
+        company_name:
+          description: The name of the originator company that initiated the ACH transfer
+          type: string
+        completed_at:
+          description: The timestamp at which the 60 day return window has passed for this ACH transfer, and it is officially completed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        counterparty_id:
+          description: ID of the counterparty that will receive the transfer
+          type: string
+        created_at:
+          description: The timestamp at which the transfer request is created
+          format: date-time
+          type: string
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+          description: The identity (API key or dashboard user) that created the ACH transfer.
+          type:
+          - object
+          - 'null'
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`.
+          type: string
+        description:
+          description: 'Description of the transfer visible only in your platform. Maximum length: `255` characters.'
+          type: string
+        effective_on:
+          description: Datetime (00:00AM in Pacific Time zone) on which the transfer is effective. For incoming transfers, this is 00:00AM on the Settlement Date of the transfer in PT timezone.
+          format: date-time
+          type: string
+        entry_class_code:
+          description: Standard Entry Class code of the transfer
+          type: string
+        entry_details:
+          description: ACH entry details containing transaction code information
+          type:
+          - object
+          - 'null'
+        hold_at:
+          description: The timestamp at which the ACH transfer was placed on hold.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        iat:
+          allOf:
+          - $ref: '#/components/schemas/IATAddenda'
+          description: This field provides additional IAT (International ACH Transfer) addenda information
+          type:
+          - object
+          - 'null'
+        id:
+          description: The unique id for this object
+          type: string
+        idempotency_key:
+          description: The idempotency key specified in the ACH transfer
+          type: string
+        initiated_at:
+          description: The timestamp at which Column received your ACH request
+          format: date-time
+          type:
+          - string
+          - 'null'
+        intermediary_financial_institutions:
+          description: Applies only to IAT transfers. This is a List of intermediary institutions involved in an IAT transfer.
+          items:
+            type: object
+          type: array
+        is_incoming:
+          description: Indicates whether the ACH transfer was incoming ( `true` ) or outgoing ( `false` ).
+          type: boolean
+        is_on_us:
+          description: Indicates whether or not the ACH transfer is coming from a Column bank account. If `true` the request is processed immediately like a book transfer, and not sent to the Fed.
+          type: boolean
+        manual_review_at:
+          description: The timestamp at which the ACH transfer went into the manual review state
+          format: date-time
+          type:
+          - string
+          - 'null'
+        notification_of_changes:
+          allOf:
+          - $ref: '#/components/schemas/NotificationChanges'
+          description: Details of Notifications of Change (NOCs), including corrected counterparty information and transaction codes. Available only with ach.`outgoing_transfer`.noc events.
+          type:
+          - object
+          - 'null'
+        nsf_deadline:
+          description: For incoming ACH Debits and available only with ach.`incoming_transfer`.nsf events. This is the deadline by which the receiver account must be funded to complete the incoming debit. Column will file an NSF return for this ACH transfer if the account is not funded by the `nsf_deadline`.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        odfi_routing_number:
+          description: The externally facing routing number for the ODFI that initiated the ACH Transfer
+          type: string
+        payment_related_info:
+          description: Provides additional information on the ACH transfer. Limited to 80 characters for most transfer types, but CTX transfers can include up to 799,920 characters (9,999 addenda records x 80 characters each). ENR and TRX transfers may also support extended lengths.
+          type: string
+        pre_review_at:
+          description: The timestamp at which transfer approval became required for the ACH transfer.
+          format: date-time
+          type: string
+        receiver_id:
+          description: This field contains the accounting reference number by which the Receiver is known to the Originator. It is included for further identification and for descriptive purposes. For example, it may be the number shown on an invoice, statement, billhead, notice, or other communication as the reference for the Receiver to update account receivable records.
+          type: string
+        receiver_name:
+          description: 'The name of the receiver, usually the name on the bank account of the Receiver. Default value: beneficiary name of the counterparty. Maximum length: `22` characters.'
+          type: string
+        return_contested_at:
+          description: The timestamp at which the dishonored return for this transfer was contested by the RDFI
+          format: date-time
+          type:
+          - string
+          - 'null'
+        return_details:
+          description: Details of the return processing history (e.g., initiated, dishonored, dishonor contested, manual review, etc.). Available only with ach.*.returned , ach.*.`return_dishonored` or ach.*.`return_contested` events.
+          items:
+            $ref: '#/components/schemas/ACHReturnEvent'
+          type: array
+        return_dishonored_at:
+          description: The timestamp at which the return for this transfer was dishonored by the ODFI
+          format: date-time
+          type:
+          - string
+          - 'null'
+        return_dishonored_funds_unlocked_at:
+          description: The timestamp at which the dishonored return funds are unlocked
+          format: date-time
+          type:
+          - string
+          - 'null'
+        returned_at:
+          description: The timestamp at which the ACH transfer is returned by the RDFI
+          format: date-time
+          type:
+          - string
+          - 'null'
+        reversal_pair_transfer_id:
+          description: If the transfer is the original transfer of an ACH Reversal, this field is the unique ID of the reversal transfer. If the transfer is the reversal transfer of an ACH Reversal, this field is the unique ID of the original transfer.
+          type: string
+        reviews:
+          description: The transfer approval decisions recorded on the ACH transfer. Each entry is a dashboard user approving or rejecting the transfer while it was in `pre_review`. This list is only populated when transfer approvals are enabled for the platform, or for the API key that created the transfer; otherwise it is omitted from the response.
+          items:
+            $ref: '#/components/schemas/TransferReview'
+          type: array
+        same_day:
+          description: Specify if the transfer is a same-day ACH transfer. If it is set as `true`, it takes precedence over `effective_date` and overrides it.
+          type: boolean
+        settled_at:
+          description: The timestamp at which the ACH was settled
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: 'The current state of the ACH transfer. Possible values: `PRE_REVIEW`, `INITIATED`, `HOLD`, `PENDING_SUBMISSION`, `SUBMITTED`, `SETTLED`, `RETURNED`, `COMPLETED`, `CANCELED`, `SCHEDULED`, `PENDING_RETURN`, `RETURN_DISHONORED`, `RETURN_DISHONORED_FUNDS_UNLOCKED`, `RETURN_CONTESTED`, `MANUAL_REVIEW`, and `MANUAL_REVIEW_APPROVED`.'
+          enum:
+          - INITIATED
+          - PRE_REVIEW
+          - HOLD
+          - PENDING_SUBMISSION
+          - SUBMITTED
+          - SETTLED
+          - RETURNED
+          - COMPLETED
+          - CANCELED
+          - SCHEDULED
+          - PENDING_RETURN
+          - RETURN_DISHONORED
+          - RETURN_DISHONORED_FUNDS_UNLOCKED
+          - RETURN_CONTESTED
+          - MANUAL_REVIEW
+          - MANUAL_REVIEW_APPROVED
+          type: string
+        submitted_at:
+          description: The timestamp at which the ACH transfer was submitted to the Fed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        trace_number:
+          description: The unique number assigned to every ACH entry by an ODFI which identifies that entry within a specific ACH file
+          type: string
+        transaction_type_code:
+          description: 'This is a required code on IAT transfers used to identify reason for payment. Possible values: `ANN`, `BUS`, `DEP`, `LOA`, `MIS`, `MOR`, `PEN`, `REM`, `RLS`, `SAL`, `TAX`.'
+          type: string
+        type:
+          description: 'ACH transfer type: `CREDIT` or `DEBIT`. [Learn more]({{ach}}).'
+          type: string
+        ultimate_beneficiary_counterparty_id:
+          description: ID of the ultimate beneficiary counterparty that will receive the transfer. This is only required on outgoing IAT debits.
+          type: string
+        ultimate_originator_counterparty_id:
+          description: ID of the ultimate originating counterparty that sent the transfer. This is only required on outgoing IAT credits.
+          type: string
+        updated_at:
+          description: The timestamp at which the ACH transfer was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - created_by
+      - updated_at
+      - submitted_at
+      - acknowledged_at
+      - settled_at
+      - completed_at
+      - returned_at
+      - cancelled_at
+      - initiated_at
+      - manual_review_at
+      - return_dishonored_at
+      - return_dishonored_funds_unlocked_at
+      - return_contested_at
+      - status
+      - type
+      - idempotency_key
+      - bank_account_id
+      - account_number_id
+      - counterparty_id
+      - amount
+      - currency_code
+      - description
+      - effective_on
+      - same_day
+      - company_discretionary_data
+      - company_entry_description
+      - company_id
+      - company_name
+      - receiver_name
+      - receiver_id
+      - entry_class_code
+      - allow_overdraft
+      - is_incoming
+      - nsf_deadline
+      - trace_number
+      - odfi_routing_number
+      - return_details
+      - is_on_us
+      - iat
+      - payment_related_info
+      - reversal_pair_transfer_id
+      - notification_of_changes
+      - ultimate_originator_counterparty_id
+      - ultimate_beneficiary_counterparty_id
+      - transaction_type_code
+      - intermediary_financial_institutions
+      - entry_details
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

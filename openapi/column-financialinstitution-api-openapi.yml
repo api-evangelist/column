@@ -1,0 +1,288 @@
+openapi: 3.2.0
+info:
+  title: Column Financial Institution API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: FinancialInstitution
+paths:
+  /iban/{iban}:
+    get:
+      description: Validate the format of an IBAN and check whether it is registered with the given financial institution. However, we cannot verify if the account is still open.
+      operationId: FinancialInstitution_GetIBAN
+      parameters:
+      - in: path
+        name: iban
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IBAN'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Validate an IBAN
+      tags:
+      - FinancialInstitution
+  /institutions:
+    get:
+      description: List all financial institutions. Filtered results can be retrieved with extra parameters in your queries.
+      operationId: FinancialInstitution_ListFinancialInstitutions
+      parameters:
+      - description: Filter institutions by country code.
+        in: query
+        name: country_code
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter institutions by name.
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - description: Filter institutions by routing number type.
+        in: query
+        name: routing_number_type
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFinancialInstitution'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List financial institutions
+      tags:
+      - FinancialInstitution
+  /institutions/{routing_number}:
+    get:
+      description: Retrieve a single financial institution by its ABA number or BIC.
+      operationId: FinancialInstitution_GetFinancialInstitution
+      parameters:
+      - in: path
+        name: routing_number
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialInstitution'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a financial institution
+      tags:
+      - FinancialInstitution
+components:
+  schemas:
+    FinancialInstitution:
+      properties:
+        ach_eligible:
+          description: Whether the institution is eligible for ACH transfers
+          type: boolean
+        check_eligible:
+          description: Whether the institution is eligible for check transfers
+          type: boolean
+        city:
+          description: The city of the institution
+          type: string
+        country_code:
+          description: The country code of the institution
+          type: string
+        created_at:
+          description: The creation timestamp
+          format: date-time
+          type: string
+        full_name:
+          description: The full name of the institution
+          type: string
+        phone_number:
+          description: The phone number of the institution
+          type: string
+        realtime_eligible:
+          description: Whether the institution is eligible for realtime transfers
+          type: boolean
+        realtime_rfp_eligible:
+          description: Whether the institution is eligible for realtime request for payment
+          type: boolean
+        routing_number:
+          description: The routing number of the financial institution
+          type: string
+        routing_number_type:
+          description: The type of routing number
+          type: string
+        short_name:
+          description: The short name of the institution
+          type: string
+        state:
+          description: The state of the institution
+          type: string
+        street_address:
+          description: The street address of the institution
+          type: string
+        updated_at:
+          description: The last update timestamp
+          format: date-time
+          type: string
+        wire_eligible:
+          description: Whether the institution is eligible for wire transfers
+          type: boolean
+        wire_settlement_only:
+          description: Whether the institution only supports wire settlement
+          type: boolean
+        zip_code:
+          description: The ZIP code of the institution
+          type: string
+      required:
+      - routing_number
+      - routing_number_type
+      - created_at
+      - updated_at
+      - short_name
+      - full_name
+      - wire_eligible
+      - wire_settlement_only
+      - ach_eligible
+      - check_eligible
+      - realtime_eligible
+      - realtime_rfp_eligible
+      - street_address
+      - city
+      - state
+      - zip_code
+      - country_code
+      - phone_number
+      type: object
+    IBAN:
+      example:
+        account_number: '31926819'
+        bank_id: NWBK
+        bic: NWBKGB2L
+        branch_id: '601613'
+        check_digits: '29'
+        country_code: GB
+        iban: GB29NWBK60161331926819
+        institution_name: NATIONAL WESTMINSTER BANK PLC
+        national_id: NWBK601613
+      properties:
+        account_number:
+          description: Account number in the financial institution
+          type: string
+        bank_id:
+          description: Local bank code of the financial institution in its country
+          type: string
+        bic:
+          description: BIC of the financial institution
+          type: string
+        branch_id:
+          description: Branch ID of the financial institution
+          type:
+          - string
+          - 'null'
+        check_digits:
+          description: Check digits of the IBAN
+          type: string
+        country_code:
+          description: ISO 3166-1 Alpha-2 Country Code (e.g., `US`, `FR`, `UK`, `DE`) of the financial institution
+          type: string
+        iban:
+          description: The IBAN being validated
+          type: string
+        institution_name:
+          description: Name of the financial institution
+          type: string
+        national_id:
+          description: National ID of the financial institution in its country, which usually consists of its `bank_id` and `branch_id`
+          type: string
+      required:
+      - iban
+      - country_code
+      - check_digits
+      - bank_id
+      - national_id
+      - account_number
+      - bic
+      - institution_name
+      type: object
+    ListFinancialInstitution:
+      properties:
+        has_more:
+          description: Whether more institutions are available
+          type: boolean
+        institutions:
+          description: List of financial institutions
+          items:
+            $ref: '#/components/schemas/FinancialInstitution'
+          type: array
+      required:
+      - institutions
+      - has_more
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

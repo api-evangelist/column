@@ -1,0 +1,482 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer Book API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferBook
+paths:
+  /transfers/book:
+    get:
+      description: Retrieve all book transfers under your developer account. Filtered results can be retrieved with extra parameters in the query (`sender_bank_account_id`, `receiver_bank_account_id`, etc.).
+      operationId: TransferBook_ListBookTransfers
+      parameters:
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter book transfers by receiver bank account ID.
+        in: query
+        name: receiver_bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Filter book transfers by sender bank account ID.
+        in: query
+        name: sender_bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter book transfers by status.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookTransferList'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all book transfers
+      tags:
+      - TransferBook
+    post:
+      description: A book transfer is a transaction between two Column accounts that you own. They can happen instantly and can be sent 24 hours a day, 7 days a week. Both accounts need to be under your platform, but don't need to be under the same entity. Alternatively, you can send a book transfer in two steps, using the "hold" parameter and "clear" method. Book transfers in a "hold" state can be updated and canceled. There is no reversal functionality for book transfers. Simply swap the `sender_account_number_id` and `receiver_account_number_id` and repeat the request.
+      operationId: TransferBook_CreateBookTransfer
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a book transfer
+      tags:
+      - TransferBook
+  /transfers/book/{book_transfer_id}:
+    get:
+      description: Retrieve a single book transfer by its ID.
+      operationId: TransferBook_GetBookTransfer
+      parameters:
+      - in: path
+        name: book_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a book transfer
+      tags:
+      - TransferBook
+    patch:
+      description: Update a book transfer by its ID. Transfer must be in a "hold" state. Only the `amount` can be updated.
+      operationId: TransferBook_UpdateBookTransfer
+      parameters:
+      - in: path
+        name: book_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Update a book transfer
+      tags:
+      - TransferBook
+  /transfers/book/{book_transfer_id}/cancel:
+    post:
+      description: Cancel a book transfer hold by its ID. Transfer must be in a "hold" state.
+      operationId: TransferBook_CancelBookTransfer
+      parameters:
+      - in: path
+        name: book_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Cancel a book transfer
+      tags:
+      - TransferBook
+  /transfers/book/{book_transfer_id}/clear:
+    post:
+      description: Clear a book transfer by its ID. Transfer must be in a "hold" state. If the `amount` is specified, then that amount will be cleared, regardless of the amount of the hold. If no amount is specified, then the amount of the hold will be cleared.
+      operationId: TransferBook_ClearBookTransfer
+      parameters:
+      - in: path
+        name: book_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClearBookTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Clear a book transfer
+      tags:
+      - TransferBook
+components:
+  schemas:
+    BookTransferMonitoringDetailsRequest:
+      properties:
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          type:
+          - object
+          - 'null'
+        authorization_method:
+          description: The method used to authorize the book transfer.
+          type: string
+        internal_transfer_type:
+          description: The type of internal transfer.
+          type: string
+        merchant_category_code:
+          description: The merchant category code (MCC) associated with this transfer.
+          type: string
+        merchant_name:
+          description: The merchant name associated with this transfer.
+          type: string
+        sender_name:
+          description: Name of the sender initiating the transfer.
+          type: string
+        statement_description:
+          description: Description that will appear on the account statement.
+          type: string
+        website:
+          description: Website associated with the transfer originator.
+          type: string
+      type: object
+    CreateBookTransferRequest:
+      properties:
+        allow_overdraft:
+          description: Allow the account to go negative for the transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it.
+          type: boolean
+        amount:
+          description: Amount (in cents) of the funds that will be transferred between sender and receiver accounts. e.g. $1.75 would be represented by 175.
+          format: int64
+          type: integer
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`.
+          type: string
+        description:
+          description: A description of the transfer visible in account statements.
+          type: string
+        details:
+          allOf:
+          - $ref: '#/components/schemas/BookTransferMonitoringDetailsRequest'
+          description: Additional monitoring details for the book transfer, used for compliance and reporting purposes.
+          type:
+          - object
+          - 'null'
+        hold:
+          description: If set to `true`, the transfer will be created in a `HOLD` status instead of completing immediately.
+          type: boolean
+        receiver_account_number_id:
+          description: ID of the account number that will receive the transfer.
+          type: string
+        receiver_bank_account_id:
+          description: ID of the bank account that will receive the transfer.
+          type: string
+        sender_account_number_id:
+          description: ID of the account number that is sending the transfer.
+          type: string
+        sender_bank_account_id:
+          description: ID of the bank account that is sending the transfer.
+          type: string
+      required:
+      - amount
+      - currency_code
+      type: object
+    BookTransfer:
+      description: The book transfer object is the current state of a single book transfer initiated in Column. A book transfer is the movement of funds between two bank accounts under your platform, and once initiated, happen instantaneously 24/7.
+      properties:
+        allow_overdraft:
+          description: Allows the account to go negative for an outgoing transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it
+          type: boolean
+        amount:
+          description: Amount (in cents) of the funds that will be transferred between sender and receiver accounts. e.g. $1.75 would be represented by 175.
+          format: int64
+          type: integer
+        created_at:
+          description: The timestamp at which the transfer request is created
+          format: date-time
+          type: string
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        description:
+          description: A description of the transfer visible in account statements
+          type: string
+        id:
+          description: The unique ID of the object
+          type: string
+        idempotency_key:
+          description: The idempotency key specified in the book transfer
+          type: string
+        receiver_account_number_id:
+          description: ID of the account number that will receive the transfer
+          type: string
+        receiver_bank_account_id:
+          description: ID of the bank account that will receive the transfer
+          type: string
+        sender_account_number_id:
+          description: ID of the account number that is sending the transfer
+          type: string
+        sender_bank_account_id:
+          description: ID of the bank account that is sending the transfer
+          type: string
+        status:
+          description: 'The current status of the book transfer. Possible values: `REJECTED`, `COMPLETED`, `HOLD`, and `CANCELED`.'
+          enum:
+          - COMPLETED
+          - REJECTED
+          - HOLD
+          - CANCELED
+          type: string
+        updated_at:
+          description: The timestamp at which the book transfer was updated (typically a status update)
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - idempotency_key
+      - sender_bank_account_id
+      - sender_account_number_id
+      - receiver_bank_account_id
+      - receiver_account_number_id
+      - amount
+      - currency_code
+      - description
+      - status
+      - allow_overdraft
+      type: object
+    UpdateBookTransferRequest:
+      properties:
+        allow_overdraft:
+          description: Allow the account to go negative for the transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it.
+          type: boolean
+        amount:
+          description: Updated amount (in cents) of the funds that will be transferred.
+          format: int64
+          type: integer
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`.
+          type: string
+      required:
+      - amount
+      - currency_code
+      type: object
+    Address:
+      description: A physical address
+      properties:
+        city:
+          description: City name
+          maxLength: 255
+          type: string
+        country_code:
+          description: Two-letter ISO 3166-1 alpha-2 country code (e.g. `US`)
+          maxLength: 3
+          type: string
+        line_1:
+          description: Street address line 1
+          maxLength: 255
+          type: string
+        line_2:
+          description: Street address line 2
+          maxLength: 255
+          type: string
+        postal_code:
+          description: Postal or ZIP code
+          maxLength: 24
+          type: string
+        state:
+          description: State or province
+          maxLength: 255
+          type: string
+      required:
+      - line_1
+      - city
+      - country_code
+      type: object
+    ClearBookTransferRequest:
+      properties:
+        allow_overdraft:
+          description: Allow the account to go negative for the transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it.
+          type: boolean
+        amount:
+          description: Amount (in cents) to clear. If not provided, the original transfer amount is used.
+          format: int64
+          type: integer
+        currency_code:
+          description: The three-letter ISO 4217 currency code (e.g., `USD`).
+          type:
+          - string
+          - 'null'
+      type: object
+    BookTransferList:
+      properties:
+        has_more:
+          description: Whether more book transfers are available
+          type: boolean
+        transfers:
+          description: List of book transfers
+          items:
+            $ref: '#/components/schemas/BookTransfer'
+          type: array
+      required:
+      - transfers
+      - has_more
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

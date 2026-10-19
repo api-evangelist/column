@@ -1,0 +1,236 @@
+openapi: 3.2.0
+info:
+  title: Column Tax Forms API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TaxForms
+paths:
+  /simulate/tax-forms:
+    post:
+      description: Simulates the creation of a tax form for an entity. This allows you to test the tax form workflow including filing statuses, mailing, and webhook events. The normal `7` calendar days grace period for filing will be ignored in simulations.
+      operationId: TaxForms_CreateTaxForm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateCreateTaxFormRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxForm'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a tax form
+      tags:
+      - TaxForms
+components:
+  schemas:
+    SimulateCreateTaxFormRequest:
+      properties:
+        entity_id:
+          description: The entity ID to create the tax form for
+          type: string
+        tax_year:
+          description: The tax year for the form
+          type: integer
+        type:
+          description: The type of tax form to create
+          type: string
+      required:
+      - entity_id
+      - tax_year
+      - type
+      type: object
+    Address:
+      description: A physical address
+      properties:
+        city:
+          description: City name
+          maxLength: 255
+          type: string
+        country_code:
+          description: Two-letter ISO 3166-1 alpha-2 country code (e.g. `US`)
+          maxLength: 3
+          type: string
+        line_1:
+          description: Street address line 1
+          maxLength: 255
+          type: string
+        line_2:
+          description: Street address line 2
+          maxLength: 255
+          type: string
+        postal_code:
+          description: Postal or ZIP code
+          maxLength: 24
+          type: string
+        state:
+          description: State or province
+          maxLength: 255
+          type: string
+      required:
+      - line_1
+      - city
+      - country_code
+      type: object
+    TaxForm:
+      description: The Tax Form object represents a tax form (e.g., `1099-INT`) generated for an entity. For accounts that earn interet at Column, Column will automatically file a tax form to both the state and federal government. Read about Tax Forms here.
+      properties:
+        comment:
+          description: Optional comment about the tax form (e.g., cancellation reason)
+          type:
+          - string
+          - 'null'
+        created_at:
+          description: ISO 8601 timestamp when the tax form was created
+          format: date-time
+          type: string
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`.
+          type: string
+        description:
+          description: Optional description of the tax form
+          type:
+          - string
+          - 'null'
+        document_id:
+          description: ID of the document containing PDF or Zip file of this tax form
+          type: string
+        entity_id:
+          description: ID of the entity this tax form belongs to
+          type: string
+        fed_accepted_at:
+          description: ISO 8601 timestamp when the IRS accepted the form
+          format: date-time
+          type:
+          - string
+          - 'null'
+        fed_rejected_at:
+          description: ISO 8601 timestamp when the IRS rejected the form
+          format: date-time
+          type:
+          - string
+          - 'null'
+        fed_sent_at:
+          description: ISO 8601 timestamp when the form was sent to the IRS
+          format: date-time
+          type:
+          - string
+          - 'null'
+        fed_status:
+          description: 'Status of federal filing. Possible values: `not_required`, `scheduled`, `sent`, `accepted`, `rejected`, `accepted_with_error`, `canceled`.'
+          type: string
+        gross_amount:
+          description: Gross amount in the smallest unit of `currency_code` (e.g., cents in `USD` ).
+          format: int64
+          type: integer
+        id:
+          description: Unique ID for the tax form
+          type: string
+        mail_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Mailing address for the tax form
+          type:
+          - object
+          - 'null'
+        mail_received_at:
+          description: ISO 8601 timestamp when the mail was received (if tracking available)
+          format: date-time
+          type:
+          - string
+          - 'null'
+        mail_sent_at:
+          description: ISO 8601 timestamp when the form was sent via mail
+          format: date-time
+          type:
+          - string
+          - 'null'
+        mail_status:
+          description: 'Status of physical mailing to the taxpayer. Possible values: `not_required`, `scheduled`, `sent`, `received`, `canceled`.'
+          type: string
+        state:
+          description: State code (e.g., CA) if state filing is required
+          type:
+          - string
+          - 'null'
+        state_accepted_at:
+          description: ISO 8601 timestamp when the state accepted the form
+          format: date-time
+          type:
+          - string
+          - 'null'
+        state_rejected_at:
+          description: ISO 8601 timestamp when the state rejected the form
+          format: date-time
+          type:
+          - string
+          - 'null'
+        state_sent_at:
+          description: ISO 8601 timestamp when the form was sent to the state
+          format: date-time
+          type:
+          - string
+          - 'null'
+        state_status:
+          description: 'Status of state filing. Possible values: `not_required`, `scheduled`, `sent`, `accepted`, `rejected`, `canceled`.'
+          type: string
+        tax_year:
+          description: The tax year this form covers (e.g., 2025)
+          type: integer
+        type:
+          description: 'Type of tax form. Possible types are: 1099_int (IRS 1099-INT form for interest income).'
+          type: string
+        updated_at:
+          description: ISO 8601 timestamp when the tax form was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - entity_id
+      - type
+      - tax_year
+      - currency_code
+      - gross_amount
+      - document_id
+      - created_at
+      - updated_at
+      - fed_status
+      - state_status
+      - mail_status
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

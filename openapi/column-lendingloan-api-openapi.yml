@@ -1,0 +1,958 @@
+openapi: 3.2.0
+info:
+  title: Column Lending Loan API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: LendingLoan
+paths:
+  /loans:
+    get:
+      description: List all loans under the platform. Filtered results can be retrieved with extra parameters in the query.
+      operationId: LendingLoan_ListLoans
+      parameters:
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter loans by entity ID.
+        in: query
+        name: entity_id
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter loans by loan program ID.
+        in: query
+        name: loan_program_id
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter loans by status.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - description: Filter loans by type.
+        in: query
+        name: type
+        required: false
+        schema:
+          enum:
+          - unsecured
+          - secured
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLoans'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all loans
+      tags:
+      - LendingLoan
+    post:
+      description: Creates a new loan under an entity.
+      operationId: LendingLoan_CreateLoan
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a new loan
+      tags:
+      - LendingLoan
+  /loans/{loan_id}:
+    get:
+      description: Retrieve a single loan by its ID.
+      operationId: LendingLoan_GetLoan
+      parameters:
+      - in: path
+        name: loan_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a loan by ID
+      tags:
+      - LendingLoan
+    patch:
+      description: Updates a loan by its ID.
+      operationId: LendingLoan_UpdateLoan
+      parameters:
+      - in: path
+        name: loan_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoanRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Update a loan
+      tags:
+      - LendingLoan
+  /loans/{loan_id}/history:
+    get:
+      description: Retrieve daily summary history for a specific loan. Read more.
+      operationId: LendingLoan_GetLoanHistory
+      parameters:
+      - in: path
+        name: loan_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanSummaryHistory'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get loan summary history
+      tags:
+      - LendingLoan
+  /loans/programs:
+    get:
+      description: List all loan programs for your platform. No query parameters are available - all loan programs for your platform will be returned.
+      operationId: LendingLoan_ListLoanPrograms
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLoanProgramsResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List loan programs
+      tags:
+      - LendingLoan
+  /loans/programs/{loan_program_id}:
+    get:
+      description: Retrieve a single loan program by its ID.
+      operationId: LendingLoan_GetLoanProgram
+      parameters:
+      - in: path
+        name: loan_program_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanProgram'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a loan program
+      tags:
+      - LendingLoan
+    patch:
+      description: It's unlikely that you will need to update a loan program. Please work with your Column team / Solution Engineer to update a loan program.
+      operationId: LendingLoan_UpdateLoanProgram
+      parameters:
+      - in: path
+        name: loan_program_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoanProgramRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanProgram'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Update loan program
+      tags:
+      - LendingLoan
+components:
+  schemas:
+    Loan:
+      description: A loan is an object that lives under an entity, at the same level as a bank account. Just like entities can have multiple bank accounts, entities can have multiple loans. Loans are the foundation for many lending-oriented use cases such as charge cards and term loans. [Read more]({{lending}}).
+      example:
+        allow_overpayment: false
+        auto_sell: false
+        balances:
+          interest_paid: '300'
+          interest_receivable: '54400'
+          principal_charged_off: '0'
+          principal_holding: '0'
+          principal_outstanding: '6666600'
+          principal_paid: '33300'
+          retained_interest_paid: '100'
+          retained_interest_receivable: '9800'
+          retained_principal_charged_off: '0'
+          retained_principal_outstanding: '1111100'
+          retained_principal_paid: '5500'
+          servicing_fee_payable: '560'
+        canceled_at: null
+        charged_off_at: null
+        collateral_locked_amount: 0
+        created_at: '2025-06-06T08:00:00Z'
+        currency: USD
+        delinquent_at: null
+        description: ''
+        disputed_at: null
+        id: loan_2zEi4Q67eiQqyQkGXPqEzWXn5Q
+        interest_config_id: icfg_2zEi4VfLQfR06mm1fnAGcwcNT1D
+        is_business_seasoning_days: false
+        is_revolving: true
+        loan_program_id: lpgm_2zEi4QiopsBnyfuHQweFXc7Csi8
+        maturity_date: '2025-07-30'
+        max_principal_balance: 100000000000
+        paid_off_at: null
+        primary_signer_entity_id: enti_2zEi4U3gAGjdRAVHOJ19UkyG27K
+        retained_by_column: false
+        seasoning_days: 2
+        status: current
+        type: unsecured
+      properties:
+        allow_overpayment:
+          description: Indicates if a loan is able to be overpaid and have a `principal_outstanding` of less than $0. If `false`, payments that would result in a loan having a negative balance will be blocked.
+          type: boolean
+        auto_sell:
+          description: 'Indicates if seasoned principals/interests should be automatically sold to your platform. Default: the value in the loan program.'
+          type: boolean
+        balances:
+          description: The loan balances.
+          properties:
+            interest_paid:
+              description: Total paid interest in cents belonging to Column and your platform.
+              type: string
+            interest_receivable:
+              description: Total outstanding interest receivable in cents for principal belonging to Column and your platform.
+              type: string
+            principal_charged_off:
+              description: The charged-off principal receivable.
+              type: string
+            principal_holding:
+              description: The principal receivable of the loan which is in a holding state.
+              type: string
+            principal_outstanding:
+              description: Total outstanding principal receivable in cents belonging to Column and your platform.
+              type: string
+            principal_paid:
+              description: The principal receivable of the loan which has been paid belonging to Column and your platform.
+              type: string
+            retained_interest_paid:
+              description: Total paid interest in cents belonging to Column.
+              type: string
+            retained_interest_receivable:
+              description: Total outstanding interest receivable in cents for principal belonging to Column.
+              type: string
+            retained_principal_charged_off:
+              description: The charged-off principal receivable belonging to Column.
+              type: string
+            retained_principal_outstanding:
+              description: Total outstanding principal receivable in cents belonging to Column.
+              type: string
+            retained_principal_paid:
+              description: Total paid principal receivable in cents belonging to Column.
+              type: string
+            servicing_fee_payable:
+              description: Total outstanding servicing fee payable in cents to your platform.
+              type: string
+          type:
+          - object
+          - 'null'
+        canceled_at:
+          description: The timestamp the loan was canceled at. Returns `null` when not applicable.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        charged_off_at:
+          description: The timestamp the loan was charged off. Returns `null` when not applicable.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        collateral_bank_account_id:
+          description: The bank account holding collateral for a secured loan.
+          type: string
+        collateral_locked_amount:
+          description: The collateral amount currently locked for this loan, in cents.
+          type: integer
+        created_at:
+          description: The timestamp the loan was created
+          format: date-time
+          type: string
+        currency:
+          description: The currency of the loan. Currently only `USD` is supported.
+          type: string
+        delinquent_at:
+          description: The timestamp the loan was marked as delinquent. Returns `null` when not applicable.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        description:
+          description: The description of the loan in the Column dashboard
+          type: string
+        disputed_at:
+          description: The timestamp the loan was marked as disputed. Returns `null` when not applicable.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        id:
+          description: The ID of the loan object
+          type: string
+        interest_config_id:
+          description: ID of the interest configuration used to accrue interest receivable daily. The same interest configuration can be shared across multiple loans.
+          type: string
+        is_business_seasoning_days:
+          description: Indicates if `seasoning_days` are business days or calendar days.
+          type: boolean
+        is_revolving:
+          description: Indicates whether or not the loan is revolving. If `true` the loan can have multiple disbursements.
+          type: boolean
+        loan_program_id:
+          description: ID of the loan program for this loan.
+          type: string
+        maturity_date:
+          description: The maturity date of the loan. It is required if the loan is not revolving.
+          type:
+          - string
+          - 'null'
+        max_principal_balance:
+          description: The max principal balance of the loan in cents. This is akin to a credit limit. Disbursements will fail if the resulting principal will be above the max principal.
+          type: integer
+        paid_off_at:
+          description: The timestamp the loan is marked as paid off. Returns `null` when not applicable.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        primary_signer_entity_id:
+          description: The Column `entity_id` which the loan is related to
+          type: string
+        retained_by_column:
+          description: Indicates if this loan should be retained by Column. Loans retained by Column are not eligible for your platform to purchase.
+          type: boolean
+        search_metadata:
+          allOf:
+          - $ref: '#/components/schemas/SearchMetadata'
+          type:
+          - object
+          - 'null'
+        seasoning_days:
+          description: Number of days principal receivables will be seasoned.
+          type: integer
+        status:
+          description: 'The current status of the loan. Possible values: `current`, `delinquent`, `charged_off`, `in_dispute`, `canceled`, `paid_off`.'
+          type: string
+        type:
+          description: The loan type. Possible values are `unsecured` and `secured`.
+          type: string
+      required:
+      - id
+      - created_at
+      - primary_signer_entity_id
+      - status
+      - maturity_date
+      - delinquent_at
+      - charged_off_at
+      - disputed_at
+      - paid_off_at
+      - canceled_at
+      - description
+      - allow_overpayment
+      - is_revolving
+      - currency
+      - max_principal_balance
+      - balances
+      - retained_by_column
+      - auto_sell
+      - interest_config_id
+      - loan_program_id
+      - seasoning_days
+      - is_business_seasoning_days
+      - type
+      - collateral_locked_amount
+      type: object
+    CreateLoanRequest:
+      properties:
+        allow_overpayment:
+          description: Indicates if a loan is able to be overpaid and have a `principal_outstanding` of less than $0. If `false`, payments that would result in a loan having a negative balance will be blocked.
+          type: boolean
+        auto_sell:
+          description: 'Indicates if seasoned principals/interests should be automatically sold to your platform. Default: the value in the loan program.'
+          type: boolean
+        collateral_bank_account_id:
+          description: The bank account that collateralizes a secured loan.
+          type: string
+        currency:
+          description: The three-letter currency code defined in ISO 4217, e.g. `USD`.
+          type: string
+        description:
+          description: The description of the loan in the Column dashboard.
+          type: string
+        entity_id:
+          description: The entity to create the loan under.
+          type: string
+        interest_config:
+          allOf:
+          - $ref: '#/components/schemas/CreateLoanInterestConfigRequest'
+          description: Inline interest configuration to create with the loan. Either `interest_config_id` or `interest_config` may be specified, but not both.
+          type:
+          - object
+          - 'null'
+        interest_config_id:
+          description: ID of the interest configuration used to accrue interest receivable daily. If this field is not set, the default interest configuration of the loan program will be used. The same interest configuration can be shared across multiple loans. Either `interest_config_id` or `interest_config` may be specified, but not both.
+          type: string
+        is_business_seasoning_days:
+          description: 'Indicates if `seasoning_days` are business days or calendar days. Default: the value in the loan program.'
+          type: boolean
+        is_revolving:
+          description: 'Indicates whether or not the loan is revolving. If `true` the loan can have multiple disbursements. Default: the value in the loan program.'
+          type: boolean
+        loan_program_id:
+          description: ID of the loan program for this loan. If this field is not set, your platform's default loan program will be used.
+          type: string
+        maturity_date:
+          description: The maturity date of the loan. It is required if the loan is not revolving.
+          format: date
+          type: string
+        max_principal_balance:
+          description: The max principal balance of the loan in cents. This is akin to a credit limit. Disbursements will fail if the resulting principal will be above the max principal. e.g. $1.75 would be represented by `175`.
+          type: integer
+        retained_by_column:
+          description: 'Indicates if this loan should be retained by Column. Loans retained by Column are not eligible for your platform to purchase. Default: the value in the loan program.'
+          type: boolean
+        seasoning_days:
+          description: 'Number of days principal receivables will be seasoned. Default: the value in the loan program.'
+          type:
+          - integer
+          - 'null'
+        type:
+          default: unsecured
+          description: The loan type. Defaults to `unsecured`.
+          type: string
+      required:
+      - entity_id
+      - max_principal_balance
+      - currency
+      - is_revolving
+      type: object
+    ListLoans:
+      properties:
+        has_more:
+          description: Whether additional loans exist beyond this page
+          type: boolean
+        loans:
+          description: List of loans
+          items:
+            $ref: '#/components/schemas/Loan'
+          type: array
+      required:
+      - loans
+      - has_more
+      type: object
+    LoanInterestConfigSnapshot:
+      description: A snapshot defining interest rates for a specific effective date or period.
+      properties:
+        effective_after_days:
+          description: The number of days after which this config snapshot becomes effective. Either `effective_date` or `effective_after_days` may be specified, but not both.
+          type:
+          - integer
+          - 'null'
+        effective_date:
+          description: The date in Pacific Time Zone (inclusive) on which this interest config snapshot becomes effective. Either `effective_date` or `effective_after_days` may be specified, but not both.
+          type:
+          - string
+          - 'null'
+        effective_day_mode:
+          description: 'The method for rolling the effective date derived from `effective_after_days` to the next business day if it falls on a weekend or holiday. Possible values: `business_day`, `next_business_day`.'
+          type: string
+        fixed_rate:
+          description: The fixed interest rate for this snapshot (4.50% would be represented as `0.045`).
+          type:
+          - string
+          - 'null'
+        pivot_percentage:
+          description: The percentage of the pivot rate to use for variable-rate interest calculation (e.g., `1.0` for 100% of the pivot rate).
+          type:
+          - string
+          - 'null'
+        pivot_relative:
+          description: The spread added to or subtracted from the pivot rate for variable-rate interest calculation (e.g., `0.02` for +2%).
+          type:
+          - string
+          - 'null'
+      type: object
+    LoanProgram:
+      description: Loan Program objects represent the configuration for loan programs in your platform. They define settings for loan purchases, auto-selling, and account configurations. You cannot create new loan programs on your own. Please work with your Column team / Solution Engineer to create loan programs for your platform based on your Column use cases. [Read more]({{lending}}).
+      example:
+        auto_sell: true
+        auto_sell_business_day_only: true
+        close_after_sale: false
+        collection_account_number_id: acno_2zI1Da9Ro0dvk6HT2gla1H0UTyS
+        created_at: '2025-06-01T12:00:00Z'
+        default_interest_config_id: icfg_2zI2JlS7Fg5vREXIbKS1qZgE73b
+        description: Consumer installment loans
+        id: lpgm_2zI2JlS7Fg5vREXIbKS1qZgE73b
+        is_business_seasoning_days: true
+        is_revolving: false
+        max_days_to_purchase: 5
+        purchase_funding_account_number_id: acno_2zI1Da9Ro0dvk6HT2gla1H0UTyS
+        retained_by_column: false
+        seasoning_days: 10
+        updated_at: '2025-06-15T08:30:00Z'
+      properties:
+        auto_sell:
+          description: Indicates if seasoned principals/interests should be automatically sold to your platform
+          type: boolean
+        auto_sell_business_day_only:
+          description: Whether auto-sell only occurs on business days
+          type: boolean
+        close_after_sale:
+          description: Indicates if loans that are not revolving should be closed after automatic sale. [Read more]({{lending.sale}}).
+          type: boolean
+        collection_account_number_id:
+          description: Default account number ID of your platform to deposit loan payments belonging to your platform in this loan program
+          type: string
+        created_at:
+          description: The timestamp when the loan program was created
+          format: date-time
+          type: string
+        default_interest_config_id:
+          description: ID of the default interest configuration for this loan program
+          type: string
+        description:
+          description: The description of the loan program
+          type:
+          - string
+          - 'null'
+        id:
+          description: The ID of the loan program
+          type: string
+        is_business_seasoning_days:
+          description: Indicates if the default `seasoning_days` are business days or calendar days
+          type: boolean
+        is_revolving:
+          description: Indicates if loans in this loan program are revolving
+          type: boolean
+        max_days_to_purchase:
+          description: Maximum number of calendar days for seasoned principals/interests to be purchased by your platform
+          type: integer
+        purchase_funding_account_number_id:
+          description: Default account number ID for your platform to fund loan purchases in this loan program
+          type: string
+        retained_by_column:
+          description: Indicates if loans in this loan program are retained by Column
+          type: boolean
+        seasoning_days:
+          description: Default number of seasoning days for loans in this loan program
+          type: integer
+        updated_at:
+          description: The timestamp when the loan program was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - description
+      - updated_at
+      - max_days_to_purchase
+      - auto_sell
+      - auto_sell_business_day_only
+      - is_revolving
+      - retained_by_column
+      - seasoning_days
+      - is_business_seasoning_days
+      - close_after_sale
+      - default_interest_config_id
+      - purchase_funding_account_number_id
+      - collection_account_number_id
+      type: object
+    UpdateLoanProgramRequest:
+      properties:
+        auto_sell:
+          description: Indicates if seasoned principals/interests should be automatically sold to your platform.
+          type: boolean
+        collection_account_number_id:
+          description: Default account number ID of your platform to deposit loan payments belonging to your platform.
+          type: string
+        default_interest_config_id:
+          description: ID of the default interest configuration for this loan program.
+          type: string
+        purchase_funding_account_number_id:
+          description: Default account number ID for your platform to fund loan purchases.
+          type: string
+      type: object
+    LoanSummaryHistory:
+      properties:
+        history:
+          description: List of loan summaries
+          items:
+            $ref: '#/components/schemas/LoanSummary'
+          type: array
+        loan_id:
+          description: The ID of the loan
+          type: string
+      required:
+      - loan_id
+      - history
+      type: object
+    UpdateLoanRequest:
+      properties:
+        allow_overpayment:
+          description: Indicates if a loan is able to be overpaid and have a `principal_outstanding` of less than $0. If `false`, payments that would result in a loan having a negative balance will be blocked.
+          type:
+          - boolean
+          - 'null'
+        auto_sell:
+          description: Indicates if seasoned principals/interests should be automatically sold to your platform.
+          type: boolean
+        description:
+          description: The description of the loan in the Column dashboard.
+          type:
+          - string
+          - 'null'
+        interest_config_id:
+          description: ID of the interest configuration used to accrue interest receivable daily. The same interest configuration can be shared across multiple loans.
+          type: string
+        is_business_seasoning_days:
+          description: Indicates if `seasoning_days` are business days or calendar days.
+          type: boolean
+        is_revolving:
+          description: Indicates whether or not the loan is revolving. If `true` the loan can have multiple disbursements.
+          type:
+          - boolean
+          - 'null'
+        loan_program_id:
+          description: ID of the loan program for this loan. If this field is not set, your platform's default loan program will be used.
+          type: string
+        maturity_date:
+          description: The maturity date of the loan. It is required if the loan is not revolving.
+          format: date
+          type:
+          - string
+          - 'null'
+        max_principal_balance:
+          description: The max principal balance of the loan in cents. This is akin to a credit limit. Disbursements will fail if the resulting principal will be above the max principal. e.g. $1.75 would be represented by `175`.
+          type:
+          - integer
+          - 'null'
+        retained_by_column:
+          description: Indicates if this loan should be retained by Column. Loans retained by Column are not eligible for your platform to purchase.
+          type: boolean
+        seasoning_days:
+          description: Number of days principal receivables will be seasoned.
+          type: integer
+        status:
+          description: 'The current status of the loan. Possible values: `current`, `delinquent`, `charged_off`, `in_dispute`, `canceled`, `paid_off`.'
+          type:
+          - string
+          - 'null'
+      type: object
+    SearchMetadata:
+      description: Search-specific metadata returned when a query is provided.
+      properties:
+        highlights:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Matched field fragments with highlighted terms
+          type: object
+        score:
+          description: Relevance score
+          format: double
+          type: number
+      type: object
+    CreateLoanInterestConfigRequest:
+      description: Configuration for interest accrual on a loan.
+      properties:
+        accrual_method:
+          description: 'The accrual method for interest calculation. Possible values: `actual_360`, `actual_365`, and `actual_actual`.'
+          type: string
+        description:
+          description: A description for the interest configuration
+          type:
+          - string
+          - 'null'
+        history:
+          description: List of interest config snapshots defining rates and their effective dates. At least one snapshot is required.
+          items:
+            $ref: '#/components/schemas/LoanInterestConfigSnapshot'
+          minItems: 1
+          type: array
+      required:
+      - accrual_method
+      - history
+      type: object
+    ListLoanProgramsResponse:
+      properties:
+        has_more:
+          description: Whether additional loan programs exist beyond this page
+          type: boolean
+        loan_programs:
+          description: List of loan programs
+          items:
+            $ref: '#/components/schemas/LoanProgram'
+          type: array
+      required:
+      - loan_programs
+      - has_more
+      type: object
+    LoanSummary:
+      description: Loan Summary objects represent daily snapshots of loan performance and financial data. [Read more]({{lending.report}}).
+      properties:
+        currency_code:
+          description: The currency code of the loan
+          type: string
+        daily_accrued_fee:
+          description: The servicing fee amount accrued on this date, in cents
+          type: integer
+        daily_accrued_interest:
+          description: The interest amount accrued on this date, in cents
+          type: integer
+        daily_disbursed_principal:
+          description: The principal amount disbursed on this date, in cents
+          type: integer
+        daily_fee_rate:
+          description: The daily servicing fee rate applied on this date
+          type: number
+        daily_interest_rate:
+          description: The daily interest rate applied on this date
+          type: number
+        daily_paid_fee:
+          description: The servicing fee amount paid on this date in loan sales, in cents
+          type: integer
+        daily_paid_interest:
+          description: The interest amount paid on this date, in cents
+          type: integer
+        daily_paid_principal:
+          description: The principal amount paid on this date, in cents
+          type: integer
+        daily_retained_accrued_interest:
+          description: The retained interest amount accrued on this date, in cents
+          type: integer
+        daily_retained_paid_interest:
+          description: The retained interest amount paid on this date, in cents
+          type: integer
+        daily_sold_interest:
+          description: The interest amount sold on this date, in cents
+          type: integer
+        daily_sold_principal:
+          description: The principal amount sold on this date, in cents
+          type: integer
+        effective_date:
+          description: 'The date for which this summary data is effective. Format: `YYYY-MM-DD`.'
+          type: string
+        retained_by_column:
+          description: Indicates whether the loan is retained by Column
+          type: boolean
+        sale_price:
+          description: The sale price of the loan, in cents
+          type: integer
+        status:
+          description: The current status of the loan
+          type: string
+        total_fee:
+          description: The total servicing fee amount of the loan, in cents
+          type: integer
+        total_interest:
+          description: The total interest amount of the loan, in cents
+          type: integer
+        total_principal:
+          description: The total principal amount of the loan, in cents
+          type: integer
+        total_retained_interest:
+          description: The total interest amount retained by Column, in cents
+          type: integer
+        total_retained_principal:
+          description: The total principal amount retained by Column, in cents
+          type: integer
+        total_seasoned_fee:
+          description: The total servicing fee amount that has met seasoning requirements, in cents
+          type: integer
+        total_seasoned_interest:
+          description: The total interest amount that has met seasoning requirements, in cents
+          type: integer
+        total_seasoned_principal:
+          description: The total principal amount that has met seasoning requirements, in cents
+          type: integer
+      required:
+      - effective_date
+      - status
+      - retained_by_column
+      - currency_code
+      - sale_price
+      - total_principal
+      - total_retained_principal
+      - total_seasoned_principal
+      - daily_disbursed_principal
+      - daily_paid_principal
+      - daily_sold_principal
+      - daily_interest_rate
+      - total_interest
+      - total_retained_interest
+      - total_seasoned_interest
+      - daily_accrued_interest
+      - daily_retained_accrued_interest
+      - daily_paid_interest
+      - daily_retained_paid_interest
+      - daily_sold_interest
+      - daily_fee_rate
+      - total_fee
+      - total_seasoned_fee
+      - daily_accrued_fee
+      - daily_paid_fee
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

@@ -1,0 +1,297 @@
+openapi: 3.2.0
+info:
+  title: Column Reporting API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: Reporting
+paths:
+  /reporting:
+    get:
+      description: List all available settlement reports under the platform. Filtered results can be retrieved with extra parameters in the query.
+      operationId: Reporting_ListSettlementReports
+      parameters:
+      - description: Filter settlement reports by category.
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter settlement reports from this date.
+        in: query
+        name: from_date
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter settlement reports by statement subject ID.
+        in: query
+        name: statement_subject_id
+        required: false
+        schema:
+          type: string
+      - description: Filter settlement reports to this date.
+        in: query
+        name: to_date
+        required: false
+        schema:
+          type: string
+      - description: Filter settlement reports by type.
+        in: query
+        name: type
+        required: false
+        schema:
+          items:
+            enum:
+            - bank_account_summary
+            - bank_account_transaction
+            - bank_account_monthly_statement
+            - bank_account_daily_statement
+            - bank_account_interest
+            - loan_daily_summary
+            type: string
+          type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListSettlementReportsResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all settlement reports
+      tags:
+      - Reporting
+    post:
+      operationId: Reporting_ScheduleSettlementReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettlementReportRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementReport'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Schedule a settlement report
+      tags:
+      - Reporting
+  /reporting/{settlement_report_id}:
+    get:
+      description: Get a settlement report by its ID. Please refer to our Reporting Guides for more details.
+      operationId: Reporting_GetSettlementReport
+      parameters:
+      - in: path
+        name: settlement_report_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementReport'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a settlement report by ID
+      tags:
+      - Reporting
+components:
+  schemas:
+    SettlementReportRequest:
+      properties:
+        from_date:
+          description: Starting date (inclusive) of transactions included in the settlement report
+          format: date
+          type: string
+        statement_subject_id:
+          description: The subject of the statement
+          type:
+          - string
+          - 'null'
+        to_date:
+          description: Ending date (inclusive) of transactions included in the settlement report
+          format: date
+          type: string
+        type:
+          description: Settlement report type. Can be `bank_account_summary`, `bank_account_transaction`, `loan_daily_summary`.
+          type: string
+      required:
+      - from_date
+      - to_date
+      - type
+      type: object
+    SettlementReport:
+      description: The settlement report object is a pointer to a settlement report generated by Column. Settlement reports contain data about historical bank account balances, and historical bank account transactions (book transfers, ACH, and wires).
+      properties:
+        bai2_document_id:
+          description: The ID of the BAI2 document
+          type: string
+        columns:
+          description: List of columns in the settlement report. Refer to Reporting Guidance for more details.
+          items:
+            type: string
+          type: array
+        completed_at:
+          description: The timestamp the settlement report was generated successfully
+          format: date-time
+          type:
+          - string
+          - 'null'
+        created_at:
+          description: The timestamp the settlement report was scheduled
+          format: date-time
+          type: string
+        csv_document_id:
+          description: Document ID to download the CSV format of the settlement report
+          type: string
+        from_date:
+          description: Starting date (inclusive, from the beginning of `from_date` in `time_zone`) of transactions included in the settlement report
+          format: date
+          type: string
+        id:
+          description: Unique identifier for the object
+          type: string
+        initiated_at:
+          description: The timestamp the settlement report was initiated to be processed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        json_document_id:
+          description: Document ID to download the JSON format of the settlement report
+          type: string
+        parquet_document_id:
+          description: Document ID to download the Parquet format of the settlement report
+          type: string
+        pdf_document_id:
+          description: The ID of the PDF document
+          type: string
+        row_count:
+          description: Total number of records in the settlement report
+          type:
+          - integer
+          - 'null'
+        statement_subject:
+          description: The subject of the statement
+          type:
+          - string
+          - 'null'
+        statement_subject_description:
+          description: Description of the statement subject
+          type: string
+        status:
+          description: The current status of the report. Either `scheduled` or `completed`. Reports remain `scheduled` until generation succeeds, at which point they transition to `completed`.
+          type: string
+        time_zone:
+          description: Time zone of the settlement report to decide day boundaries. It is a value defined in the IANA TZ database (e.g., America/Los_Angeles, UTC, etc.).
+          type: string
+        to_date:
+          description: Ending date (inclusive, up to the end of `to_date` in `time_zone`) of transactions included in the settlement report
+          format: date
+          type: string
+        type:
+          description: Settlement report type. Can be `bank_account_summary`, `bank_account_transaction`, `bank_account_daily_statement`, `loan_daily_summary`.
+          type: string
+        updated_at:
+          description: The timestamp the settlement report was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - type
+      - status
+      - time_zone
+      - from_date
+      - to_date
+      - initiated_at
+      - completed_at
+      - row_count
+      - columns
+      - csv_document_id
+      - json_document_id
+      - parquet_document_id
+      - bai2_document_id
+      - pdf_document_id
+      - statement_subject
+      type: object
+    ListSettlementReportsResponse:
+      properties:
+        has_more:
+          description: Whether there are more reports available
+          type: boolean
+        reports:
+          description: The list of settlement reports
+          items:
+            $ref: '#/components/schemas/SettlementReport'
+          type: array
+      required:
+      - reports
+      - has_more
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

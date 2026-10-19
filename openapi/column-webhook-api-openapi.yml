@@ -1,0 +1,663 @@
+openapi: 3.2.0
+info:
+  title: Column Webhook API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: Webhook
+paths:
+  /webhook-deliveries/endpoint/{id}:
+    get:
+      description: List all the webhook delivery and retry attempts for this endpoint.
+      operationId: Webhook_ListEndpointWebhookDeliveries
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookDeliveries'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all webhook deliveries
+      tags:
+      - Webhook
+  /webhook-deliveries/event/{id}:
+    get:
+      description: List all the webhook delivery and retry attempts for this event.
+      operationId: Webhook_ListEventWebhookDeliveries
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookDeliveries'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List webhook deliveries by event
+      tags:
+      - Webhook
+  /webhook-endpoints:
+    get:
+      description: List all webhooks under your developer account.
+      operationId: Webhook_ListWebhookEndpoints
+      parameters:
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookEndpoints'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all webhook endpoints
+      tags:
+      - Webhook
+    post:
+      description: Create a webhook URL and description. This can also be done on the dashboard.
+      operationId: Webhook_CreateWebhookEndpoint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWebhookEndpointRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a webhook endpoint
+      tags:
+      - Webhook
+  /webhook-endpoints/{webhook_endpoint_id}:
+    delete:
+      description: Delete a webhook endpoint by its ID.
+      operationId: Webhook_DeleteWebhookEndpoint
+      parameters:
+      - in: path
+        name: webhook_endpoint_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Delete a webhook endpoint
+      tags:
+      - Webhook
+    get:
+      description: Retrieve a single webhook endpoint by its ID.
+      operationId: Webhook_GetWebhookEndpoint
+      parameters:
+      - in: path
+        name: webhook_endpoint_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a webhook endpoint
+      tags:
+      - Webhook
+    patch:
+      description: Update a webhook endpoint by its ID.
+      operationId: Webhook_UpdateWebhookEndpoint
+      parameters:
+      - in: path
+        name: webhook_endpoint_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWebhookEndpointRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Update a webhook endpoint
+      tags:
+      - Webhook
+  /webhook-endpoints/{webhook_endpoint_id}/verify:
+    post:
+      description: Send a test event to a webhook endpoint to verify it is configured correctly.
+      operationId: Webhook_VerifyWebhookEndpoint
+      parameters:
+      - in: path
+        name: webhook_endpoint_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyWebhookEndpointRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Verify a webhook endpoint
+      tags:
+      - Webhook
+  /webhook_deliveries/endpoint/{id}:
+    get:
+      deprecated: true
+      operationId: getWebhookDeliveriesEndpointById
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookDeliveries'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List webhook deliveries by endpoint
+      tags:
+      - Webhook
+      x-operation-id-source: normalized
+      x-operation-id-original: Webhook_ListEndpointWebhookDeliveries
+  /webhook_deliveries/event/{id}:
+    get:
+      deprecated: true
+      operationId: getWebhookDeliveriesEventById
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookDeliveries'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List webhook deliveries by event
+      tags:
+      - Webhook
+      x-operation-id-source: normalized
+      x-operation-id-original: Webhook_ListEventWebhookDeliveries
+  /webhook_endpoints:
+    get:
+      deprecated: true
+      operationId: getWebhookEndpoints
+      parameters:
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWebhookEndpoints'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all webhook endpoints
+      tags:
+      - Webhook
+      x-operation-id-source: normalized
+      x-operation-id-original: Webhook_ListWebhookEndpoints
+    post:
+      deprecated: true
+      operationId: postWebhookEndpoints
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWebhookEndpointRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a webhook endpoint
+      tags:
+      - Webhook
+      x-operation-id-source: normalized
+      x-operation-id-original: Webhook_CreateWebhookEndpoint
+  /webhook_endpoints/{webhook_endpoint_id}:
+    delete:
+      deprecated: true
+      operationId: deleteWebhookEndpointsByWebhookEndpointId
+      parameters:
+      - in: path
+        name: webhook_endpoint_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Delete a webhook endpoint
+      tags:
+      - Webhook
+      x-operation-id-source: normalized
+      x-operation-id-original: Webhook_DeleteWebhookEndpoint
+    get:
+      deprecated: true
+      operationId: getWebhookEndpointsByWebhookEndpointId
+      parameters:
+      - in: path
+        name: webhook_endpoint_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a webhook endpoint
+      tags:
+      - Webhook
+      x-operation-id-source: normalized
+      x-operation-id-original: Webhook_GetWebhookEndpoint
+    patch:
+      deprecated: true
+      operationId: patchWebhookEndpointsByWebhookEndpointId
+      parameters:
+      - in: path
+        name: webhook_endpoint_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWebhookEndpointRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Update a webhook endpoint
+      tags:
+      - Webhook
+      x-operation-id-source: normalized
+      x-operation-id-original: Webhook_UpdateWebhookEndpoint
+  /webhook_endpoints/{webhook_endpoint_id}/verify:
+    post:
+      deprecated: true
+      operationId: postWebhookEndpointsByWebhookEndpointIdVerify
+      parameters:
+      - in: path
+        name: webhook_endpoint_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyWebhookEndpointRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Verify a webhook endpoint
+      tags:
+      - Webhook
+      x-operation-id-source: normalized
+      x-operation-id-original: Webhook_VerifyWebhookEndpoint
+components:
+  schemas:
+    CreateWebhookEndpointRequest:
+      properties:
+        description:
+          description: A description for this webhook endpoint.
+          type: string
+        enabled_events:
+          description: A list of events and event types which will be sent to this webhook's URL.
+          items:
+            type: string
+          type: array
+        url:
+          description: The HTTPS URL that webhooks will be delivered to.
+          type: string
+      required:
+      - enabled_events
+      - url
+      - description
+      type: object
+    WebhookDelivery:
+      properties:
+        event:
+          allOf:
+          - $ref: '#/components/schemas/Event'
+          description: The event payload associated with this webhook delivery.
+          type:
+          - object
+          - 'null'
+        scheduled_at:
+          description: The timestamp at which the webhook delivery is scheduled.
+          format: date-time
+          type: string
+        status:
+          description: 'The delivery status of the webhook. Possible values: `pending`, `succeeded`, `failed`.'
+          type: string
+      required:
+      - event
+      - scheduled_at
+      - status
+      type: object
+    VerifyWebhookEndpointRequest:
+      properties:
+        event_type:
+          description: The event type to send a test webhook for
+          type: string
+      required:
+      - event_type
+      type: object
+    ListWebhookEndpoints:
+      properties:
+        webhook_endpoints:
+          description: List of webhook endpoints.
+          items:
+            $ref: '#/components/schemas/WebhookEndpoint'
+          type: array
+      required:
+      - webhook_endpoints
+      type: object
+    ListWebhookDeliveries:
+      properties:
+        webhook_deliveries:
+          description: List of webhook deliveries.
+          items:
+            $ref: '#/components/schemas/WebhookDelivery'
+          type: array
+      required:
+      - webhook_deliveries
+      type: object
+    WebhookEndpoint:
+      description: The webhook object is the current state of a particular webhook endpoint set up in Column. Webhook endpoints are used to configure URLs used to receive Column events.
+      properties:
+        created_at:
+          description: 'Date (format: `YYYY-MM-DD`) on which the event was emitted'
+          format: date-time
+          type: string
+        description:
+          description: A description for this webhook
+          type: string
+        enabled_events:
+          description: A list of events and event types which are being sent to this webhook's URL
+          items:
+            type: string
+          type: array
+        id:
+          description: The unique ID of the object
+          type: string
+        is_disabled:
+          description: Indicates whether this webhook URL is actively receiving events
+          type: boolean
+        secret:
+          description: Secret key which allows you to verify that the event was sent by Column, and not by a third party
+          type: string
+        updated_at:
+          description: Timestamp of when this webhook was last updated
+          format: date-time
+          type: string
+        url:
+          description: The HTTPS URL that webhooks will be delivered to. e.g. https://yoursite.com/column-events
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - description
+      - enabled_events
+      - secret
+      - is_disabled
+      - url
+      type: object
+    UpdateWebhookEndpointRequest:
+      properties:
+        description:
+          description: A description for this webhook endpoint.
+          type: string
+        enabled_events:
+          description: A list of events and event types which will be sent to this webhook's URL.
+          items:
+            type: string
+          type: array
+        is_disabled:
+          description: Set to `true` to disable this webhook endpoint from receiving events.
+          type: boolean
+        url:
+          description: The HTTPS URL that webhooks will be delivered to.
+          type: string
+      type: object
+    Event:
+      description: The event object is a snapshot of a particular data object (ACH, wire, book, return..etc) in time. An event object will be created each time a data object is created, or changes state. For example, you can use events to track state changes of a particular transfer over time - like an ACH transfer that has been initiated, submitted, settled, or returned.
+      properties:
+        created_at:
+          description: The timestamp at which the event was emitted
+          format: date-time
+          type: string
+        data:
+          description: The object instance that triggered the event to be emitted. For example, on an ach.* event, this will be the ACH object.
+          type: object
+        id:
+          description: The unique ID of the object
+          type: string
+        type:
+          description: The type of event which was emitted. See Events and Webhooks for more information.
+          type: string
+      required:
+      - id
+      - created_at
+      - type
+      - data
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

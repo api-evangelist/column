@@ -156,130 +156,267 @@ apis:
     url: https://docs.column.com/working-with-the-api/events-and-webhooks/
   - type: AsyncAPI
     url: openapi/column-asyncapi.yml
-- aid: column:column-account-numbers-api
-  name: Column Account Numbers API
-  description: The Account Numbers API from Column — 2 operation(s) for account numbers.
+- aid: column:column-accountnumber-api
+  name: Column Account Number API
+  description: The AccountNumber API from Column — 2 operation(s) for accountnumber.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
-  - Account Numbers
+  - AccountNumber
   properties:
   - type: OpenAPI
-    url: openapi/column-account-numbers-api-openapi.yml
-- aid: column:column-ach-transfers-api
-  name: Column ACH Transfers API
-  description: The ACH Transfers API from Column — 4 operation(s) for ach transfers.
+    url: openapi/column-accountnumber-api-openapi.yml
+- aid: column:column-cards-api
+  name: Column Cards API
+  description: The Cards API from Column — 57 operation(s) for cards.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
-  - ACH Transfers
+  - Cards
   properties:
   - type: OpenAPI
-    url: openapi/column-ach-transfers-api-openapi.yml
-- aid: column:column-bank-accounts-api
-  name: Column Bank Accounts API
-  description: The Bank Accounts API from Column — 2 operation(s) for bank accounts.
+    url: openapi/column-cards-api-openapi.yml
+- aid: column:column-counterparty-api
+  name: Column Counterparty API
+  description: The Counterparty API from Column — 2 operation(s) for counterparty.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
-  - Bank Accounts
+  - Counterparty
   properties:
   - type: OpenAPI
-    url: openapi/column-bank-accounts-api-openapi.yml
-- aid: column:column-book-transfers-api
-  name: Column Book Transfers API
-  description: The Book Transfers API from Column — 2 operation(s) for book transfers.
+    url: openapi/column-counterparty-api-openapi.yml
+- aid: column:column-documents-api
+  name: Column Documents API
+  description: The Documents API from Column — 2 operation(s) for documents.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
-  - Book Transfers
+  - Documents
   properties:
   - type: OpenAPI
-    url: openapi/column-book-transfers-api-openapi.yml
-- aid: column:column-check-transfers-api
-  name: Column Check Transfers API
-  description: The Check Transfers API from Column — 3 operation(s) for check transfers.
-  humanURL: https://column.com/docs/api
-  baseURL: https://api.column.com
-  tags:
-  - Check Transfers
-  properties:
-  - type: OpenAPI
-    url: openapi/column-check-transfers-api-openapi.yml
-- aid: column:column-counterparties-api
-  name: Column Counterparties API
-  description: The Counterparties API from Column — 2 operation(s) for counterparties.
-  humanURL: https://column.com/docs/api
-  baseURL: https://api.column.com
-  tags:
-  - Counterparties
-  properties:
-  - type: OpenAPI
-    url: openapi/column-counterparties-api-openapi.yml
-- aid: column:column-entities-api
-  name: Column Entities API
-  description: The Entities API from Column — 4 operation(s) for entities.
-  humanURL: https://column.com/docs/api
-  baseURL: https://api.column.com
-  tags:
-  - Entities
-  properties:
-  - type: OpenAPI
-    url: openapi/column-entities-api-openapi.yml
-- aid: column:column-events-api
-  name: Column Events API
-  description: The Events API from Column — 2 operation(s) for events.
+    url: openapi/column-documents-api-openapi.yml
+- aid: column:column-event-api
+  name: Column Event API
+  description: The Event API from Column — 3 operation(s) for event.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
   - Event
-  tags_raw:
-  - Events
   properties:
   - type: OpenAPI
-    url: openapi/column-events-api-openapi.yml
-- aid: column:column-international-wires-api
-  name: Column International Wires API
-  description: The International Wires API from Column — 2 operation(s) for international wires.
+    url: openapi/column-event-api-openapi.yml
+- aid: column:column-financialinstitution-api
+  name: Column Financial Institution API
+  description: The FinancialInstitution API from Column — 3 operation(s) for financialinstitution.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
-  - International Wires
+  - FinancialInstitution
   properties:
   - type: OpenAPI
-    url: openapi/column-international-wires-api-openapi.yml
-- aid: column:column-realtime-transfers-api
-  name: Column Realtime Transfers API
-  description: The Realtime Transfers API from Column — 2 operation(s) for realtime transfers.
+    url: openapi/column-financialinstitution-api-openapi.yml
+- aid: column:column-identityentity-api
+  name: Column Identity Entity API
+  description: The IdentityEntity API from Column — 12 operation(s) for identityentity.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
-  - Realtime Transfers
+  - IdentityEntity
   properties:
   - type: OpenAPI
-    url: openapi/column-realtime-transfers-api-openapi.yml
-- aid: column:column-webhooks-api
-  name: Column Webhooks API
-  description: The Webhooks API from Column — 2 operation(s) for webhooks.
+    url: openapi/column-identityentity-api-openapi.yml
+- aid: column:column-lendingdisbursements-api
+  name: Column Lending Disbursements API
+  description: The LendingDisbursements API from Column — 4 operation(s) for lendingdisbursements.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - LendingDisbursements
+  properties:
+  - type: OpenAPI
+    url: openapi/column-lendingdisbursements-api-openapi.yml
+- aid: column:column-lendingloan-api
+  name: Column Lending Loan API
+  description: The LendingLoan API from Column — 5 operation(s) for lendingloan.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - LendingLoan
+  properties:
+  - type: OpenAPI
+    url: openapi/column-lendingloan-api-openapi.yml
+- aid: column:column-lendingpayments-api
+  name: Column Lending Payments API
+  description: The LendingPayments API from Column — 4 operation(s) for lendingpayments.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - LendingPayments
+  properties:
+  - type: OpenAPI
+    url: openapi/column-lendingpayments-api-openapi.yml
+- aid: column:column-lendingsale-api
+  name: Column Lending Sale API
+  description: The LendingSale API from Column — 5 operation(s) for lendingsale.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - LendingSale
+  properties:
+  - type: OpenAPI
+    url: openapi/column-lendingsale-api-openapi.yml
+- aid: column:column-reporting-api
+  name: Column Reporting API
+  description: The Reporting API from Column — 2 operation(s) for reporting.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Reporting
+  properties:
+  - type: OpenAPI
+    url: openapi/column-reporting-api-openapi.yml
+- aid: column:column-taxforms-api
+  name: Column Tax Forms API
+  description: The TaxForms API from Column — 1 operation(s) for taxforms.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TaxForms
+  properties:
+  - type: OpenAPI
+    url: openapi/column-taxforms-api-openapi.yml
+- aid: column:column-transfer-api
+  name: Column Transfer API
+  description: The Transfer API from Column — 1 operation(s) for transfer.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - Transfer
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transfer-api-openapi.yml
+- aid: column:column-transferach-api
+  name: Column Transfer ACH API
+  description: The TransferACH API from Column — 10 operation(s) for transferach.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferACH
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferach-api-openapi.yml
+- aid: column:column-transferachpositivepayrules-api
+  name: Column Transfer ACH Positive Pay Rules API
+  description: >-
+    The TransferACHPositivePayRules API from Column — 3 operation(s) for transferachpositivepayrules.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferACHPositivePayRules
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferachpositivepayrules-api-openapi.yml
+- aid: column:column-transferadmin-api
+  name: Column Transfer Admin API
+  description: The TransferAdmin API from Column — 1 operation(s) for transferadmin.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferAdmin
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferadmin-api-openapi.yml
+- aid: column:column-transferbook-api
+  name: Column Transfer Book API
+  description: The TransferBook API from Column — 4 operation(s) for transferbook.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferBook
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferbook-api-openapi.yml
+- aid: column:column-transfercheck-api
+  name: Column Transfer Check API
+  description: The TransferCheck API from Column — 11 operation(s) for transfercheck.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferCheck
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transfercheck-api-openapi.yml
+- aid: column:column-transferchecklockbox-api
+  name: Column Transfer Check Lockbox API
+  description: The TransferCheckLockbox API from Column — 2 operation(s) for transferchecklockbox.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferCheckLockbox
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferchecklockbox-api-openapi.yml
+- aid: column:column-transferchecks-api
+  name: Column Transfer Checks API
+  description: The TransferChecks API from Column — 2 operation(s) for transferchecks.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferChecks
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferchecks-api-openapi.yml
+- aid: column:column-transferrealtime-api
+  name: Column Transfer Realtime API
+  description: The TransferRealtime API from Column — 16 operation(s) for transferrealtime.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferRealtime
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferrealtime-api-openapi.yml
+- aid: column:column-transferswift-api
+  name: Column Transfer Swift API
+  description: The TransferSwift API from Column — 13 operation(s) for transferswift.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferSwift
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferswift-api-openapi.yml
+- aid: column:column-transferwire-api
+  name: Column Transfer Wire API
+  description: The TransferWire API from Column — 18 operation(s) for transferwire.
+  humanURL: https://column.com/docs/api
+  baseURL: https://api.column.com
+  tags:
+  - TransferWire
+  properties:
+  - type: OpenAPI
+    url: openapi/column-transferwire-api-openapi.yml
+- aid: column:column-webhook-api
+  name: Column Webhook API
+  description: The Webhook API from Column — 10 operation(s) for webhook.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
   - Webhook
-  tags_raw:
-  - Webhooks
   properties:
   - type: OpenAPI
-    url: openapi/column-webhooks-api-openapi.yml
-- aid: column:column-wire-transfers-api
-  name: Column Wire Transfers API
-  description: The Wire Transfers API from Column — 2 operation(s) for wire transfers.
+    url: openapi/column-webhook-api-openapi.yml
+- aid: column:column-bank-account-api
+  name: Column Bank Account API
+  description: The Bank Account API from Column — 6 operation(s) for bank account.
   humanURL: https://column.com/docs/api
   baseURL: https://api.column.com
   tags:
-  - Wire Transfers
+  - Bank Account
   properties:
   - type: OpenAPI
-    url: openapi/column-wire-transfers-api-openapi.yml
+    url: openapi/column-bank-account-api-openapi.yml
 common:
   - type: CapabilityMap
     url: capabilities/column-capability-edges.yml

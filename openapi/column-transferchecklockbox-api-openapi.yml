@@ -1,0 +1,341 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer Check Lockbox API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferCheckLockbox
+paths:
+  /transfers/checks/lockboxes:
+    get:
+      description: Retrieve all check lockboxes under your platform.
+      operationId: TransferCheckLockbox_ListLockboxes
+      parameters:
+      - description: Return results associated with this bank account.
+        in: query
+        name: bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLockboxes'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all check lockboxes
+      tags:
+      - TransferCheckLockbox
+    post:
+      description: Create and assign a check lockbox to a bank account or account number. If you specify a bank account, Column assigns the lockbox to the account's default account number. Each account number can have at most one linked lockbox.
+      operationId: TransferCheckLockbox_CreateLockbox
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLockboxRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lockbox'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a check lockbox
+      tags:
+      - TransferCheckLockbox
+  /transfers/checks/lockboxes/{lockbox_id}:
+    delete:
+      description: Close a check lockbox by its ID. Once closed, the lockbox can no longer be used to receive mailed checks.
+      operationId: TransferCheckLockbox_DeleteLockbox
+      parameters:
+      - in: path
+        name: lockbox_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lockbox'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Delete a check lockbox
+      tags:
+      - TransferCheckLockbox
+    get:
+      description: Retrieve a single check lockbox by its ID.
+      operationId: TransferCheckLockbox_GetLockbox
+      parameters:
+      - in: path
+        name: lockbox_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lockbox'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a check lockbox
+      tags:
+      - TransferCheckLockbox
+components:
+  schemas:
+    CreateLockboxRequest:
+      description: Request to create and assign a lockbox to a bank account or account number.
+      properties:
+        account_number_id:
+          description: ID of the account number to link to the lockbox. Either `bank_account_id` or `account_number_id` must be specified.
+          type: string
+        bank_account_id:
+          description: ID of the bank account to link to the lockbox. Either `bank_account_id` or `account_number_id` must be specified.
+          type: string
+        description:
+          description: 'Optional description of the lockbox. Maximum length: `255` characters.'
+          maxLength: 255
+          type: string
+        processing_center:
+          description: Processing center to use when creating the lockbox. Defaults to `TX`.
+          enum:
+          - CA
+          - NY
+          - TX
+          type: string
+      type: object
+    Lockbox:
+      description: A lockbox that receives mail and checks for an account.
+      properties:
+        account_number_id:
+          description: ID of the account number linked to the lockbox
+          example: acno_3VqZl7yJSJXOQp5X4qiPOusL6ga
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Mailing address for the lockbox
+          type:
+          - object
+          - 'null'
+        bank_account_id:
+          description: ID of the bank account linked to the lockbox
+          example: bacc_3VqZl1eEeP2cRXib4BLHfNCoGb7
+          type: string
+        created_at:
+          description: ISO 8601 timestamp when the lockbox was created
+          format: date-time
+          type: string
+        description:
+          description: Optional description of the lockbox
+          example: Operations lockbox
+          type:
+          - string
+          - 'null'
+        id:
+          description: Unique ID for the lockbox
+          example: lbox_3VqZkz3FNgKx24u8FQeGMB1L4mU
+          type: string
+        idempotency_key:
+          description: Idempotency key used to create the lockbox, if provided.
+          example: create-lockbox-2026-06-08
+          type: string
+        processing_center:
+          description: Processing center assigned to the lockbox.
+          enum:
+          - CA
+          - NY
+          - TX
+          example: TX
+          type: string
+        status:
+          description: 'The current status of the lockbox. Possible values:
+
+            - `active`: Lockbox is ready to accept checks.
+
+            - `closed`: Lockbox is deleted, and no more checks will be accepted.
+
+            - `pending`: Lockbox is still under review, and not ready to accept checks yet.'
+          enum:
+          - active
+          - closed
+          - pending
+          example: active
+          type: string
+        type:
+          description: Type of lockbox address.
+          enum:
+          - cmra
+          - registered_agent
+          example: cmra
+          type: string
+        updated_at:
+          description: ISO 8601 timestamp when the lockbox was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - bank_account_id
+      - account_number_id
+      - idempotency_key
+      - status
+      - processing_center
+      - address
+      - type
+      - created_at
+      - updated_at
+      type: object
+    ListLockboxes:
+      properties:
+        has_more:
+          description: Whether more lockboxes are available
+          type: boolean
+        lockboxes:
+          description: List of lockboxes
+          items:
+            $ref: '#/components/schemas/Lockbox'
+          type: array
+      required:
+      - lockboxes
+      - has_more
+      type: object
+    Address:
+      description: A physical address
+      properties:
+        city:
+          description: City name
+          maxLength: 255
+          type: string
+        country_code:
+          description: Two-letter ISO 3166-1 alpha-2 country code (e.g. `US`)
+          maxLength: 3
+          type: string
+        line_1:
+          description: Street address line 1
+          maxLength: 255
+          type: string
+        line_2:
+          description: Street address line 2
+          maxLength: 255
+          type: string
+        postal_code:
+          description: Postal or ZIP code
+          maxLength: 24
+          type: string
+        state:
+          description: State or province
+          maxLength: 255
+          type: string
+      required:
+      - line_1
+      - city
+      - country_code
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

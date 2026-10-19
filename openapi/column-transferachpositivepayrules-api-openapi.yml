@@ -1,0 +1,205 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer ACH Positive Pay Rules API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferACHPositivePayRules
+paths:
+  /ach-positive-pay-rules:
+    post:
+      description: Creates an ACH positive pay rule on a bank account.
+      operationId: TransferACHPositivePayRules_CreateACHPositivePayRule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateACHPositivePayRuleRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHPositivePayRuleResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create an ACH positive pay rule
+      tags:
+      - TransferACHPositivePayRules
+  /ach-positive-pay-rules/{ach_positive_pay_rule_id}:
+    delete:
+      description: Delete an ACH positive pay rule by its ID.
+      operationId: TransferACHPositivePayRules_DeleteACHPositivePayRule
+      parameters:
+      - in: path
+        name: ach_positive_pay_rule_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Delete an ACH positive pay rule
+      tags:
+      - TransferACHPositivePayRules
+    get:
+      description: Retrieve a single ACH positive pay rule by its ID.
+      operationId: TransferACHPositivePayRules_GetACHPositivePayRule
+      parameters:
+      - in: path
+        name: ach_positive_pay_rule_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ACHPositivePayRuleResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get an ACH positive pay rule
+      tags:
+      - TransferACHPositivePayRules
+  /bank-accounts/{bank_account_id}/ach-positive-pay-rules:
+    get:
+      description: Gets all ACH positive pay rules on a bank account.
+      operationId: TransferACHPositivePayRules_ListACHPositivePayRulesByBankAccount
+      parameters:
+      - in: path
+        name: bank_account_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListACHPositivePayRulesResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List ACH positive pay rules
+      tags:
+      - TransferACHPositivePayRules
+components:
+  schemas:
+    ListACHPositivePayRulesResponse:
+      properties:
+        ach_positive_pay_rules:
+          description: List of ACH positive pay rules
+          items:
+            $ref: '#/components/schemas/ACHPositivePayRuleResponse'
+          type: array
+        has_more:
+          description: Whether additional rules exist beyond this page
+          type: boolean
+      required:
+      - ach_positive_pay_rules
+      - has_more
+      type: object
+    ACHPositivePayRuleResponse:
+      description: The ACH Positive Pay Rule object represents a whitelist rule for handling incoming debits. Incoming debits to a bank account with at least one positive pay rule will be automatically returned unless the incoming debit meets the conditions of a positive pay rule on the account. A positive pay rule is uniquely identified by the target bank account and the ACH Company ID present in an incoming debit.
+      properties:
+        ach_company_id:
+          description: The ACH Company ID for the rule. This is a ten digit identifier.
+          type: string
+        ach_positive_pay_rule_id:
+          description: The unique ID of the ACH positive pay rule
+          type: string
+        amount:
+          description: the amount threshold in cents that will be used in rule evaluation. Must not be set if `amount_condition` is set to `ANY_AMOUNT`
+          format: int64
+          type: integer
+        amount_condition:
+          description: 'This required field configures the rule to make a specific kind of amount comparison. equal: The incoming debit will only be permitted if the transfer amount equals the rule amount. `less_than_or_equal_to`: The incoming debit will only be permitted if the transfer amount is less than or equal to the rule amount. `any_amount`: The incoming debit will be permitted for any amount.'
+          type: string
+        bank_account_id:
+          description: ID of the bank account this rule applies to
+          type: string
+        description:
+          description: 'Description of the rule. Maximum length: `255` characters.'
+          type: string
+      required:
+      - ach_positive_pay_rule_id
+      - bank_account_id
+      - description
+      - ach_company_id
+      - amount
+      - amount_condition
+      type: object
+    CreateACHPositivePayRuleRequest:
+      properties:
+        ach_company_id:
+          description: The ACH Company ID for the rule. This is a ten digit identifier.
+          type: string
+        amount:
+          description: the amount threshold in cents that will be used in rule evaluation. Must not be set if `amount_condition` is set to `ANY_AMOUNT`
+          format: int64
+          type:
+          - integer
+          - 'null'
+        amount_condition:
+          description: 'This required field configures the rule to make a specific kind of amount comparison. equal: The incoming debit will only be permitted if the transfer amount equals the rule amount. `less_than_or_equal_to`: The incoming debit will only be permitted if the transfer amount is less than or equal to the rule amount. `any_amount`: The incoming debit will be permitted for any amount.'
+          type: string
+        bank_account_id:
+          description: ID of the bank account this rule applies to
+          type: string
+        description:
+          description: 'Description of the rule. Maximum length: `255` characters.'
+          type: string
+      required:
+      - description
+      - ach_company_id
+      - bank_account_id
+      - amount_condition
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.

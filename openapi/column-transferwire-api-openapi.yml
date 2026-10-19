@@ -1,0 +1,1748 @@
+openapi: 3.2.0
+info:
+  title: Column Transfer Wire API
+  version: '1.4'
+  contact:
+    name: Column
+    url: https://column.com
+    email: support@column.com
+servers:
+- url: https://api.column.com/
+security:
+- BasicAuth: []
+tags:
+- name: TransferWire
+paths:
+  /simulate/receive-international-wire:
+    post:
+      description: Simulates an incoming international wire transfer to an account for the amount specified.
+      operationId: TransferWire_ReceiveInternationalWire
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateReceiveWireRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Receive an international wire
+      tags:
+      - TransferWire
+  /simulate/receive-wire:
+    post:
+      description: Simulates an incoming wire transfer to an account for the amount specified. We recommend using this API to set a balance on your account in the sandbox environment. This API is always enabled, and is not affected by the operating hours of the sandbox Fedwire system.
+      operationId: TransferWire_ReceiveWireTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateReceiveWireRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Receive a wire transfer
+      tags:
+      - TransferWire
+  /simulate/receive-wire-drawdown-request:
+    post:
+      description: Simulates an incoming wire drawdown request into the specified account number ID.
+      operationId: TransferWire_ReceiveWireDrawdownRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateReceiveWireDrawdownRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Receive a wire drawdown request
+      tags:
+      - TransferWire
+  /simulate/receive-wire-return-request:
+    post:
+      description: Simulates an incoming wire return request for a simulated incoming wire transfer.
+      operationId: TransferWire_ReceiveWireReturnRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateReceiveWireReturnRequestRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Receive a wire return request
+      tags:
+      - TransferWire
+  /simulate/transfers/wire/settle:
+    post:
+      description: Forces the submission and settlement of an outgoing Wire transfer, regardless of the operating hours of the Sandbox Fed. The wire message should move from `PENDING_SUBMISSION` to `COMPLETED` after this API call.
+      operationId: TransferWire_SettleWireTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateSettleWireTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Settle wire transfer
+      tags:
+      - TransferWire
+  /transfers/wire:
+    get:
+      description: Retrieve all wire transfers under your platform.
+      operationId: TransferWire_ListWireTransfers
+      parameters:
+      - description: Filter wire transfers by bank account ID.
+        in: query
+        name: bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Filter wire transfers by counterparty ID.
+        in: query
+        name: counterparty_id
+        required: false
+        schema:
+          type: string
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter for incoming wire transfers only.
+        in: query
+        name: is_incoming
+        required: false
+        schema:
+          type: boolean
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter wire transfers by status.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransferList'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all wire transfers
+      tags:
+      - TransferWire
+    post:
+      description: Create a wire transfer between a Column account and a counterparty.
+      operationId: TransferWire_CreateWireTransfer
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWireTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a wire transfer
+      tags:
+      - TransferWire
+  /transfers/wire/{wire_transfer_id}:
+    get:
+      description: Retrieve a single wire transfer by its ID.
+      operationId: TransferWire_GetWireTransfer
+      parameters:
+      - in: path
+        name: wire_transfer_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get wire transfer
+      tags:
+      - TransferWire
+  /transfers/wire/{wire_transfer_id}/cancel:
+    post:
+      description: Abort an outgoing wire transfer in a `hold` state. The held funds return to the available balance and the wire is never sent.
+      operationId: TransferWire_CancelWireTransfer
+      parameters:
+      - in: path
+        name: wire_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Cancel a held outgoing wire transfer
+      tags:
+      - TransferWire
+  /transfers/wire/{wire_transfer_id}/clear:
+    post:
+      description: Release the hold on a wire transfer in a `hold` state. For an incoming transfer the held funds move from the holding balance into the available balance and the transfer completes. For an outgoing transfer the held funds are released and the wire is sent.
+      operationId: TransferWire_ClearWireTransfer
+      parameters:
+      - in: path
+        name: wire_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Clear a held wire transfer
+      tags:
+      - TransferWire
+  /transfers/wire/{wire_transfer_id}/return-request:
+    post:
+      description: Sends an outgoing wire return request to request the return of funds of a previously sent outgoing wire transfer.
+      operationId: TransferWire_CreateWireReturnRequest
+      parameters:
+      - in: path
+        name: wire_transfer_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWireReturnRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireReturnRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a wire return request
+      tags:
+      - TransferWire
+  /transfers/wire/{wire_transfer_id}/reverse:
+    post:
+      description: Reverse an incoming wire transfer received in error. You can read more about Wire Reversals.
+      operationId: TransferWire_ReverseWireTransfer
+      parameters:
+      - in: path
+        name: wire_transfer_id
+        required: true
+        schema:
+          type: string
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReverseWireTransferRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Reverse an incoming wire transfer
+      tags:
+      - TransferWire
+  /transfers/wire/drawdown:
+    get:
+      description: Retrieve all wire drawdowns under your developer account.
+      operationId: TransferWire_ListWireDrawdownRequests
+      parameters:
+      - description: Filter wire drawdown requests by account number ID.
+        in: query
+        name: account_number_id
+        required: false
+        schema:
+          type: string
+      - description: Filter wire drawdown requests by bank account ID.
+        in: query
+        name: bank_account_id
+        required: false
+        schema:
+          type: string
+      - description: Filter wire drawdown requests by beneficiary counterparty ID.
+        in: query
+        name: beneficiary_counterparty_id
+        required: false
+        schema:
+          type: string
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter for incoming wire drawdown requests only.
+        in: query
+        name: is_incoming
+        required: false
+        schema:
+          type: boolean
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter wire drawdown requests by status.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWireDrawdownRequests'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all wire drawdown requests
+      tags:
+      - TransferWire
+    post:
+      description: Sends an outgoing wire drawdown to request funds from an external account.
+      operationId: TransferWire_CreateWireDrawdown
+      parameters:
+      - description: Idempotency keys can be up to 255 characters long and are case sensitive. Column reserves the right to expire idempotency keys after 30 days. Only ASCII printable characters (code 32 - 126) are allowed for idempotency keys.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWireDrawdownRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireDrawdownRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Create a wire drawdown request
+      tags:
+      - TransferWire
+  /transfers/wire/drawdown/{wire_drawdown_request_id}:
+    get:
+      description: Retrieves a single wire drawdown request by its ID.
+      operationId: TransferWire_GetWireDrawdownRequest
+      parameters:
+      - in: path
+        name: wire_drawdown_request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireDrawdownRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a wire drawdown request
+      tags:
+      - TransferWire
+  /transfers/wire/drawdown/{wire_drawdown_request_id}/approve:
+    post:
+      description: Approves a single wire drawdown request by its ID. If approved, an outgoing wire is initiated using the information specified in the drawdown request.
+      operationId: TransferWire_ApproveWireDrawdownRequest
+      parameters:
+      - in: path
+        name: wire_drawdown_request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireTransfer'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Approve a wire drawdown request
+      tags:
+      - TransferWire
+  /transfers/wire/return-requests:
+    get:
+      description: Retrieve all wire returns under your developer account.
+      operationId: TransferWire_ListWireReturnRequests
+      parameters:
+      - description: Return results where the `created_at` field is greater than this value.
+        in: query
+        name: created.gt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is greater than or equal to this value.
+        in: query
+        name: created.gte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than this value.
+        in: query
+        name: created.lt
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Return results where the `created_at` field is less than or equal to this value.
+        in: query
+        name: created.lte
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: A cursor for use in pagination. `ending_before` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, starting with `foo_ZXhhbXBsZQo`, your subsequent call can include `ending_before=foo_ZXhhbXBsZQo` in order to fetch the previous page of the list.
+        in: query
+        name: ending_before
+        required: false
+        schema:
+          type: string
+      - description: Filter for incoming wire return requests only.
+        in: query
+        name: is_incoming
+        required: false
+        schema:
+          type: boolean
+      - description: A limit on the number of objects to be returned, between `1` and `100`. The default is `10`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Filter wire return requests by the original wire transfer ID.
+        in: query
+        name: original_transfer_id
+        required: false
+        schema:
+          type: string
+      - description: A cursor for use in pagination. `starting_after` is an ID that defines your place in the list. For instance, if you make a list request and receive 20 objects, ending with `foo_ZXhhbXBsZQo`, your subsequent call can include `starting_after=foo_ZXhhbXBsZQo` in order to fetch the next page of the list.
+        in: query
+        name: starting_after
+        required: false
+        schema:
+          type: string
+      - description: Filter wire return requests by status.
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListWireReturnRequests'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: List all wire return requests
+      tags:
+      - TransferWire
+  /transfers/wire/return-requests/{wire_return_request_id}:
+    get:
+      description: Retrieves a single wire return request by its ID.
+      operationId: TransferWire_GetWireReturnRequest
+      parameters:
+      - in: path
+        name: wire_return_request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireReturnRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Get a wire return request
+      tags:
+      - TransferWire
+  /transfers/wire/return-requests/{wire_return_request_id}/approve:
+    post:
+      description: Approves a single wire return request by its ID. If approved, an outgoing wire is initiated using the information specified in the return request.
+      operationId: TransferWire_ApproveWireReturnRequest
+      parameters:
+      - in: path
+        name: wire_return_request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireReturnRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Approve a wire return request
+      tags:
+      - TransferWire
+  /transfers/wire/return-requests/{wire_return_request_id}/reject:
+    post:
+      description: Rejects a single wire return request by its ID. If rejected, a return response is sent to the requestor.
+      operationId: TransferWire_RejectWireReturnRequest
+      parameters:
+      - in: path
+        name: wire_return_request_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectWireReturnRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WireReturnRequest'
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+      summary: Reject a wire return request
+      tags:
+      - TransferWire
+components:
+  schemas:
+    WireTransferList:
+      properties:
+        has_more:
+          description: Whether there are more results available after this set.
+          type: boolean
+        transfers:
+          description: List of transfers.
+          items:
+            $ref: '#/components/schemas/WireTransfer'
+          type: array
+      required:
+      - transfers
+      - has_more
+      type: object
+    WireReturnRequestRejectReason:
+      enum:
+      - beneficiary_account_closed
+      - non_sufficient_funds
+      - funds_already_returned
+      - rejected_by_beneficiary
+      - legal_decision
+      - no_response_from_beneficiary
+      type: string
+    CreateWireDrawdownRequest:
+      properties:
+        amount:
+          description: Amount (in cents) of the wire drawdown request.
+          format: int64
+          type: integer
+        beneficiary_account_number_id:
+          description: ID of the account number that will receive the funds.
+          type: string
+        beneficiary_bank_account_id:
+          description: ID of the bank account that will receive the funds.
+          type: string
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`.
+          type: string
+        recipient_counterparty_id:
+          description: ID of the counterparty from which funds are being drawn.
+          type: string
+        recipient_description:
+          description: Description of the drawdown request sent to the recipient.
+          type: string
+      required:
+      - amount
+      - currency_code
+      - beneficiary_account_number_id
+      - beneficiary_bank_account_id
+      - recipient_counterparty_id
+      - recipient_description
+      type: object
+    WireReturnRequest:
+      description: A wire return request object represents a request to return funds from a wire transfer. Each return request object can be either sent or received and must always be associated with an existing wire transfer.
+      properties:
+        approved_at:
+          description: The timestamp when the wire return request is approved
+          format: date-time
+          type:
+          - string
+          - 'null'
+        completed_at:
+          description: The timestamp when the wire return request is completed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        created_at:
+          description: The timestamp when the wire return request was created
+          format: date-time
+          type: string
+        id:
+          description: The unique id of the wire return request object
+          type: string
+        is_incoming:
+          description: Whether this is an incoming return request (created by another bank) or outgoing (initiated by us)
+          type: boolean
+        manual_review_at:
+          description: The timestamp when the wire return request went into the manual review state
+          format: date-time
+          type:
+          - string
+          - 'null'
+        original_transfer_id:
+          description: ID of the original transfer that this return request is requesting to return
+          type:
+          - string
+          - 'null'
+        rejected_at:
+          description: The timestamp when the wire return request is rejected
+          format: date-time
+          type:
+          - string
+          - 'null'
+        return_request_reason:
+          description: The reason of the return request
+          type: string
+        return_request_response_reason:
+          description: The reason of the response to the return request
+          type: string
+        return_transfer_id:
+          description: ID of the return transfer
+          type:
+          - string
+          - 'null'
+        scheduled_at:
+          description: The timestamp when the wire return request is scheduled to be sent
+          format: date-time
+          type:
+          - string
+          - 'null'
+        sent_at:
+          description: The timestamp when the wire return request is sent
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: The status of the wire return request. Possible statuses include `initiated`, `scheduled`, `sent`, `manual_review`, `approved`, `rejected`, and `completed`.
+          type: string
+        updated_at:
+          description: The timestamp when the wire return request was updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - original_transfer_id
+      - return_transfer_id
+      - status
+      - is_incoming
+      - return_request_reason
+      - return_request_response_reason
+      - created_at
+      - updated_at
+      - manual_review_at
+      - approved_at
+      - rejected_at
+      - completed_at
+      - scheduled_at
+      - sent_at
+      type: object
+    WireDrawdownRequest:
+      description: The wire drawdown object represents the current state of a single wire drawdown received by Column. Wire drawdowns are used to request a customer send a wire to a verified counterparty.
+      properties:
+        account_number_id:
+          description: The Column account number id to which the wire drawdown request was made
+          type: string
+        amount:
+          description: Amount (in cents) that will be transferred between originator and counterparty accounts if the wire drawdown is approved
+          format: int64
+          type: integer
+        approved_at:
+          description: The timestamp at which the drawdown request was approved.
+          format: date-time
+          type: string
+        bank_account_id:
+          description: Column bank account id to which the wire drawdown request was made
+          type: string
+        beneficiary_account_number:
+          description: The external account number to which funds will be sent if the wire drawdown request is approved
+          type: string
+        beneficiary_counterparty_id:
+          description: The counterparty ID, which Column automatically creates, to which funds will be sent if the wire drawdown request is approved
+          type: string
+        beneficiary_name:
+          description: The beneficiary name to which funds will be sent if the wire drawdown request is approved
+          type: string
+        beneficiary_reference:
+          description: Reference information for the beneficiary.
+          type: string
+        completed_at:
+          description: The timestamp at which the drawdown request was completed.
+          format: date-time
+          type: string
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        description:
+          description: Description of the drawdown request.
+          type: string
+        id:
+          description: The unique id of the wire drawdown request object
+          type: string
+        imad:
+          description: The IMAD included in the wire drawdown request. Stands for Input/Output Message Accountability Data. A unique number set by the originating bank given to each Fedwire payment when using the Federal Reserve Bank Service and can be used to investigate and track wire transfers. IMAD will not be populated for on-us wire transfers.
+          type: string
+        is_incoming:
+          description: Indicates whether the wire drawdown request is incoming (`true`) or outgoing (`false`)
+          type: boolean
+        message_identifier:
+          description: The message identifier supplied in the wire drawdown request. This is typically the same as the IMAD.
+          type: string
+        originator_account_number:
+          description: The account number of the originator of the wire drawdown request. This is often different from the beneficiary account number.
+          type: string
+        originator_name:
+          description: The name of the originator who sent the wire drawdown request. This is often different from the beneficiary name.
+          type: string
+        originator_to_beneficiary_information:
+          description: Free form text where the originator may supply some additional information describing the wire drawdown request
+          items:
+            type: string
+          type: array
+        received_at:
+          description: Date/time at which the wire drawdown request was received (UTC)
+          format: date-time
+          type: string
+        receiver_di_name:
+          description: The name of the financial institution to which the wire drawdown request was sent
+          type: string
+        receiver_di_routing_number:
+          description: The routing number of the financial institution to which the wire drawdown request was sent
+          type: string
+        rejected_at:
+          description: The timestamp at which the drawdown request was rejected.
+          format: date-time
+          type: string
+        sender_di_name:
+          description: The name of the financial institution that sent the wire drawdown request
+          type: string
+        sender_di_routing_number:
+          description: The routing number of the financial institution that sent the wire drawdown request
+          type: string
+        sent_at:
+          description: The timestamp at which the drawdown request was sent.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: The status of the wire drawdown request. Possible statuses include `received`, `initiated`, `sent`, `approved`, `denied`, `completed`, and `rejected`.
+          type: string
+        wire_transfer_id:
+          description: The wire transfer ID of the outgoing wire transfer should a wire drawdown request be approved
+          type: string
+      required:
+      - id
+      - status
+      - sent_at
+      - bank_account_id
+      - account_number_id
+      - beneficiary_counterparty_id
+      - beneficiary_account_number
+      - beneficiary_name
+      - beneficiary_reference
+      - originator_account_number
+      - originator_name
+      - originator_to_beneficiary_information
+      - receiver_di_name
+      - receiver_di_routing_number
+      - sender_di_name
+      - sender_di_routing_number
+      - description
+      - amount
+      - currency_code
+      - imad
+      - message_identifier
+      - is_incoming
+      type: object
+    CreateWireTransferRequest:
+      properties:
+        account_number_id:
+          description: ID of the account number from which the wire transfer is sent. Exactly one of `bank_account_id` or `account_number_id` is required.
+          type: string
+        allow_overdraft:
+          description: Allow the account to go negative for the transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it.
+          type: boolean
+        amount:
+          description: Amount (in cents) of the funds that will be transferred. e.g. $1.75 would be represented by 175.
+          type: integer
+        bank_account_id:
+          description: ID of the bank account from which the wire transfer is sent. Exactly one of `bank_account_id` or `account_number_id` is required. If a `bank_account_id` is provided, the default account number on that bank account is used.
+          type: string
+        counterparty_id:
+          description: ID of the counterparty that will receive the transfer.
+          type: string
+        creditor_tax_id:
+          description: A Tax Identification Number (TIN) or Employer Identification Number (EIN) of exactly `9` numeric characters for the creditor.
+          type:
+          - string
+          - 'null'
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`.
+          type: string
+        description:
+          description: A description of the transfer. This field contains originator to beneficiary information and will be transmitted to the RDFI. `140` character limit.
+          type: string
+        hold:
+          description: Create the transfer with the funds held instead of submitting it. The amount is locked out of the available balance and the wire is not sent until it is cleared.
+          type: boolean
+        instructed_bank_routing_number:
+          description: 'Optional ABA routing number of the instructed bank (Fedwire receiver) when it differs from the counterparty''s bank. When specified, the wire is physically sent to this institution on Fedwire, which then forwards funds to the counterparty''s bank. Must be a valid Fedwire-eligible ABA routing number.
+
+            '
+          type:
+          - string
+          - 'null'
+        tax_record_period_type:
+          description: 'The tax record period type for tax-related wire transfers. Possible values: `MM01`-`MM12` (monthly), `QTR1`-`QTR4` (quarterly), `HLF1`-`HLF2` (half-yearly).'
+          type:
+          - string
+          - 'null'
+        tax_type_code:
+          description: 'The tax type code for tax-related wire transfers. Possible values: `WITF` (withholding tax), `TAXE` (tax payment).'
+          type:
+          - string
+          - 'null'
+        tax_year:
+          description: A Tax Year of exactly `4` numerical characters.
+          type:
+          - string
+          - 'null'
+        ultimate_originator_counterparty:
+          allOf:
+          - $ref: '#/components/schemas/CreateCounterparty'
+          description: Inline counterparty object for the ultimate originator. Use this instead of `ultimate_originator_counterparty_id` to create a new counterparty inline.
+        ultimate_originator_counterparty_id:
+          description: ID of the ultimate originating counterparty that sent the transfer in an outgoing wire transfer.
+          type: string
+      required:
+      - counterparty_id
+      - amount
+      - currency_code
+      type: object
+    Identity:
+      description: An identity (API key or dashboard user) that performed an action.
+      properties:
+        id:
+          description: The unique ID of the identity (e.g., API key ID or dashboard user ID).
+          type: string
+        name:
+          description: The display name of the identity.
+          type: string
+        type:
+          description: The type of the identity.
+          enum:
+          - API_KEY
+          - DASHBOARD_USER
+          type: string
+      required:
+      - id
+      - name
+      - type
+      type: object
+    WireTransfer:
+      description: The wire transfer object represents the current state of a single wire transfer initiated by or received by Column. Wire transfers are used to send and receive money over Fedwire. The wire transfer object exposes all relevant information about the wire transfer to developers.
+      properties:
+        account_number_id:
+          description: ID of the account number that is sending/receiving the transfer
+          type: string
+        allow_overdraft:
+          description: Allows the account to go negative for an outgoing transfer. The bank account needs to have `is_overdraftable` enabled with an overdraft reserve account linked to it
+          type: boolean
+        amount:
+          description: Amount (in cents) of the funds that will be transferred between originator and counterparty accounts. e.g. $1.75 would be represented by 175.
+          format: int64
+          type: integer
+        bank_account_id:
+          description: ID of the bank account that is sending/receiving the transfer
+          type: string
+        beneficiary_account_number:
+          description: The external account number to which the wire is being sent
+          type: string
+        beneficiary_name:
+          description: The name of the person who is receiving the wire
+          type: string
+        beneficiary_reference:
+          description: Reference information for the beneficiary included in the wire transfer.
+          type: string
+        business_function_code:
+          description: The business function code specified in the wire transfer. Possible business function codes are `BTR`, `CTP`, `CTR`, `DRC`, or `DRW`.
+          type: string
+        completed_at:
+          description: The timestamp when the wire was completed
+          format: date-time
+          type:
+          - string
+          - 'null'
+        counterparty_id:
+          description: ID of the counterparty that is receiving/sending the transfer
+          type: string
+        created_at:
+          description: The timestamp when the wire was created
+          format: date-time
+          type: string
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+          description: The identity (API key or dashboard user) that created the wire transfer.
+          type:
+          - object
+          - 'null'
+        creditor_agent_name:
+          description: Name of the creditor's financial institution.
+          type: string
+        creditor_agent_routing_number:
+          description: Routing number of the creditor's financial institution.
+          type: string
+        creditor_tax_id:
+          description: A Tax Identification Number (TIN) or Employer Identification Number (EIN) of exactly `9` numeric characters for the creditor. This field is only required when the counterparty routing number is one of the Treasury tax payment RTNs ('091036164' or '091036177') for an outgoing wire transfer.
+          type: string
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        debtor_agent_name:
+          description: Name of the debtor's financial institution.
+          type: string
+        debtor_agent_routing_number:
+          description: Routing number of the debtor's financial institution.
+          type: string
+        description:
+          description: A description of the transfer visible in account statements. This field contains "originator to beneficiary" information and will be transmitted to the RDFI. The description has a `140` character limit.
+          type: string
+        fi_to_fi_information_line_1:
+          description: Financial institution to financial institution information, most often used by a FI to explain the reason for a wire reversal
+          type: string
+        fi_to_fi_information_line_2:
+          description: Financial institution to financial institution information line 2.
+          type: string
+        fi_to_fi_information_line_3:
+          description: Financial institution to financial institution information line 3.
+          type: string
+        fi_to_fi_information_line_4:
+          description: Financial institution to financial institution information line 4.
+          type: string
+        fi_to_fi_information_line_5:
+          description: Financial institution to financial institution information line 5.
+          type: string
+        fi_to_fi_information_line_6:
+          description: Financial institution to financial institution information line 6.
+          type: string
+        hold_at:
+          description: The timestamp when the wire transfer entered the hold state.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        id:
+          description: The unique ID of the object
+          type: string
+        idempotency_key:
+          description: The idempotency key specified in the wire transfer
+          type: string
+        imad:
+          description: Stands for Input/Output Message Accountability Data. A unique number set by the originating bank given to each Fedwire payment when using the Federal Reserve Bank Service and can be used to investigate and track wire transfers. IMAD will be populated asynchronously and will not be populated on the completed event. IMAD will also not be populated for on-us wire transfers.
+          type: string
+        initiated_at:
+          description: The timestamp when the wire was initiated
+          format: date-time
+          type:
+          - string
+          - 'null'
+        instructed_agent_name:
+          description: Name of the instructed financial institution.
+          type: string
+        instructed_agent_routing_number:
+          description: Routing number of the instructed financial institution.
+          type: string
+        instructing_agent_name:
+          description: Name of the instructing financial institution.
+          type: string
+        instructing_agent_routing_number:
+          description: Routing number of the instructing financial institution.
+          type: string
+        is_incoming:
+          description: Indicates whether the wire transfer was incoming ( `true` or outgoing `false` )
+          type: boolean
+        is_on_us:
+          description: Indicates whether the wire transfer was between two bank accounts held at Column
+          type: boolean
+        manual_review_at:
+          description: The timestamp when the wire went into the manual review state
+          format: date-time
+          type:
+          - string
+          - 'null'
+        omad:
+          description: Stands for Input/Output Message Accountability Data. A unique number set by the Fed given to each Fedwire payment when using the Federal Reserve Bank Service and can be used to investigate and track wire transfers. OMAD will be populated asynchronously and will not be populated on the completed event. OMAD will also not be populated for on-us wire transfers.
+          type: string
+        originator_account_number:
+          description: The external account number from which the wire is originated
+          type: string
+        originator_name:
+          description: The name of the person or entity that is originating the wire
+          type: string
+        originator_to_beneficiary_information_line_1:
+          description: Originator to beneficiary information line 1.
+          type: string
+        originator_to_beneficiary_information_line_2:
+          description: Originator to beneficiary information line 2.
+          type: string
+        originator_to_beneficiary_information_line_3:
+          description: Originator to beneficiary information line 3.
+          type: string
+        originator_to_beneficiary_information_line_4:
+          description: Originator to beneficiary information line 4.
+          type: string
+        pending_submission_at:
+          description: The timestamp when the wire was marked PENDING_SUBMISSION
+          format: date-time
+          type:
+          - string
+          - 'null'
+        pre_review_at:
+          description: The timestamp at which transfer approval became required for the wire transfer, which then waits for an approval decision before being initiated. Only set when transfer approvals are enabled for the platform, or for the API key that created the transfer.
+          format: date-time
+          type: string
+        previous_message_reference:
+          description: The previous message identifier included in the raw wire message
+          type: string
+        raw_beneficiary_address:
+          description: The unstructured beneficiary address extracted from the raw wire message
+          type: string
+        raw_message:
+          description: The raw Fedwire message for this wire transfer.
+          type: string
+        raw_originator_address:
+          description: The unstructured originator address extracted from the raw wire message
+          type: string
+        receiver_di_name:
+          description: The name of the person / entity that received the wire
+          type: string
+        receiver_di_routing_number:
+          description: The routing number of the bank that received the wire
+          type: string
+        rejected_at:
+          description: The timestamp when the wire was rejected
+          format: date-time
+          type:
+          - string
+          - 'null'
+        return_additional_info:
+          description: Contains additional freeform text from the RDFI if provided (only populated for wire returns)
+          type: string
+        return_reason:
+          description: 'Reason the original transfer was returned. Possible values: `invalid_beneficiary_account_number`, `beneficiary_mismatch`, `beneficiary_request`, `originator_request`, `account_closed`, `account_blocked`, `incorrect_amount`, `fraud`, `missing_originator_data`, `missing_beneficiary_data`, `compliance`, `other`.'
+          type: string
+        reversal_pair_transfer_id:
+          description: If the transfer is the original transfer of a wire reversal, this field is the unique ID of the reversal transfer. If the transfer is the reversal transfer of a wire reversal, this field is the unique ID of the original transfer.
+          type: string
+        reviews:
+          description: The transfer approval decisions recorded on the wire transfer. Each entry is a dashboard user approving or rejecting the transfer while it was in `pre_review`. This list is only populated when transfer approvals are enabled for the platform, or for the API key that created the transfer; otherwise it is omitted from the response.
+          items:
+            $ref: '#/components/schemas/TransferReview'
+          type: array
+        sender_address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: The address of the sender of the wire transfer.
+          type:
+          - object
+          - 'null'
+        sender_di_name:
+          description: The name of the person / entity that sent the wire
+          type: string
+        sender_di_routing_number:
+          description: The routing number of the bank that sent the wire
+          type: string
+        sender_reference:
+          description: The sender reference field parsed out from the raw wire message
+          type: string
+        status:
+          description: 'The current status of the wire transfer. Possible values: `INITIATED`, `PRE_REVIEW`, `COMPLETED`, `REJECTED`, `MANUAL_REVIEW`, `HOLD`, and `CANCELED`.'
+          enum:
+          - INITIATED
+          - PRE_REVIEW
+          - COMPLETED
+          - REJECTED
+          - MANUAL_REVIEW
+          - HOLD
+          - CANCELED
+          type: string
+        submitted_at:
+          description: The timestamp when the wire was submitted
+          format: date-time
+          type:
+          - string
+          - 'null'
+        subtype_code:
+          description: The subtype code specified in the wire transfer
+          type: string
+        tax_record_period_type:
+          description: The Tax Month in the tax remittance component. This field is only required when the counterparty routing number is one of the Treasury tax payment RTNs for an outgoing wire transfer. Possible values are `MM01` through `MM12` (January through December).
+          type: string
+        tax_type_code:
+          description: Tax Type Code of exactly `5` alphanumeric characters (capital letters and numbers). This field is only required when the counterparty routing number is one of the Treasury tax payment RTNs for an outgoing wire transfer.
+          type: string
+        tax_year:
+          description: A Tax Year of exactly `4` numerical characters. This field is only required when the counterparty routing number is one of the Treasury tax payment RTNs for an outgoing wire transfer.
+          type: string
+        type_code:
+          description: The type code specified in the wire transfer
+          type: string
+        ultimate_originator_counterparty_id:
+          description: ID of the ultimate originating counterparty that sent the transfer in an outgoing wire transfer. If present, this will replace the originator field in the outgoing wire message.
+          type: string
+        updated_at:
+          description: The timestamp when the wire was updated
+          format: date-time
+          type: string
+        wire_drawdown_request_id:
+          description: ID of the wire drawdown request if the wire is sent in response to a wire drawdown request
+          type: string
+      required:
+      - id
+      - created_at
+      - created_by
+      - updated_at
+      - initiated_at
+      - pending_submission_at
+      - submitted_at
+      - completed_at
+      - rejected_at
+      - manual_review_at
+      - idempotency_key
+      - bank_account_id
+      - account_number_id
+      - counterparty_id
+      - amount
+      - currency_code
+      - description
+      - status
+      - allow_overdraft
+      - is_on_us
+      - is_incoming
+      - omad
+      - type_code
+      - subtype_code
+      - imad
+      - sender_di_routing_number
+      - sender_di_name
+      - sender_reference
+      - receiver_di_routing_number
+      - receiver_di_name
+      - previous_message_reference
+      - business_function_code
+      - beneficiary_name
+      - raw_beneficiary_address
+      - beneficiary_account_number
+      - beneficiary_reference
+      - originator_name
+      - raw_originator_address
+      - originator_account_number
+      - originator_to_beneficiary_information_line_1
+      - originator_to_beneficiary_information_line_2
+      - originator_to_beneficiary_information_line_3
+      - originator_to_beneficiary_information_line_4
+      - fi_to_fi_information_line_1
+      - fi_to_fi_information_line_2
+      - fi_to_fi_information_line_3
+      - fi_to_fi_information_line_4
+      - fi_to_fi_information_line_5
+      - fi_to_fi_information_line_6
+      - sender_address
+      - reversal_pair_transfer_id
+      - wire_drawdown_request_id
+      - ultimate_originator_counterparty_id
+      - creditor_tax_id
+      - tax_record_period_type
+      - tax_type_code
+      - tax_year
+      - debtor_agent_routing_number
+      - debtor_agent_name
+      - instructing_agent_routing_number
+      - instructing_agent_name
+      - instructed_agent_routing_number
+      - instructed_agent_name
+      - creditor_agent_routing_number
+      - creditor_agent_name
+      type: object
+    SimulateReceiveWireDrawdownRequest:
+      properties:
+        amount:
+          description: Amount (in cents) to credit the account. e.g. $1.75 would be represented by 175
+          format: int64
+          type: integer
+        beneficiary_counterparty_id:
+          description: Optional counterparty ID for the beneficiary
+          type: string
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        destination_account_number_id:
+          description: Identifier for the destination account number
+          type: string
+      required:
+      - destination_account_number_id
+      - amount
+      - currency_code
+      type: object
+    CreateCounterparty:
+      properties:
+        account_number:
+          description: The account number for the bank account.
+          type: string
+        account_type:
+          description: The type of the account number. Can be `checking`, `savings`, `general_ledger`, or `loan`.
+          type: string
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Addresses need to adhere to character validation, as addresses are used across multiple payment rails. Characters are validated according to the Fedwire character validation.
+          type:
+          - object
+          - 'null'
+        description:
+          description: 'Description of the counterparty visible only in your platform. Maximum length: `127` characters.'
+          type: string
+        email:
+          description: The email address of the beneficiary.
+          type: string
+        legal_id:
+          description: 'The legal ID (e.g., Tax ID, Cedula Juridica, etc.) of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `127` characters.'
+          type: string
+        legal_type:
+          description: The legal entity type of the beneficiary. Can be `business`, `non_profit`, `individual`, or `sole_proprietor`. This field is recommended for international wire transfers, and required in some countries.
+          type:
+          - string
+          - 'null'
+        local_account_number:
+          description: 'The local account number (e.g. Cuenta Cliente in Costa Rica) in the beneficiary''s bank. This field is recommended for international wire transfers, and required in some countries. Maximum length: 63 characters.'
+          type: string
+        local_bank_code:
+          description: 'The local bank code of the beneficiary''s bank (e.g., India IFSC, Australia BSB, China CNAPS, etc.). This field is recommended for international wire transfers, and required in some countries. Maximum length: `63` characters.'
+          type: string
+        local_bank_country_code:
+          description: The ISO 3166-1 alpha-2 country code of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        local_bank_name:
+          description: Name of the beneficiary's local bank.
+          type:
+          - string
+          - 'null'
+        name:
+          description: The counterparty name who owns the bank account. There is a `127` character limit for this field. For domestic wires, only the first 35 characters are included in the wire message.
+          type: string
+        phone:
+          description: 'The phone number of the beneficiary. This field is recommended for international wire transfers, and required in some countries. Maximum length: `31` characters.'
+          type: string
+        routing_number:
+          description: The routing number of the bank.
+          type: string
+        routing_number_type:
+          description: The type of the routing number. Can be `aba`, `bic`, or `other`.
+          type: string
+        wire_drawdown_allowed:
+          description: Whitelists counterparties for automatic approval of drawdown requests to Column via Fedwire. If `false`, all inbound drawdown requests from this counterparty will require explicit approval.
+          type: boolean
+      required:
+      - routing_number
+      - account_number
+      type: object
+    ApprovalActionRequest:
+      description: Optional request body for the approval decision implied by a clear or hold-cancel endpoint.
+      properties:
+        comment:
+          description: An optional reviewer comment recorded with the approval or rejection when the held transfer requires approval. Ignored for holds that do not require approval.
+          type:
+          - string
+          - 'null'
+      type: object
+    Address:
+      description: A physical address
+      properties:
+        city:
+          description: City name
+          maxLength: 255
+          type: string
+        country_code:
+          description: Two-letter ISO 3166-1 alpha-2 country code (e.g. `US`)
+          maxLength: 3
+          type: string
+        line_1:
+          description: Street address line 1
+          maxLength: 255
+          type: string
+        line_2:
+          description: Street address line 2
+          maxLength: 255
+          type: string
+        postal_code:
+          description: Postal or ZIP code
+          maxLength: 24
+          type: string
+        state:
+          description: State or province
+          maxLength: 255
+          type: string
+      required:
+      - line_1
+      - city
+      - country_code
+      type: object
+    SimulateSettleWireTransferRequest:
+      properties:
+        wire_transfer_id:
+          description: The ID of the wire transfer to settle
+          type: string
+      required:
+      - wire_transfer_id
+      type: object
+    SimulateReceiveWireRequest:
+      properties:
+        amount:
+          description: Amount (in cents) to credit the account. e.g. $1.75 would be represented by 175
+          format: int64
+          type: integer
+        currency_code:
+          description: The three-letter currency code defined in ISO 4217. e.g. `USD`
+          type: string
+        destination_account_number_id:
+          description: Identifier for the destination account number
+          type: string
+      required:
+      - destination_account_number_id
+      - amount
+      - currency_code
+      type: object
+    ListWireReturnRequests:
+      properties:
+        has_more:
+          description: Whether there are more results available after this set.
+          type: boolean
+        requests:
+          description: List of wire return request objects.
+          items:
+            $ref: '#/components/schemas/WireReturnRequest'
+          type: array
+      required:
+      - requests
+      - has_more
+      type: object
+    RejectWireReturnRequest:
+      properties:
+        additional_info:
+          description: Additional information about the rejection. Maximum 105 characters.
+          type: string
+        reject_reason:
+          allOf:
+          - $ref: '#/components/schemas/WireReturnRequestRejectReason'
+          description: 'The reason for rejecting the return request. Possible values: `beneficiary_account_closed`, `non_sufficient_funds`, `funds_already_returned`, `rejected_by_beneficiary`, `legal_decision`, `no_response_from_beneficiary`.'
+      required:
+      - reject_reason
+      - additional_info
+      type: object
+    TransferReview:
+      description: A transfer review records a single approve or reject decision made on a transfer while it was awaiting approval in `pre_review`. Transfer reviews are only created when transfer approvals are enabled for the platform, or for the API key that created the transfer.
+      properties:
+        comment:
+          description: Comment provided by the reviewer
+          type: string
+        created_at:
+          description: Timestamp of when the review was created
+          format: date-time
+          type: string
+        decision:
+          description: 'Review decision. Possible values: `approved`, `rejected`'
+          enum:
+          - approved
+          - rejected
+          type: string
+        id:
+          description: Unique identifier of the review
+          type: string
+        reviewed_by:
+          allOf:
+          - $ref: '#/components/schemas/Identity'
+          description: Identity of the reviewer (API key or dashboard user)
+          type:
+          - object
+          - 'null'
+        updated_at:
+          description: Timestamp of when the review was last updated
+          format: date-time
+          type: string
+      required:
+      - id
+      - created_at
+      - updated_at
+      - reviewed_by
+      - decision
+      type: object
+    ReverseWireTransferRequest:
+      properties:
+        allow_overdraft:
+          description: Allow the account to go negative for the reversal.
+          type: boolean
+        description:
+          description: 'Description for the wire reversal. Maximum length: `255` characters.'
+          type: string
+        reason:
+          description: The reason for reversing the wire transfer.
+          type: string
+      required:
+      - reason
+      type: object
+    WireReturnRequestReason:
+      enum:
+      - incorrect_beneficiary_account
+      - incorrect_amount
+      - requested_by_originator
+      - duplicate
+      - fraud
+      - tech_failure
+      - payment_not_justified
+      type: string
+    ListWireDrawdownRequests:
+      properties:
+        has_more:
+          description: Whether there are more results available after this set.
+          type: boolean
+        requests:
+          description: List of wire drawdown request objects.
+          items:
+            $ref: '#/components/schemas/WireDrawdownRequest'
+          type: array
+      required:
+      - requests
+      - has_more
+      type: object
+    CreateWireReturnRequest:
+      properties:
+        additional_info:
+          description: Additional information about the return request. Maximum 105 characters.
+          type: string
+        return_request_reason:
+          allOf:
+          - $ref: '#/components/schemas/WireReturnRequestReason'
+          description: 'The reason for the return request. Possible values: `incorrect_beneficiary_account`, `incorrect_amount`, `requested_by_originator`, `duplicate`, `fraud`, `tech_failure`, `payment_not_justified`.'
+      required:
+      - return_request_reason
+      - additional_info
+      type: object
+    SimulateReceiveWireReturnRequestRequest:
+      properties:
+        wire_transfer_id:
+          description: The ID of the wire transfer
+          type: string
+      required:
+      - wire_transfer_id
+      type: object
+    EmptyResponse:
+      description: Empty response object
+      type: object
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              type:
+                type: string
+            type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth with an empty username and your API key as the password.
