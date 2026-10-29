@@ -1,4 +1,4 @@
-# Column (column)
+# Column
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,198 +66,150 @@
 
 Column is a chartered nationally-regulated bank purpose-built for developer APIs. Offers ACH, wires, FedNow, checks, BIN sponsorship, and bank-direct ledgering.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/column/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/column/refs/heads/main/apis.yml)
+**Areas:** Fintech · Banking · Banking as a Service · ACH · Wires · Embedded Finance
 
-## Tags
+## Column on APIs.io
 
-- Fintech
-- Banking
-- BaaS
-- ACH
-- Wires
+Everything profiled for Column is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/column/](https://apis.io/providers/column/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (21)
 
-- **Created:** 2026-05-08
-- **Modified:** 2026-05-30
+- [Column ACH Transfers API](https://apis.io/apis/column/column-ach-transfers-api/) — Originate and receive ACH transfers with returns and reversal handling.
+- [Column Wire Transfers API](https://apis.io/apis/column/column-wire-transfers-api/) — Send domestic wires with drawdowns and return-request workflows.
+- [Column International Wires API](https://apis.io/apis/column/column-international-wires-api/) — Cross-border wires with FX quoting and amendments.
+- [Column Realtime Transfers API](https://apis.io/apis/column/column-realtime-transfers-api/) — Instant RTP/FedNow transfers and Request for Payment (RFP).
+- [Column Book Transfers API](https://apis.io/apis/column/column-book-transfers-api/) — Internal ledger movements between Column accounts.
+- [Column Check Services API](https://apis.io/apis/column/column-check-services-api/) — Issue, print, mail and deposit physical checks.
+- [Column Lending API](https://apis.io/apis/column/column-lending-api/) — Loan disbursements, payments, sales and reporting.
+- [Column Entities & Accounts API](https://apis.io/apis/column/column-entities-accounts-api/) — Person and business entity onboarding plus bank accounts and account numbers.
+- [Column Webhooks](https://apis.io/apis/column/column-webhooks/) — HMAC-SHA256 signed event callbacks for ACH, wire, international wire (SWIFT), realtime (RTP/FedNow), book transfers, checks, bank accounts, identity…
+- [Column Account Numbers API](https://apis.io/apis/column/column-account-numbers-api/) — The Account Numbers API from Column — 2 operation(s) for account numbers.
+- [Column ACH Transfers API](https://apis.io/apis/column/column-ach-transfers-api/) — The ACH Transfers API from Column — 4 operation(s) for ach transfers.
+- [Column Bank Accounts API](https://apis.io/apis/column/column-bank-accounts-api/) — The Bank Accounts API from Column — 2 operation(s) for bank accounts.
+- [Column Book Transfers API](https://apis.io/apis/column/column-book-transfers-api/) — The Book Transfers API from Column — 2 operation(s) for book transfers.
+- [Column Check Transfers API](https://apis.io/apis/column/column-check-transfers-api/) — The Check Transfers API from Column — 3 operation(s) for check transfers.
+- [Column Counterparties API](https://apis.io/apis/column/column-counterparties-api/) — The Counterparties API from Column — 2 operation(s) for counterparties.
+- [Column Entities API](https://apis.io/apis/column/column-entities-api/) — The Entities API from Column — 4 operation(s) for entities.
+- [Column Events API](https://apis.io/apis/column/column-events-api/) — The Events API from Column — 2 operation(s) for events.
+- [Column International Wires API](https://apis.io/apis/column/column-international-wires-api/) — The International Wires API from Column — 2 operation(s) for international wires.
+- [Column Realtime Transfers API](https://apis.io/apis/column/column-realtime-transfers-api/) — The Realtime Transfers API from Column — 2 operation(s) for realtime transfers.
+- [Column Webhooks API](https://apis.io/apis/column/column-webhooks-api/) — The Webhooks API from Column — 2 operation(s) for webhooks.
+- [Column Wire Transfers API](https://apis.io/apis/column/column-wire-transfers-api/) — The Wire Transfers API from Column — 2 operation(s) for wire transfers.
 
-## APIs
+### Published properties
 
-### Column ACH Transfers API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Originate and receive ACH transfers with returns and reversal handling.
+#### Agentic access (1)
 
-- **Human URL:** [https://column.com/docs/api](https://column.com/docs/api)
-- **Base URL:** `https://api.column.com`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Column Agentic Access](https://apis.io/agentic-access/column/column-agentic-access/)
 
-- ACH
-- Payments
+#### Collections (14)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [Documentation](https://column.com/docs/api)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Column API](https://apis.io/collections/column/open-column/)
+- [Column Account Numbers API](https://apis.io/collections/column/open-column-account-numbers-api/)
+- [Column Account Numbers ACH Transfers API](https://apis.io/collections/column/open-column-ach-transfers-api/)
+- [Column Webhooks](https://apis.io/collections/column/open-column-asyncapi/)
+- [Column Account Numbers Bank Accounts API](https://apis.io/collections/column/open-column-bank-accounts-api/)
+- [Column Account Numbers Book Transfers API](https://apis.io/collections/column/open-column-book-transfers-api/)
+- [Column Account Numbers Check Transfers API](https://apis.io/collections/column/open-column-check-transfers-api/)
+- [Column Account Numbers Counterparties API](https://apis.io/collections/column/open-column-counterparties-api/)
+- [Column Account Numbers Entities API](https://apis.io/collections/column/open-column-entities-api/)
+- [Column Account Numbers Events API](https://apis.io/collections/column/open-column-events-api/)
+- [Column Account Numbers International Wires API](https://apis.io/collections/column/open-column-international-wires-api/)
+- [Column Account Numbers Realtime Transfers API](https://apis.io/collections/column/open-column-realtime-transfers-api/)
+- [Column Account Numbers Webhooks API](https://apis.io/collections/column/open-column-webhooks-api/)
+- [Column Account Numbers Wire Transfers API](https://apis.io/collections/column/open-column-wire-transfers-api/)
 
-### Column Wire Transfers API
+#### Security (2)
 
-Send domestic wires with drawdowns and return-request workflows.
+Authentication, trust centre, and vulnerability disclosure.
 
-- **Human URL:** [https://column.com/docs/api](https://column.com/docs/api)
-- **Base URL:** `https://api.column.com`
+- [Column Authentication](https://apis.io/security/column/column-authentication/)
+- [Column Domain Security](https://apis.io/security/column/column-domain-security/)
 
-#### Tags
+#### Plans and pricing (1)
 
-- Wires
-- Payments
+Published plans, tiers and prices.
 
-#### Properties
+- [Column Plans Pricing](https://apis.io/plans/column/column-plans-pricing/)
 
-- [Documentation](https://column.com/docs/api)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Rate limits (1)
 
-### Column International Wires API
+Published request limits.
 
-Cross-border wires with FX quoting and amendments.
+- [Column Rate Limits](https://apis.io/rate-limits/column/column-rate-limits/)
 
-- **Human URL:** [https://column.com/docs/api](https://column.com/docs/api)
-- **Base URL:** `https://api.column.com`
+#### FinOps (1)
 
-#### Tags
+What the API costs to run, by operation.
 
-- Wires
-- FX
-- Cross-Border
+- [Column Finops](https://apis.io/finops/column/column-finops/)
 
-#### Properties
+## Where to find this API
 
-- [Documentation](https://column.com/docs/api)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-### Column Realtime Transfers API
-
-Instant RTP/FedNow transfers and Request for Payment (RFP).
-
-- **Human URL:** [https://column.com/docs/api](https://column.com/docs/api)
-- **Base URL:** `https://api.column.com`
-
-#### Tags
-
-- RTP
-- FedNow
-- Instant Payments
-
-#### Properties
-
-- [Documentation](https://column.com/docs/api)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Column Book Transfers API
-
-Internal ledger movements between Column accounts.
-
-- **Human URL:** [https://column.com/docs/api](https://column.com/docs/api)
-- **Base URL:** `https://api.column.com`
-
-#### Tags
-
-- Book Transfers
-
-#### Properties
-
-- [Documentation](https://column.com/docs/api)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Column Check Services API
-
-Issue, print, mail and deposit physical checks.
-
-- **Human URL:** [https://column.com/docs/api](https://column.com/docs/api)
-- **Base URL:** `https://api.column.com`
-
-#### Tags
-
-- Check
-- Payments
-
-#### Properties
-
-- [Documentation](https://column.com/docs/api)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Column Lending API
-
-Loan disbursements, payments, sales and reporting.
-
-- **Human URL:** [https://column.com/docs/api](https://column.com/docs/api)
-- **Base URL:** `https://api.column.com`
-
-#### Tags
-
-- Lending
-- Loans
-
-#### Properties
-
-- [Documentation](https://column.com/docs/api)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Column Entities & Accounts API
-
-Person and business entity onboarding plus bank accounts and account numbers.
-
-- **Human URL:** [https://column.com/docs/api](https://column.com/docs/api)
-- **Base URL:** `https://api.column.com`
-
-#### Tags
-
-- Accounts
-- KYC
-
-#### Properties
-
-- [Documentation](https://column.com/docs/api)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Column Webhooks
-
-HMAC-SHA256 signed event callbacks for ACH, wire, international wire (SWIFT), realtime (RTP/FedNow), book transfers, checks, bank accounts, identity verification, loans, and reporting.
-
-- **Human URL:** [https://docs.column.com/working-with-the-api/events-and-webhooks/](https://docs.column.com/working-with-the-api/events-and-webhooks/)
-- **Base URL:** `https://api.column.com`
-
-#### Tags
-
-- Webhooks
-- Events
-- AsyncAPI
-
-#### Properties
-
-- [Documentation](https://docs.column.com/working-with-the-api/events-and-webhooks/)
-- [AsyncAPI](openapi/column-asyncapi.yml) — [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/latest)
-- [Postman Collection](collections/column.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/column.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [LinkedIn](https://www.linkedin.com/company/column-bank)
 - [Website](https://column.com/)
-- [Plans](plans/column-plans-pricing.yml)
-- [Rate Limits](rate-limits/column-rate-limits.yml)
-- [Fin Ops](finops/column-finops.yml)
-- [L L Ms Txt](https://column.com/llms.txt)
+- [Getting started](https://docs.column.com/guides/getting-started)
+- [API reference](https://docs.column.com/api/)
+- [Changelog](https://column.com/changelog/)
+- [Blog](https://column.com/blog)
+- [Status](https://status.column.com)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 35.7** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 64.3 |
+| Contract quality | 53.9 |
+| Contract governance | 0.0 |
+| Operational transparency | 44.7 |
+| Developer ergonomics | 50.0 |
+| Access clarity | 11.8 |
+
+**Agent readiness 23.5** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | unknown |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 9.4** — Banking & Open Finance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/column/](https://apis.io/providers/column/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Column: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/column/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
